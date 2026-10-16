@@ -1,0 +1,103 @@
+/* ==========================================================================
+   Akbar Cricket Club — Print Stylesheet
+   Clean Browser Print Layout for Official Reports
+   ========================================================================== */
+
+@media print {
+  /* Hide UI chrome */
+  .app-sidebar,
+  .app-header,
+  .app-footer,
+  .mobile-sidebar-backdrop,
+  .btn,
+  .btn-burgundy,
+  .btn-gold,
+  .btn-outline-burgundy,
+  .btn-light-custom,
+  .modal-backdrop-custom,
+  .toast-container,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+    font-family: Arial, sans-serif !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .app-main-wrapper {
+    margin-left: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .app-content-body {
+    padding: 20px !important;
+  }
+
+  /* Print Header banner */
+  .print-header-banner {
+    display: block !important;
+    border-bottom: 2px solid #9e2332;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+
+  .print-club-title {
+    font-size: 18pt;
+    font-weight: bold;
+    color: #16243a;
+    margin: 0;
+  }
+
+  .print-report-subtitle {
+    font-size: 13pt;
+    color: #9e2332;
+    margin-top: 4px;
+    margin-bottom: 6px;
+  }
+
+  .print-meta-date {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+  /* Table styling for print */
+  .table-custom {
+    width: 100% !important;
+    border: 1px solid #cccccc !important;
+    border-collapse: collapse !important;
+  }
+
+  .table-custom th,
+  .table-custom td {
+    border: 1px solid #dddddd !important;
+    padding: 6px 8px !important;
+    color: #000000 !important;
+    font-size: 9pt !important;
+  }
+
+  .table-custom th {
+    background-color: #f2f2f2 !important;
+    font-weight: bold !important;
+  }
+
+  .badge-role, .badge-status {
+    border: 1px solid #999999 !important;
+    background: transparent !important;
+    color: #000000 !important;
+  }
+
+  /* Avoid break inside rows */
+  tr, .card-custom {
+    page-break-inside: avoid;
+  }
+}
+
+.print-header-banner {
+  display: none;
+}
