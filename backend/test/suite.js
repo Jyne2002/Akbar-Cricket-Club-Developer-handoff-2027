@@ -6,12 +6,32 @@
 
 const assert = require('assert');
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+const fs = require('fs');
+const os = require('os');
+const crypto = require('crypto');
+
+const testDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'acc-suite-'));
+process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = crypto.randomBytes(32).toString('hex');
+process.env.FIELD_ENCRYPTION_KEY = crypto.randomBytes(32).toString('hex');
+process.env.ADMIN_EMAIL = 'admin@example.test';
+process.env.ADMIN_PASSWORD = crypto.randomBytes(24).toString('hex');
+process.env.EMBEDDED_DB_DIR = testDirectory;
+process.env.UPLOADS_DIR = path.join(testDirectory, 'uploads');
+process.env.OPENAI_API_KEY = '';
+
+const coachEmail = 'coach@example.test';
+const coachPassword = crypto.randomBytes(24).toString('hex');
+const { loadStore, setEmbeddedActive } = require('../src/config/embeddedDb');
+const { seedDatabase } = require('../src/services/seedService');
+const { hashPassword } = require('../src/config/security');
+const User = require('../src/models/User');
+const app = require('../server');
 
 const { encryptField, decryptField, sanitizeCsvValue } = require('../src/config/security');
 const { parseBowlingBalls, formatBallsToOvers } = require('../src/services/scorecardService');
 
-async function runTests() {
+async function runTests(apiOrigin) {
   console.log('\n=======================================================');
   console.log(' RUNNING AKBAR CRICKET CLUB VERIFICATION TEST SUITE');
   console.log('=======================================================\n');
@@ -143,7 +163,7 @@ async function runTests() {
 
   try {
     // 1. Health check
-    const healthRes = await fetch('http://localhost:3000/api/health');
+    const healthRes = await fetch(`${apiOrigin}/api/health`);
     assert.strictEqual(healthRes.status, 200, 'Health check status must be 200');
     const healthJson = await healthRes.json();
     assert.strictEqual(healthJson.status, 'ok');
@@ -151,10 +171,10 @@ async function runTests() {
     passed++;
 
     // 2. Authentication Login as Admin
-    const loginRes = await fetch('http://localhost:3000/api/auth/login', {
+    const loginRes = await fetch(`${apiOrigin}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'admin@akbarcricket.lk', password: 'AkbarCricket@2026!' })
+      body: JSON.stringify({ email: process.env.ADMIN_EMAIL, password: process.env.ADMIN_PASSWORD })
     });
     assert.strictEqual(loginRes.status, 200, 'Admin login must return 200');
     const loginJson = await loginRes.json();
@@ -165,7 +185,7 @@ async function runTests() {
     passed++;
 
     // 3. Opening Squad Data Count
-    const playersRes = await fetch('http://localhost:3000/api/players', {
+    const playersRes = await fetch(`${apiOrigin}/api/players`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     const playersJson = await playersRes.json();
@@ -174,7 +194,7 @@ async function runTests() {
     passed++;
 
     // 4. Opening Equipment Data Count
-    const eqRes = await fetch('http://localhost:3000/api/equipment', {
+    const eqRes = await fetch(`${apiOrigin}/api/equipment`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     const eqJson = await eqRes.json();
@@ -183,7 +203,7 @@ async function runTests() {
     passed++;
 
     // 5. Opening Sessions Count
-    const sessRes = await fetch('http://localhost:3000/api/sessions', {
+    const sessRes = await fetch(`${apiOrigin}/api/sessions`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     const sessJson = await sessRes.json();
@@ -192,7 +212,7 @@ async function runTests() {
     passed++;
 
     // 6. Command Centre Data Overview
-    const ccRes = await fetch('http://localhost:3000/api/command-centre', {
+    const ccRes = await fetch(`${apiOrigin}/api/command-centre`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     const ccJson = await ccRes.json();
@@ -202,7 +222,7 @@ async function runTests() {
     passed++;
 
     // 7. AI Operations Assistant Suggestions
-    const sugRes = await fetch('http://localhost:3000/api/tasks/suggestions', {
+    const sugRes = await fetch(`${apiOrigin}/api/tasks/suggestions`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     const sugJson = await sugRes.json();
@@ -213,15 +233,15 @@ async function runTests() {
 
     // 8. Role-Based Confidential Field Redaction Test
     // Login as Coach:
-    const coachLoginRes = await fetch('http://localhost:3000/api/auth/login', {
+    const coachLoginRes = await fetch(`${apiOrigin}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'coach@akbarcricket.lk', password: 'Coach@2026!' })
+      body: JSON.stringify({ email: coachEmail, password: coachPassword })
     });
     const coachLoginJson = await coachLoginRes.json();
     const coachToken = coachLoginJson.token;
 
-    const coachPlayerRes = await fetch(`http://localhost:3000/api/players/${playersJson.players[0].id}`, {
+    const coachPlayerRes = await fetch(`${apiOrigin}/api/players/${playersJson.players[0].id}`, {
       headers: { 'Authorization': `Bearer ${coachToken}` }
     });
     const coachPlayerJson = await coachPlayerRes.json();
@@ -241,8 +261,35 @@ async function runTests() {
   console.log('=======================================================\n');
 
   if (failed > 0) {
-    process.exit(1);
+    process.exitCode = 1;
   }
 }
 
-runTests();
+async function main() {
+  let server;
+  try {
+    loadStore();
+    setEmbeddedActive(true);
+    await seedDatabase();
+    await User.create({
+      name: 'Test Coach',
+      email: coachEmail,
+      password: await hashPassword(coachPassword),
+      role: 'Coach'
+    });
+    server = app.listen(0, '127.0.0.1');
+    await new Promise((resolve, reject) => {
+      server.once('listening', resolve);
+      server.once('error', reject);
+    });
+    await runTests(`http://127.0.0.1:${server.address().port}`);
+  } finally {
+    if (server) await new Promise(resolve => server.close(resolve));
+    fs.rmSync(testDirectory, { recursive: true, force: true });
+  }
+}
+
+main().catch(err => {
+  console.error('Verification suite failed:', err);
+  process.exitCode = 1;
+});

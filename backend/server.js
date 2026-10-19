@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 const express = require('express');
@@ -10,6 +11,7 @@ const { connectDB } = require('./src/config/db');
 const { seedDatabase } = require('./src/services/seedService');
 const { apiLimiter, sanitizeInput } = require('./src/middleware/security');
 const { authenticate } = require('./src/middleware/auth');
+const { validateProductionConfig } = require('./src/config/production');
 
 // Models for Command Centre dashboard aggregation
 const Player = require('./src/models/Player');
@@ -21,7 +23,13 @@ const Task = require('./src/models/Task');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const APP_ORIGIN = process.env.APP_ORIGIN || 'http://localhost:5173';
+const isProduction = process.env.NODE_ENV === 'production';
+const APP_ORIGIN = process.env.APP_ORIGIN || (isProduction ? 'https://cricket.akbar.com' : 'http://localhost:5173');
+const frontendDist = path.resolve(__dirname, '../frontend/dist');
+
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
 
 // 1. Security Headers
 app.use(helmet({
@@ -199,22 +207,43 @@ app.use('/api/tasks', require('./src/routes/tasks'));
 app.use('/api/reports', require('./src/routes/reports'));
 app.use('/api/uploads', require('./src/routes/uploads'));
 
+app.use('/api', (req, res) => {
+  res.status(404).json({ success: false, message: 'API route not found.' });
+});
+
+app.use(express.static(frontendDist, { index: false }));
+
+app.get('*', (req, res, next) => {
+  if (req.path !== '/' && req.path !== '/index.html' && (path.extname(req.path) || !req.accepts('html'))) {
+    return next();
+  }
+  res.sendFile(path.join(frontendDist, 'index.html'));
+});
+
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error('Unhandled API Error:', err);
   res.status(err.status || 500).json({
     success: false,
-    message: err.message || 'An unexpected internal server error occurred.'
+    message: isProduction && (!err.status || err.status >= 500)
+      ? 'An unexpected internal server error occurred.'
+      : err.message || 'An unexpected internal server error occurred.'
   });
 });
 
 // Start Server
 async function startServer() {
   try {
+    validateProductionConfig();
+    if (isProduction && !fs.existsSync(path.join(frontendDist, 'index.html'))) {
+      throw new Error('Frontend build is missing. Run npm run build from the repository root.');
+    }
     await connectDB();
-    await seedDatabase();
+    if (process.env.SEED_ON_STARTUP !== 'false') {
+      await seedDatabase();
+    }
 
-    app.listen(PORT, () => {
+    return app.listen(PORT, '0.0.0.0', () => {
       console.log(`=======================================================`);
       console.log(` Akbar Cricket Club — Team Management Suite v2.0`);
       console.log(` Season 2026–2027 Backend Server Running`);
@@ -223,11 +252,14 @@ async function startServer() {
       console.log(`=======================================================`);
     });
   } catch (err) {
-    console.error('Failed to start server:', err);
+    console.error('Failed to start server:', isProduction ? err.message : err);
     process.exit(1);
   }
 }
 
-startServer();
+if (require.main === module) {
+  startServer();
+}
 
 module.exports = app;
+module.exports.startServer = startServer;

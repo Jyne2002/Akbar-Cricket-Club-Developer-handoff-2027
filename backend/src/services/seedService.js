@@ -147,14 +147,20 @@ const INITIAL_SESSIONS = [
 ];
 
 async function seedDatabase() {
+  if (process.env.NODE_ENV === 'production') {
+    console.log('Production seeding disabled; existing accounts and club records are preserved.');
+    return;
+  }
+  if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD.length < 12) {
+    throw new Error('Development seeding requires ADMIN_EMAIL and an ADMIN_PASSWORD of at least 12 characters.');
+  }
   console.log('Seeding Akbar Cricket Club initial data...');
 
   // 1. Seed Administrator if not exists
-  const adminEmail = (process.env.ADMIN_EMAIL || 'admin@akbarcricket.lk').toLowerCase();
+  const adminEmail = process.env.ADMIN_EMAIL.toLowerCase().trim();
   const existingAdmin = await User.findOne({ email: adminEmail });
   if (!existingAdmin) {
-    const defaultPassword = process.env.ADMIN_PASSWORD || 'AkbarCricket@2026!';
-    const hashedPassword = await hashPassword(defaultPassword);
+    const hashedPassword = await hashPassword(process.env.ADMIN_PASSWORD);
     await User.create({
       name: 'System Administrator',
       email: adminEmail,
@@ -162,31 +168,6 @@ async function seedDatabase() {
       role: 'Administrator'
     });
     console.log(` Created initial Administrator: ${adminEmail}`);
-  }
-
-  // Also seed a demo Manager and Coach for convenient testing if they don't exist
-  const managerEmail = 'manager@akbarcricket.lk';
-  if (!(await User.findOne({ email: managerEmail }))) {
-    const pw = await hashPassword('Manager@2026!');
-    await User.create({
-      name: 'Club Manager',
-      email: managerEmail,
-      password: pw,
-      role: 'Manager'
-    });
-    console.log(` Created demo Manager: ${managerEmail}`);
-  }
-
-  const coachEmail = 'coach@akbarcricket.lk';
-  if (!(await User.findOne({ email: coachEmail }))) {
-    const pw = await hashPassword('Coach@2026!');
-    await User.create({
-      name: 'Head Coach',
-      email: coachEmail,
-      password: pw,
-      role: 'Coach'
-    });
-    console.log(` Created demo Coach: ${coachEmail}`);
   }
 
   // 2. Seed 20 Squad Players

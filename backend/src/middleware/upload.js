@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 
-const uploadDir = path.resolve(process.env.UPLOADS_DIR || path.join(__dirname, '../../uploads'));
+const uploadDir = path.resolve(__dirname, '../../', process.env.UPLOADS_DIR || 'uploads');
 
 // Ensure upload directory exists
 if (!fs.existsSync(uploadDir)) {

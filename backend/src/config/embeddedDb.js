@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const dataDir = path.resolve(__dirname, '../../data');
+const dataDir = path.resolve(process.env.EMBEDDED_DB_DIR || path.join(__dirname, '../../data'));
 const storeFilePath = path.join(dataDir, 'store.json');
 
 let store = {

@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const { authenticate } = require('../middleware/auth');
 
-const uploadDir = path.resolve(process.env.UPLOADS_DIR || path.join(__dirname, '../../uploads'));
+const uploadDir = path.resolve(__dirname, '../../', process.env.UPLOADS_DIR || 'uploads');
 
 /**
  * GET /api/uploads/:filename

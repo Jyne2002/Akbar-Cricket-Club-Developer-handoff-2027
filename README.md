@@ -11,7 +11,7 @@ A corporate sports management dashboard and operational platform engineered for 
 - **Backend**: Node.js & Express REST API with security middleware (Helmet, CORS, Cookie-Parser, Express Rate-Limit).
 - **Database Layer**: MongoDB via Mongoose ODM with dual-mode zero-dependency fallback engine.
   - Connects to primary `MONGODB_URI` when MongoDB is running.
-  - Automatically activates the embedded file-backed database engine at `./data/store.json` if local MongoDB is offline, guaranteeing immediate out-of-the-box operation without external dependencies.
+  - Development only: activates the embedded file-backed database engine at `./data/store.json` if local MongoDB is offline. Production requires MongoDB and fails startup if Atlas is unavailable.
 - **Security & Privacy**:
   - Passwords hashed using `bcryptjs` (salt rounds: 12).
   - Sessions managed via secure `HttpOnly` JWT cookies (`acc_token`) with server-side revocation.
@@ -25,7 +25,7 @@ A corporate sports management dashboard and operational platform engineered for 
 ## 🚀 Quick Start & Run Instructions
 
 ### 1. Prerequisites
-- **Node.js**: v18.0.0 or higher (v24+ supported)
+- **Node.js**: v22.x or v24.x (v24.x recommended for Hostinger)
 - **npm**: v9.0.0 or higher
 - **MongoDB** (Optional): MongoDB service or Atlas URI. If omitted or not running, the application runs on its embedded persistent database engine.
 
@@ -39,9 +39,9 @@ cd backend
 # Install dependencies
 npm install
 
-# Configuration: A pre-configured .env with strong local keys is included
-# If configuring manually, copy .env.example to .env
-# cp .env.example .env
+# Copy .env.example to .env and configure your own secrets and administrator.
+# Never commit .env files.
+cp .env.example .env
 
 # Run automated verification test suite
 npm test
@@ -70,14 +70,11 @@ The application opens at: **`http://localhost:5173/`**
 
 ## 🔐 Default Personnel Credentials
 
-The database automatically provisions the following default credentials on first launch:
+There are no built-in default passwords. Development seeding requires your own `ADMIN_EMAIL` and `ADMIN_PASSWORD` (at least 12 characters). Additional users are created by an Administrator in Settings.
 
-| Role | Email | Password | Permissions |
-| :--- | :--- | :--- | :--- |
-| **Administrator** | `admin@akbarcricket.lk` | `AkbarCricket@2026!` | Full administrative access, confidential records, user account creation, system settings. |
-| **Manager** | `manager@akbarcricket.lk` | `Manager@2026!` | Confidential player records, squad CSV imports, match score verification, club operations. |
-| **Coach** | `coach@akbarcricket.lk` | `Coach@2026!` | Cricket profiles, attendance roll calls, match Playing XI, gear inspections, Kanban tasks. Confidential HR data redacted. |
-| **Viewer** | *(Create via Settings)* | *(Assigned by Admin)* | Read-only operational access to rosters, fixtures, and leaderboards. |
+Production never seeds accounts, players, equipment, or sessions. Existing accounts and database records remain in place. Run `npm run audit:accounts` against the intended database to check for previously published demo passwords without changing records, then change any flagged passwords through Settings before deployment.
+
+For root deployment, exact Hostinger settings, production environment variables, and verification steps, see [HOSTINGER.md](HOSTINGER.md).
 
 ---
 
@@ -195,9 +192,11 @@ Sample templates are available in the `templates/` directory:
 
 To run the automated verification suite:
 ```powershell
-cd backend
+npm ci
+npm run build
 npm test
 ```
+Tests start isolated HTTP servers with temporary data and random test credentials. They do not connect to Atlas, load your application data, or require a separately running backend.
 The test suite validates:
 - [x] AES-256-GCM encryption and decryption of NIC numbers
 - [x] CSV formula injection sanitization (`=`, `+`, `-`, `@`)
