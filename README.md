@@ -25,7 +25,7 @@ A corporate sports management dashboard and operational platform engineered for 
 ## 🚀 Quick Start & Run Instructions
 
 ### 1. Prerequisites
-- **Node.js**: v22.x or v24.x (v24.x recommended for Hostinger)
+- **Node.js**: v22.x or v24.x (Hostinger is configured for v22.x)
 - **npm**: v9.0.0 or higher
 - **MongoDB** (Optional): MongoDB service or Atlas URI. If omitted or not running, the application runs on its embedded persistent database engine.
 
@@ -74,7 +74,7 @@ There are no built-in default passwords. Development seeding requires your own `
 
 Production never seeds accounts, players, equipment, or sessions. Existing accounts and database records remain in place. Run `npm run audit:accounts` against the intended database to check for previously published demo passwords without changing records, then change any flagged passwords through Settings before deployment.
 
-For root deployment, exact Hostinger settings, production environment variables, and verification steps, see [HOSTINGER.md](HOSTINGER.md).
+For Hostinger deployment from `backend`, run `npm run build:hostinger` at the repository root before committing. This builds Vite and copies its compiled files into the tracked `backend/hostinger-static` directory. Hostinger only needs `backend`, npm, and entry file `server.js`; it does not need the frontend source or a custom build command. See [HOSTINGER.md](HOSTINGER.md) for environment variables and verification steps.
 
 ---
 

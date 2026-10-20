@@ -108,7 +108,6 @@ export function renderLogin(container, onLoginSuccess) {
                   id="login-password"
                   class="form-control-custom border-start-0"
                   placeholder="••••••••••••"
-                  value="AkbarCricket@2026!"
                   required
                   autocomplete="current-password"
                 >

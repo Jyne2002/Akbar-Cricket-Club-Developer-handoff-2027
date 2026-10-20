@@ -29,12 +29,12 @@ const { isEmbeddedActive } = require('../src/config/embeddedDb');
 const { validateProductionConfig } = require('../src/config/production');
 const { seedDatabase } = require('../src/services/seedService');
 const app = require('../server');
-const frontendDist = path.resolve(__dirname, '../../frontend/dist');
+const frontendDist = path.resolve(__dirname, '../hostinger-static');
 let server;
 let apiOrigin;
 
 before(async () => {
-  assert.ok(fs.existsSync(path.join(frontendDist, 'index.html')), 'Run npm run build before npm test.');
+  assert.ok(fs.existsSync(path.join(frontendDist, 'index.html')), 'Run npm run build:hostinger before npm test.');
   server = app.listen(0, '127.0.0.1');
   await once(server, 'listening');
   apiOrigin = `http://127.0.0.1:${server.address().port}`;

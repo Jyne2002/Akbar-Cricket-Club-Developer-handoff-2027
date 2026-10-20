@@ -1,29 +1,26 @@
 # Hostinger production deployment
 
-The repository root runs one Express application. It serves the Vite build from `frontend/dist` and all existing API routes under `/api`, using the same HTTPS domain and session cookies. Frontend API calls already use relative `/api/...` URLs, so no frontend API URL or `VITE_*` secrets are needed.
+The `backend` folder is the complete Hostinger application. Express serves the compiled Vite frontend from `backend/hostinger-static` and all existing API routes under `/api`, using the same HTTPS domain and session cookies. It never reads `../frontend/dist` at runtime. Frontend API calls already use relative `/api/...` URLs, so no frontend API URL or `VITE_*` secrets are needed.
 
 ## Exact hPanel settings
 
-In the existing Node.js Web App for `cricket.akbar.com`, open **Settings & Redeploy** and use:
+Keep the existing Node.js Web App settings for `cricket.akbar.com`:
 
 | Setting | Value |
 | --- | --- |
 | Repository | `Jyne2002/Akbar-Cricket-Club-Developer-handoff-2027` |
-| Branch | The branch containing these deployment changes |
-| Root directory | `.` (repository root; select `/` if hPanel represents the repository root that way) |
+| Branch | `main` |
+| Root directory | `backend` |
 | Framework | **Express.js** |
-| Node.js version | **24.x** |
+| Node.js version | **22.x** |
 | Package manager | **npm** |
-| Install command, if editable | `npm ci` |
-| Build command | `npm run build` |
-| Start command, if editable | `npm start` |
-| Entry file | `backend/server.js` |
-| Output directory, if required | `.` (keep the complete Express application and `frontend/dist` together) |
+| Entry file | `server.js` |
+| Custom build command | None required; the compiled frontend is included in Git |
 | Domain | `cricket.akbar.com` with SSL enabled |
 
-The root `postinstall` automatically installs backend dependencies from `backend/package-lock.json` and frontend build dependencies from `frontend/package-lock.json`. Vite is explicitly installed even when `NODE_ENV=production`. The build only compiles the frontend; it does not connect to the database or seed data. Express serves the generated `frontend/dist`; do not configure this application as a frontend-only Vite deployment.
+Hostinger installs only the backend dependencies from `backend/package.json` and `backend/package-lock.json`, then starts `server.js`. The backend has no installation or startup step that requires the repository root, Vite, or the `frontend` directory. Its `npm start` script also runs `node server.js` if Hostinger uses that script.
 
-These settings follow Hostinger's [Node.js deployment guide](https://www.hostinger.com/tutorials/deploy-node-js-application/) and [supported frameworks and deployment settings](https://www.hostinger.com/support/how-to-deploy-a-nodejs-website-in-hostinger/).
+Build the frontend locally before each push that changes frontend source. The root `npm run build:hostinger` command builds Vite, validates its HTML/JS/CSS output, removes the previous `backend/hostinger-static` bundle, and copies the complete new `frontend/dist` tree there. `npm run build` runs the same workflow. Commit the generated `backend/hostinger-static` files, including hashed assets and any old-asset deletions. Building does not connect to MongoDB or modify records.
 
 ## Environment variables
 
@@ -122,11 +119,13 @@ From the repository root:
 
 ```sh
 npm ci
-npm run build
+npm run build:hostinger
 npm test
 ```
 
-The test suite uses temporary databases and randomly generated test credentials; it does not connect to Atlas or modify `backend/data/store.json`. Deployment tests verify frontend HTML, nested SPA paths, JS/CSS assets, JSON API errors, proxy behavior, production configuration, PORT handling, disabled seeding, and MongoDB connection failures. The existing suite verifies authentication, RBAC, encryption, cricket formulas, inventory, and assistant suggestions.
+The test suite uses temporary databases and randomly generated test credentials; it does not connect to Atlas or modify `backend/data/store.json`. Deployment tests verify frontend HTML, nested SPA paths, JS/CSS assets, JSON API errors, proxy behavior, production configuration, PORT handling, disabled seeding, and MongoDB connection failures. A separate test copies only the deployable backend and its installed dependencies into a temporary directory, excludes local environment files and data, starts its actual `server.js` in production mode with a database stub, and verifies the complete frontend and API routing without a sibling `frontend` directory. The existing suite verifies authentication, RBAC, encryption, cricket formulas, inventory, and assistant suggestions.
+
+Before pushing, confirm that `backend/hostinger-static/index.html` and all compiled assets appear in Git changes. `.env`, `.env.*` credentials, `backend/data`, and uploaded user files are excluded. The previously tracked `backend/data/store.json` is removed from Git tracking while the local file is preserved. Placeholder-only `.env.example` and `uploads/.gitkeep` may remain tracked. Keep `frontend/dist` and all `node_modules` directories ignored.
 
 After making the reviewed source changes available to Hostinger and redeploying, verify:
 
@@ -137,4 +136,4 @@ After making the reviewed source changes available to Hostinger and redeploying,
 5. Sign in with an existing account, confirm expected club data, refresh a page, and confirm authenticated downloads work. Login records the existing last-login timestamp as usual.
 6. Confirm previously uploaded files still open from their authenticated `/api/uploads/...` URLs.
 
-No hPanel settings or live deployment are changed by editing the repository. Do not commit `.env`, credentials, runtime data, or generated `frontend/dist` files.
+No hPanel settings or live deployment are changed by editing the repository. Include `backend/hostinger-static` in the reviewed commit; do not commit `.env`, credentials, runtime data, user uploads, or generated `frontend/dist` files. This preparation does not push, commit, or deploy automatically.

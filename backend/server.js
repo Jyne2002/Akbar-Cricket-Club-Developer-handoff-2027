@@ -25,7 +25,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
 const APP_ORIGIN = process.env.APP_ORIGIN || (isProduction ? 'https://cricket.akbar.com' : 'http://localhost:5173');
-const frontendDist = path.resolve(__dirname, '../frontend/dist');
+const frontendDist = path.resolve(__dirname, 'hostinger-static');
 
 if (isProduction) {
   app.set('trust proxy', 1);
@@ -236,7 +236,7 @@ async function startServer() {
   try {
     validateProductionConfig();
     if (isProduction && !fs.existsSync(path.join(frontendDist, 'index.html'))) {
-      throw new Error('Frontend build is missing. Run npm run build from the repository root.');
+      throw new Error('Hostinger frontend bundle is missing. Run npm run build:hostinger locally and include backend/hostinger-static in Git.');
     }
     await connectDB();
     if (process.env.SEED_ON_STARTUP !== 'false') {
