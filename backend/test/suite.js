@@ -26,7 +26,7 @@ const { loadStore, setEmbeddedActive } = require('../src/config/embeddedDb');
 const { seedDatabase } = require('../src/services/seedService');
 const { hashPassword } = require('../src/config/security');
 const User = require('../src/models/User');
-const app = require('../server');
+const app = require('../app');
 
 const { encryptField, decryptField, sanitizeCsvValue } = require('../src/config/security');
 const { parseBowlingBalls, formatBallsToOvers } = require('../src/services/scorecardService');

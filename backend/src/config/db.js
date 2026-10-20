@@ -18,6 +18,7 @@ async function connectDB() {
     await mongoose.connect(primaryUri, {
       serverSelectionTimeoutMS: allowEmbeddedDb ? 2000 : 30000,
       connectTimeoutMS: allowEmbeddedDb ? 2000 : 30000,
+      bufferCommands: allowEmbeddedDb,
       autoIndex: allowEmbeddedDb,
       autoCreate: allowEmbeddedDb
     });
@@ -25,7 +26,7 @@ async function connectDB() {
     console.log(' Connected to primary MongoDB database.');
   } catch (err) {
     if (!allowEmbeddedDb) {
-      throw new Error('MongoDB connection failed. Check MONGODB_URI, Atlas network access, and database credentials.');
+      throw new Error('MongoDB connection failed. Check MONGODB_URI, Atlas network access, and database credentials.', { cause: err });
     }
     console.warn(`Primary MongoDB connection unavailable (${err.message}).`);
     console.log(' Activating zero-dependency embedded database engine with persistence at ./data/store.json.');

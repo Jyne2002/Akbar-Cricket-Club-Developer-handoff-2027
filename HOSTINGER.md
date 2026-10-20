@@ -20,11 +20,15 @@ Keep the existing Node.js Web App settings for `cricket.akbar.com`:
 
 Hostinger installs only the backend dependencies from `backend/package.json` and `backend/package-lock.json`, then starts `server.js`. The backend has no installation or startup step that requires the repository root, Vite, or the `frontend` directory. Its `npm start` script also runs `node server.js` if Hostinger uses that script.
 
+`server.js` initializes the database both when Node executes it directly and when the hosting runner imports its exported Express app. Routes are defined in `backend/app.js`; API requests wait for initialization before querying MongoDB. Keep both files in the deployment. Production database queries do not silently buffer against an uninitialized connection.
+
 Build the frontend locally before each push that changes frontend source. The root `npm run build:hostinger` command builds Vite, validates its HTML/JS/CSS output, removes the previous `backend/hostinger-static` bundle, and copies the complete new `frontend/dist` tree there. `npm run build` runs the same workflow. Commit the generated `backend/hostinger-static` files, including hashed assets and any old-asset deletions. Building does not connect to MongoDB or modify records.
 
 ## Environment variables
 
 Set these in **hPanel -> Environment Variables** before redeploying. Copy the existing production values through the dashboard; never place secrets in Git, frontend code, or screenshots.
+
+The local, Git-ignored `backend/.env.hostinger` file contains the required production settings ready to import into hPanel. It preserves the existing Atlas URI, JWT secret, and field-encryption key, and disables fallback and seeding. Keep Hostinger's assigned `PORT` and any existing persistent `UPLOADS_DIR` setting. Do not commit or share this environment file.
 
 | Variable | Production value |
 | --- | --- |
@@ -82,6 +86,14 @@ npm run audit:accounts
 The audit connects only to MongoDB, checks all users against the three formerly published demo passwords, reports affected account emails, and exits with status 1 if any are found. It never changes or deletes accounts or records. Change flagged passwords using the existing Settings flow and rerun the audit until it passes. Production must already contain an Administrator account; this deployment does not create one. Do not run the development seed script against production to provision accounts.
 
 This source change prevents future unsafe seeding. It does not prove existing Atlas accounts are safe until the audit has run against that database.
+
+## Authentication startup errors
+
+`Operation users.findOne() buffering timed out after 10000ms` means the account query had no usable MongoDB connection; it is not a password validation failure. See the [Mongoose buffering FAQ](https://mongoosejs.com/docs/8.x/docs/faq.html). The hosting entry point must initialize MongoDB even when imported as a module, and Hostinger must have the production environment variables listed above. Changes to a local `.env` are not sent to Hostinger through Git.
+
+If Atlas reports `ReplicaSetNoPrimary` with TLS alert errors, check [Atlas Network Access](https://www.mongodb.com/docs/atlas/security/ip-access-list/) for the application's actual outbound IP addresses and verify cluster availability. Also permit your current development IP when connecting locally. Keep TLS certificate validation enabled. A local connection check cannot prove that Hostinger's outbound IP is allowed.
+
+Changing the development-only `ADMIN_PASSWORD` environment variable does not reset an existing Atlas account. Use the migrated login details in the ignored `backend/.env.migration-credentials` file. Password changes should go through the existing authenticated Settings flow.
 
 ## Local-data migration
 

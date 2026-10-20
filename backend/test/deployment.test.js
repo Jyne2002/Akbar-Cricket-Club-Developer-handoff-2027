@@ -28,7 +28,7 @@ const { connectDB } = require('../src/config/db');
 const { isEmbeddedActive } = require('../src/config/embeddedDb');
 const { validateProductionConfig } = require('../src/config/production');
 const { seedDatabase } = require('../src/services/seedService');
-const app = require('../server');
+const app = require('../app');
 const frontendDist = path.resolve(__dirname, '../hostinger-static');
 let server;
 let apiOrigin;
@@ -111,6 +111,55 @@ test('supports the production origin and Hostinger proxy headers', async () => {
   assert.equal(app.get('trust proxy'), 1);
 });
 
+test('authentication waits for database initialization before looking up an account', async () => {
+  const originalInitialization = app.locals.initialization;
+  let releaseInitialization;
+  app.locals.initialization = new Promise(resolve => { releaseInitialization = resolve; });
+  const findUser = mock.method(User, 'findOne', async () => null);
+  let responsePromise;
+  try {
+    responsePromise = fetch(`${apiOrigin}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'initialization-check@example.invalid', password: crypto.randomBytes(24).toString('hex') })
+    });
+    await new Promise(resolve => setTimeout(resolve, 30));
+    assert.equal(findUser.mock.callCount(), 0);
+    releaseInitialization();
+    const response = await responsePromise;
+    assert.equal(response.status, 401);
+    assert.equal(findUser.mock.callCount(), 1);
+  } finally {
+    releaseInitialization();
+    if (responsePromise) await responsePromise;
+    app.locals.initialization = originalInitialization;
+    findUser.mock.restore();
+  }
+});
+
+test('failed database initialization returns an API error without querying accounts or exposing secrets', async () => {
+  const originalInitialization = app.locals.initialization;
+  const initialization = Promise.reject(new Error('private database connection details'));
+  initialization.catch(() => {});
+  app.locals.initialization = initialization;
+  const findUser = mock.method(User, 'findOne', async () => null);
+  try {
+    const response = await fetch(`${apiOrigin}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'initialization-check@example.invalid', password: crypto.randomBytes(24).toString('hex') })
+    });
+    assert.equal(response.status, 503);
+    assert.equal(findUser.mock.callCount(), 0);
+    const body = await response.json();
+    assert.equal(body.success, false);
+    assert.doesNotMatch(body.message, /private database connection details/);
+  } finally {
+    app.locals.initialization = originalInitialization;
+    findUser.mock.restore();
+  }
+});
+
 test('production seeding performs no database operations even with administrator variables set', async () => {
   const findUser = mock.method(User, 'findOne', () => {
     throw new Error('Production must not seed accounts.');
@@ -168,6 +217,7 @@ test('Atlas connection failure never falls back to local data when embedded mode
     assert.equal(connectionOptions.serverSelectionTimeoutMS, 30000);
     assert.equal(connectionOptions.autoIndex, false);
     assert.equal(connectionOptions.autoCreate, false);
+    assert.equal(connectionOptions.bufferCommands, false);
   } finally {
     process.env.NODE_ENV = originalMode;
     connection.mock.restore();
