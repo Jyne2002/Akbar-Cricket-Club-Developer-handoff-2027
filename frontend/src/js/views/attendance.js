@@ -6,6 +6,7 @@
 import { api } from '../api.js';
 import { showToast } from '../components/toast.js';
 import { openModal, closeModal } from '../components/modal.js';
+import { escapeHtml } from '../utils/html.js';
 
 let sessionsList = [];
 let currentUser = null;
@@ -106,11 +107,12 @@ export async function renderAttendance(container, user) {
   });
 
   if (canEdit) {
-    document.getElementById('btn-create-session')?.addEventListener('click', openCreateSessionModal);
+    document.getElementById('btn-create-session')?.addEventListener('click', () => openSessionEditModal());
   }
 }
 
 async function loadSessions() {
+  const canEdit = ['Administrator', 'Manager', 'Coach'].includes(currentUser?.role);
   const search = document.getElementById('attendance-search')?.value || '';
   const type = document.getElementById('attendance-type-filter')?.value || 'All';
   const tbody = document.getElementById('sessions-tbody');
@@ -142,13 +144,18 @@ async function loadSessions() {
         <tr>
           <td class="text-nowrap fw-bold">${s.date}</td>
           <td>
-            <div class="fw-bold text-main" style="font-size: 13.5px;">${s.title}</div>
-            <div class="small text-muted">${s.venue || 'No venue specified'}</div>
+            <div class="fw-bold text-main" style="font-size: 13.5px;">${escapeHtml(s.title)}</div>
+            <div class="small text-muted">${escapeHtml(s.venue || 'No venue specified')}</div>
           </td>
           <td><span class="badge-role ${typeBadge}">${s.type}</span></td>
           <td style="${rateColor}; font-size: 14px;">${s.rateDisplay}</td>
           <td><span class="badge-role">${s.completionText}</span></td>
           <td class="text-end">
+            ${canEdit ? `
+              <button type="button" class="btn btn-sm btn-outline-burgundy py-1 px-3 btn-edit-session" data-session-id="${s.id}">
+                <i class="bi bi-pencil me-1"></i>Edit Session
+              </button>
+            ` : ''}
             <button class="btn btn-sm btn-burgundy py-1 px-3 btn-open-rollcall" data-session-id="${s.id}">
               <i class="bi bi-person-check me-1"></i>Roll Call
             </button>
@@ -162,6 +169,12 @@ async function loadSessions() {
       btn.addEventListener('click', () => {
         const sid = btn.getAttribute('data-session-id');
         openRollCallModal(sid);
+      });
+    });
+    document.querySelectorAll('.btn-edit-session').forEach(button => {
+      button.addEventListener('click', () => {
+        const session = sessionsList.find(s => s.id === button.dataset.sessionId);
+        if (session) openSessionEditModal(session);
       });
     });
   } catch (err) {
@@ -186,8 +199,8 @@ async function openRollCallModal(sessionId) {
       <div>
         <div class="d-flex justify-content-between align-items-center mb-3 p-3 rounded" style="background: var(--body-bg); border: 1px solid var(--border-color);">
           <div>
-            <h5 class="mb-1 text-main fw-bold">${session.title}</h5>
-            <div class="small text-muted"><i class="bi bi-calendar3 me-1"></i>${session.date} &bull; <i class="bi bi-geo-alt me-1"></i>${session.venue || 'Venue TBD'}</div>
+            <h5 class="mb-1 text-main fw-bold">${escapeHtml(session.title)}</h5>
+            <div class="small text-muted"><i class="bi bi-calendar3 me-1"></i>${session.date} &bull; <i class="bi bi-geo-alt me-1"></i>${escapeHtml(session.venue || 'Venue TBD')}</div>
           </div>
           <div class="text-end">
             <div class="stat-label">Current Attendance Rate</div>
@@ -224,8 +237,8 @@ async function openRollCallModal(sessionId) {
                 const p = r.player || {};
                 return `
                   <tr data-player-id="${p._id}">
-                    <td class="fw-bold text-main">${p.fullName || 'Unknown'}</td>
-                    <td class="small text-muted">${p.company || '—'}</td>
+                    <td class="fw-bold text-main">${escapeHtml(p.fullName || 'Unknown')}</td>
+                    <td class="small text-muted">${escapeHtml(p.company || '—')}</td>
                     <td style="width: 170px;">
                       <select class="form-select-custom rollcall-status-select" ${!canEdit ? 'disabled' : ''}>
                         ${statuses.map(st => `
@@ -234,7 +247,7 @@ async function openRollCallModal(sessionId) {
                       </select>
                     </td>
                     <td>
-                      <input type="text" class="form-control-custom rollcall-note-input" placeholder="Optional note..." value="${r.note || ''}" ${!canEdit ? 'readonly' : ''}>
+                      <input type="text" class="form-control-custom rollcall-note-input" placeholder="Optional note..." value="${escapeHtml(r.note)}" ${!canEdit ? 'readonly' : ''}>
                     </td>
                   </tr>
                 `;
@@ -314,45 +327,47 @@ async function openRollCallModal(sessionId) {
 }
 
 /**
- * Schedule New Session Modal
+ * Schedule or edit session details without changing the saved roll call.
  */
-function openCreateSessionModal() {
+function openSessionEditModal(session = null) {
+  const isEditing = !!session;
   const contentHtml = `
     <form id="create-session-form">
       <div class="row g-3">
         <div class="col-12">
           <label class="form-label-custom">Session Title *</label>
-          <input type="text" id="s-title" class="form-control-custom" placeholder="e.g. NCC Indoor Practice - Nets" required>
+          <input type="text" id="s-title" class="form-control-custom" placeholder="e.g. NCC Indoor Practice - Nets" value="${escapeHtml(session?.title)}" required>
         </div>
         <div class="col-md-6">
           <label class="form-label-custom">Session Type *</label>
           <select id="s-type" class="form-select-custom">
-            <option value="Practice">Practice</option>
-            <option value="Match">Match Attendance</option>
+            <option value="Practice" ${session?.type === 'Practice' ? 'selected' : ''}>Practice</option>
+            <option value="Match" ${session?.type === 'Match' ? 'selected' : ''}>Match Attendance</option>
           </select>
         </div>
         <div class="col-md-6">
           <label class="form-label-custom">Date *</label>
-          <input type="date" id="s-date" class="form-control-custom" value="${new Date().toISOString().split('T')[0]}" required>
+          <input type="date" id="s-date" class="form-control-custom" value="${escapeHtml(session?.date || new Date().toISOString().split('T')[0])}" required>
         </div>
         <div class="col-12">
           <label class="form-label-custom">Venue</label>
-          <input type="text" id="s-venue" class="form-control-custom" placeholder="e.g. Oval Indoor Nets (MCA SPL)">
+          <input type="text" id="s-venue" class="form-control-custom" placeholder="e.g. Oval Indoor Nets (MCA SPL)" value="${escapeHtml(session?.venue)}">
         </div>
         <div class="col-12">
           <label class="form-label-custom">Operational Notes</label>
-          <textarea id="s-notes" class="form-control-custom" rows="2" placeholder="Specific training drills, equipment requirements..."></textarea>
+          <textarea id="s-notes" class="form-control-custom" rows="2" placeholder="Specific training drills, equipment requirements...">${escapeHtml(session?.notes)}</textarea>
         </div>
       </div>
     </form>
   `;
 
   openModal({
-    title: 'Schedule Practice or Match Attendance',
+    title: isEditing ? 'Edit Session Details' : 'Schedule Practice or Match Attendance',
     contentHtml,
     onOpen: (modalEl) => {
-      document.getElementById('modal-btn-save')?.addEventListener('click', async () => {
-        const title = document.getElementById('s-title')?.value;
+      const saveButton = modalEl.querySelector('#modal-btn-save');
+      saveButton?.addEventListener('click', async () => {
+        const title = document.getElementById('s-title')?.value.trim();
         const type = document.getElementById('s-type')?.value;
         const date = document.getElementById('s-date')?.value;
         const venue = document.getElementById('s-venue')?.value;
@@ -362,14 +377,22 @@ function openCreateSessionModal() {
           showToast('Title and date are required.', 'error');
           return;
         }
+        if (!modalEl.querySelector('#create-session-form').reportValidity()) return;
 
+        saveButton.disabled = true;
         try {
-          await api.post('/api/sessions', { title, type, date, venue, notes });
-          showToast(`Session "${title}" scheduled.`, 'success');
+          if (isEditing) {
+            await api.put(`/api/sessions/${session.id}`, { title, type, date, venue, notes });
+          } else {
+            await api.post('/api/sessions', { title, type, date, venue, notes });
+          }
+          showToast(`Session "${title}" ${isEditing ? 'updated' : 'scheduled'}.`, 'success');
           closeModal();
           loadSessions();
         } catch (err) {
           showToast(`Error: ${err.message}`, 'error');
+        } finally {
+          saveButton.disabled = false;
         }
       });
     }

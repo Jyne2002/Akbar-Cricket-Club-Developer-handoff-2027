@@ -26,6 +26,7 @@ const { loadStore, setEmbeddedActive } = require('../src/config/embeddedDb');
 const { seedDatabase } = require('../src/services/seedService');
 const { hashPassword } = require('../src/config/security');
 const User = require('../src/models/User');
+const Player = require('../src/models/Player');
 const app = require('../app');
 
 const { encryptField, decryptField, sanitizeCsvValue } = require('../src/config/security');
@@ -249,6 +250,91 @@ async function runTests(apiOrigin) {
     assert.strictEqual(coachPlayerJson.player.nic, undefined, 'Coach must NOT receive confidential NIC');
     assert.strictEqual(coachPlayerJson.player.epfNumber, undefined, 'Coach must NOT receive confidential EPF number');
     console.log(' [PASS] Live API: RBAC strictly masked confidential HR fields from Coach view');
+    passed++;
+
+    // Custom companies must also validate in MongoDB, not just the embedded store.
+    const customCompany = 'Example "Tea" & Trading (Pvt) Ltd';
+    assert.strictEqual(new Player({ fullName: 'Custom Company Player', company: customCompany }).validateSync(), undefined);
+    console.log(' [PASS] Player schema: accepts custom company names');
+    passed++;
+
+    const request = (endpoint, method = 'GET', body, authToken = token) => fetch(`${apiOrigin}${endpoint}`, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) })
+    });
+    const createdRes = await request('/api/players', 'POST', {
+      fullName: 'Custom Company Player', company: `  ${customCompany}  `,
+      epfNumber: '00123', emergencyContact: { name: 'Contact', phone: '0771234567', relationship: 'Sibling' }
+    });
+    assert.strictEqual(createdRes.status, 201);
+    const createdPlayer = (await createdRes.json()).player;
+    assert.strictEqual(createdPlayer.company, customCompany);
+    const playerEndpoint = `/api/players/${createdPlayer._id}`;
+    const updatedCompany = 'Updated Custom Company';
+    const updateRes = await request(playerEndpoint, 'PUT', { company: updatedCompany, fullName: 'Updated Player' });
+    assert.strictEqual(updateRes.status, 200);
+    const updatedPlayer = (await updateRes.json()).player;
+    assert.strictEqual(updatedPlayer.company, updatedCompany);
+    assert.strictEqual(updatedPlayer.epfNumber, '00123');
+    assert.strictEqual(updatedPlayer.emergencyContact.name, 'Contact');
+    const coachEditRes = await request(playerEndpoint, 'PUT', {
+      company: 'Forbidden Company', fullName: 'Forbidden Name', cricketRole: 'Bowler'
+    }, coachToken);
+    assert.strictEqual(coachEditRes.status, 200);
+    const coachEditedPlayer = (await coachEditRes.json()).player;
+    assert.strictEqual(coachEditedPlayer.company, updatedCompany);
+    assert.strictEqual(coachEditedPlayer.fullName, 'Updated Player');
+    assert.strictEqual(coachEditedPlayer.cricketRole, 'Bowler');
+    console.log(' [PASS] Live API: creates and edits custom companies while preserving profile data and Coach permissions');
+    passed++;
+
+    const newSessionRes = await request('/api/sessions', 'POST', {
+      title: 'Editable Session', type: 'Practice', date: '2027-01-05', venue: 'Original Venue', notes: 'Original notes'
+    });
+    assert.strictEqual(newSessionRes.status, 201);
+    const newSession = (await newSessionRes.json()).session;
+    const sessionEndpoint = `/api/sessions/${newSession._id}`;
+    const rollCall = newSession.rollCall.map(entry => ({ ...entry,
+      status: entry.player === createdPlayer._id ? 'Late' : 'Not marked',
+      note: entry.player === createdPlayer._id ? 'Arrived at 9:10' : ''
+    }));
+    assert.strictEqual((await request(`${sessionEndpoint}/roll-call`, 'PUT', { rollCall }, coachToken)).status, 200);
+    const beforeEdit = await (await request(sessionEndpoint)).json();
+    const sessionUpdateRes = await request(sessionEndpoint, 'PUT', {
+      title: 'Updated Session', type: 'Match', date: '2027-01-06', venue: 'Updated Venue', notes: 'Updated notes'
+    }, coachToken);
+    assert.strictEqual(sessionUpdateRes.status, 200);
+    const afterEdit = await (await request(sessionEndpoint)).json();
+    assert.strictEqual(afterEdit.session.title, 'Updated Session');
+    assert.strictEqual(afterEdit.session.type, 'Match');
+    assert.strictEqual(afterEdit.session.date, '2027-01-06');
+    assert.strictEqual(afterEdit.session.venue, 'Updated Venue');
+    assert.strictEqual(afterEdit.session.notes, 'Updated notes');
+    assert.deepStrictEqual(afterEdit.session.rollCall, beforeEdit.session.rollCall);
+    assert.deepStrictEqual(afterEdit.stats, beforeEdit.stats);
+    console.log(' [PASS] Live API: edits session history details without losing saved attendance or notes');
+    passed++;
+
+    assert.strictEqual((await fetch(`${apiOrigin}${playerEndpoint}`, { method: 'DELETE' })).status, 401);
+    assert.strictEqual((await request(playerEndpoint, 'DELETE', undefined, coachToken)).status, 403);
+    assert.strictEqual((await request(playerEndpoint, 'DELETE')).status, 200);
+    const remainingPlayers = await (await request('/api/players')).json();
+    assert.ok(!remainingPlayers.players.some(player => player._id === createdPlayer._id));
+    const historicalProfile = await (await request(playerEndpoint)).json();
+    assert.strictEqual(historicalProfile.player.isActive, false);
+    assert.strictEqual(historicalProfile.attendanceHistory[0].status, 'Late');
+    assert.strictEqual(historicalProfile.attendanceHistory[0].note, 'Arrived at 9:10');
+    const historicalSession = await (await request(sessionEndpoint)).json();
+    assert.deepStrictEqual(historicalSession.session.rollCall, afterEdit.session.rollCall);
+    assert.strictEqual((await request(playerEndpoint, 'DELETE')).status, 404);
+    assert.strictEqual((await request('/api/players/000000000000000000000000', 'DELETE')).status, 404);
+    const futureSessionRes = await request('/api/sessions', 'POST', {
+      title: 'Future Session', type: 'Practice', date: '2027-02-05'
+    });
+    assert.strictEqual(futureSessionRes.status, 201);
+    assert.ok(!(await futureSessionRes.json()).session.rollCall.some(entry => entry.player === createdPlayer._id));
+    console.log(' [PASS] Live API: authorized player deletion removes active membership and preserves attendance history');
     passed++;
 
   } catch (liveErr) {

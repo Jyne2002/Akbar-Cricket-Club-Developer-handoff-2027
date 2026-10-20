@@ -54,10 +54,11 @@ router.get('/', authenticate, async (req, res) => {
  */
 router.get('/:id', authenticate, async (req, res) => {
   try {
-    const session = await Session.findById(req.params.id).populate('rollCall.player', 'fullName company cricketRole jerseyNumber');
+    const session = await Session.findById(req.params.id);
     if (!session) {
       return res.status(404).json({ success: false, message: 'Session not found.' });
     }
+    await session.populate('rollCall.player', 'fullName company cricketRole jerseyNumber');
 
     // Ensure all active players exist in roll call
     const allPlayers = await Player.find({ isActive: true }).select('fullName company cricketRole jerseyNumber');

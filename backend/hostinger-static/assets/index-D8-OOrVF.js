@@ -1,4 +1,4 @@
-(function(){const s=document.createElement("link").relList;if(s&&s.supports&&s.supports("modulepreload"))return;for(const i of document.querySelectorAll('link[rel="modulepreload"]'))a(i);new MutationObserver(i=>{for(const l of i)if(l.type==="childList")for(const c of l.addedNodes)c.tagName==="LINK"&&c.rel==="modulepreload"&&a(c)}).observe(document,{childList:!0,subtree:!0});function t(i){const l={};return i.integrity&&(l.integrity=i.integrity),i.referrerPolicy&&(l.referrerPolicy=i.referrerPolicy),i.crossOrigin==="use-credentials"?l.credentials="include":i.crossOrigin==="anonymous"?l.credentials="omit":l.credentials="same-origin",l}function a(i){if(i.ep)return;i.ep=!0;const l=t(i);fetch(i.href,l)}})();const y={async request(e,s={}){const t={credentials:"include",headers:{Accept:"application/json",...s.headers},...s};t.body&&!(t.body instanceof FormData)&&typeof t.body=="object"&&(t.headers["Content-Type"]="application/json",t.body=JSON.stringify(t.body));try{const a=await fetch(e,t);a.status===401&&!e.includes("/api/auth/login")&&window.dispatchEvent(new CustomEvent("auth:expired"));const i=a.headers.get("content-type");let l=null;if(i&&i.includes("application/json")?l=await a.json():l=await a.text(),!a.ok){const c=l&&l.message?l.message:`HTTP error ${a.status}`,n=new Error(c);throw n.status=a.status,n.data=l,n}return l}catch(a){throw console.error(`API Error [${e}]:`,a.message),a}},get(e){return this.request(e,{method:"GET"})},post(e,s){return this.request(e,{method:"POST",body:s})},put(e,s){return this.request(e,{method:"PUT",body:s})},delete(e){return this.request(e,{method:"DELETE"})},upload(e,s){return this.request(e,{method:"POST",body:s})}};function Oe(e,s="command-centre"){const t=e!=null&&e.name?e.name.split(" ").map(a=>a[0]).join("").slice(0,2).toUpperCase():"AC";return`
+(function(){const s=document.createElement("link").relList;if(s&&s.supports&&s.supports("modulepreload"))return;for(const l of document.querySelectorAll('link[rel="modulepreload"]'))a(l);new MutationObserver(l=>{for(const n of l)if(n.type==="childList")for(const c of n.addedNodes)c.tagName==="LINK"&&c.rel==="modulepreload"&&a(c)}).observe(document,{childList:!0,subtree:!0});function t(l){const n={};return l.integrity&&(n.integrity=l.integrity),l.referrerPolicy&&(n.referrerPolicy=l.referrerPolicy),l.crossOrigin==="use-credentials"?n.credentials="include":l.crossOrigin==="anonymous"?n.credentials="omit":n.credentials="same-origin",n}function a(l){if(l.ep)return;l.ep=!0;const n=t(l);fetch(l.href,n)}})();const y={async request(e,s={}){const t={credentials:"include",headers:{Accept:"application/json",...s.headers},...s};t.body&&!(t.body instanceof FormData)&&typeof t.body=="object"&&(t.headers["Content-Type"]="application/json",t.body=JSON.stringify(t.body));try{const a=await fetch(e,t);a.status===401&&!e.includes("/api/auth/login")&&window.dispatchEvent(new CustomEvent("auth:expired"));const l=a.headers.get("content-type");let n=null;if(l&&l.includes("application/json")?n=await a.json():n=await a.text(),!a.ok){const c=n&&n.message?n.message:`HTTP error ${a.status}`,i=new Error(c);throw i.status=a.status,i.data=n,i}return n}catch(a){throw console.error(`API Error [${e}]:`,a.message),a}},get(e){return this.request(e,{method:"GET"})},post(e,s){return this.request(e,{method:"POST",body:s})},put(e,s){return this.request(e,{method:"PUT",body:s})},delete(e){return this.request(e,{method:"DELETE"})},upload(e,s){return this.request(e,{method:"POST",body:s})}};function Ve(e,s="command-centre"){const t=e!=null&&e.name?e.name.split(" ").map(a=>a[0]).join("").slice(0,2).toUpperCase():"AC";return`
     <aside class="app-sidebar" id="app-sidebar">
       <!-- Brand & Crest -->
       <div class="sidebar-brand-box">
@@ -80,7 +80,7 @@
         </button>
       </div>
     </aside>
-  `}function Fe({title:e,breadcrumb:s="Workspace",actionButton:t=null}){const a=new Date().toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"});return`
+  `}function We({title:e,breadcrumb:s="Workspace",actionButton:t=null}){const a=new Date().toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"});return`
     <header class="app-header">
       <div class="d-flex align-items-center gap-3">
         <!-- Mobile Hamburger Toggle -->
@@ -120,17 +120,17 @@
         `:""}
       </div>
     </header>
-  `}function p(e,s="info",t=4e3){const a=document.getElementById("toast-root");if(!a)return;const i="toast-"+Date.now()+"-"+Math.floor(Math.random()*1e3);let l="bi-info-circle-fill";s==="success"?l="bi-check-circle-fill":s==="danger"||s==="error"?l="bi-exclamation-triangle-fill":s==="warning"&&(l="bi-exclamation-circle-fill");const n=`
-    <div id="${i}" class="toast align-items-center shadow-lg border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true" style="${s==="success"?"background-color: var(--success-green);":s==="danger"||s==="error"?"background-color: var(--burgundy);":s==="warning"?"background-color: var(--warning-amber); color: #fff;":"background-color: #16243a; color: #fff;"} border-radius: 8px;">
+  `}function b(e,s="info",t=4e3){const a=document.getElementById("toast-root");if(!a)return;const l="toast-"+Date.now()+"-"+Math.floor(Math.random()*1e3);let n="bi-info-circle-fill";s==="success"?n="bi-check-circle-fill":s==="danger"||s==="error"?n="bi-exclamation-triangle-fill":s==="warning"&&(n="bi-exclamation-circle-fill");const i=`
+    <div id="${l}" class="toast align-items-center shadow-lg border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true" style="${s==="success"?"background-color: var(--success-green);":s==="danger"||s==="error"?"background-color: var(--burgundy);":s==="warning"?"background-color: var(--warning-amber); color: #fff;":"background-color: #16243a; color: #fff;"} border-radius: 8px;">
       <div class="d-flex">
         <div class="toast-body d-flex align-items-center gap-2 py-2 px-3" style="font-size: 13px; font-weight: 500;">
-          <i class="bi ${l} fs-6"></i>
+          <i class="bi ${n} fs-6"></i>
           <span>${e}</span>
         </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close" onclick="document.getElementById('${i}').remove()"></button>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close" onclick="document.getElementById('${l}').remove()"></button>
       </div>
     </div>
-  `;a.insertAdjacentHTML("beforeend",n);const d=document.getElementById(i);setTimeout(()=>{d&&d.parentNode&&(d.classList.add("fade"),setTimeout(()=>d.remove(),250))},t)}function se(e,s){e.innerHTML=`
+  `;a.insertAdjacentHTML("beforeend",i);const o=document.getElementById(l);setTimeout(()=>{o&&o.parentNode&&(o.classList.add("fade"),setTimeout(()=>o.remove(),250))},t)}function ne(e,s){e.innerHTML=`
     <div class="login-split-page">
       <!-- Left Branding Panel (53% width on desktop) -->
       <div class="login-brand-panel">
@@ -255,13 +255,13 @@
         </div>
       </div>
     </div>
-  `;const t=document.getElementById("login-form"),a=document.getElementById("login-error-alert"),i=document.getElementById("login-error-text"),l=document.getElementById("login-submit-btn");t.addEventListener("submit",async c=>{c.preventDefault(),a.classList.add("d-none"),l.disabled=!0,l.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Authenticating...';const n=document.getElementById("login-email").value,d=document.getElementById("login-password").value;try{const r=await y.post("/api/auth/login",{email:n,password:d});p(`Welcome back, ${r.user.name}!`,"success"),typeof s=="function"&&s(r.user)}catch(r){i.textContent=r.message||"Authentication failed. Please verify your credentials.",a.classList.remove("d-none")}finally{l.disabled=!1,l.innerHTML='<span>Sign in to workspace</span><i class="bi bi-arrow-right ms-1"></i>'}})}async function He(e){e.innerHTML=`
+  `;const t=document.getElementById("login-form"),a=document.getElementById("login-error-alert"),l=document.getElementById("login-error-text"),n=document.getElementById("login-submit-btn");t.addEventListener("submit",async c=>{c.preventDefault(),a.classList.add("d-none"),n.disabled=!0,n.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Authenticating...';const i=document.getElementById("login-email").value,o=document.getElementById("login-password").value;try{const r=await y.post("/api/auth/login",{email:i,password:o});b(`Welcome back, ${r.user.name}!`,"success"),typeof s=="function"&&s(r.user)}catch(r){l.textContent=r.message||"Authentication failed. Please verify your credentials.",a.classList.remove("d-none")}finally{n.disabled=!1,n.innerHTML='<span>Sign in to workspace</span><i class="bi bi-arrow-right ms-1"></i>'}})}async function Ge(e){e.innerHTML=`
     <div class="d-flex justify-content-center align-items-center py-5">
       <div class="spinner-border text-danger" role="status">
         <span class="visually-hidden">Loading Command Centre...</span>
       </div>
     </div>
-  `;try{const s=await y.get("/api/command-centre"),{stats:t,attentionPanel:a,upcomingFixtures:i,topPerformers:l,recentTasks:c}=s,n=l.bestBatsmen[0],d=l.bestBowlers[0],r=l.bestFielders[0];e.innerHTML=`
+  `;try{const s=await y.get("/api/command-centre"),{stats:t,attentionPanel:a,upcomingFixtures:l,topPerformers:n,recentTasks:c}=s,i=n.bestBatsmen[0],o=n.bestBowlers[0],r=n.bestFielders[0];e.innerHTML=`
       <!-- Wide Navy Gradient Banner -->
       <div class="command-banner">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center position-relative" style="z-index: 2;">
@@ -352,22 +352,22 @@
               <a href="#/matches" class="btn btn-outline-burgundy btn-sm py-1 px-2" style="font-size: 11px;">View All</a>
             </div>
             <div class="p-3">
-              ${i&&i.length>0?`
+              ${l&&l.length>0?`
                 <div class="d-flex flex-column gap-2">
-                  ${i.map(o=>`
+                  ${l.map(d=>`
                     <div class="p-3 rounded border d-flex justify-content-between align-items-center" style="background-color: var(--body-bg); border-color: var(--border-color) !important;">
                       <div>
                         <div class="fw-bold" style="font-size: 13.5px; color: var(--text-main);">
-                          vs ${o.opponent}
+                          vs ${d.opponent}
                         </div>
                         <div class="small text-muted mt-1">
-                          <i class="bi bi-calendar3 me-1"></i>${o.date} &bull; <i class="bi bi-geo-alt me-1"></i>${o.venue||"Venue TBD"}
+                          <i class="bi bi-calendar3 me-1"></i>${d.date} &bull; <i class="bi bi-geo-alt me-1"></i>${d.venue||"Venue TBD"}
                         </div>
                       </div>
                       <div class="text-end">
-                        <span class="badge-role badge-batsman">${o.format}</span>
+                        <span class="badge-role badge-batsman">${d.format}</span>
                         <div class="mt-1">
-                          <a href="#/matches?id=${o._id}" class="small text-danger text-decoration-none fw-bold">Match Centre &rarr;</a>
+                          <a href="#/matches?id=${d._id}" class="small text-danger text-decoration-none fw-bold">Match Centre &rarr;</a>
                         </div>
                       </div>
                     </div>
@@ -450,16 +450,16 @@
               <span class="stat-label">Best Batsman</span>
               <span class="badge-role badge-batsman">Runs</span>
             </div>
-            ${n?`
-              <div class="fw-bold" style="font-size: 16px; color: var(--text-main);">${n.name}</div>
-              <div class="stat-value text-danger my-1">${n.runs} <span style="font-size: 13px; font-weight: 500; color: var(--text-muted);">runs</span></div>
-              <div class="small text-muted mb-2">${n.company}</div>
+            ${i?`
+              <div class="fw-bold" style="font-size: 16px; color: var(--text-main);">${i.name}</div>
+              <div class="stat-value text-danger my-1">${i.runs} <span style="font-size: 13px; font-weight: 500; color: var(--text-muted);">runs</span></div>
+              <div class="small text-muted mb-2">${i.company}</div>
               <div class="border-top pt-2 mt-2">
                 <div class="small text-muted fw-bold mb-1" style="font-size: 10px; text-transform: uppercase;">Top Three Contenders</div>
-                ${l.bestBatsmen.map((o,m)=>`
+                ${n.bestBatsmen.map((d,p)=>`
                   <div class="d-flex justify-content-between small py-1">
-                    <span>${m+1}. ${o.name}</span>
-                    <span class="fw-bold">${o.runs} r</span>
+                    <span>${p+1}. ${d.name}</span>
+                    <span class="fw-bold">${d.runs} r</span>
                   </div>
                 `).join("")}
               </div>
@@ -476,16 +476,16 @@
               <span class="stat-label">Best Bowler</span>
               <span class="badge-role badge-bowler">Wickets</span>
             </div>
-            ${d?`
-              <div class="fw-bold" style="font-size: 16px; color: var(--text-main);">${d.name}</div>
-              <div class="stat-value text-danger my-1">${d.wickets} <span style="font-size: 13px; font-weight: 500; color: var(--text-muted);">wickets</span></div>
-              <div class="small text-muted mb-2">${d.company}</div>
+            ${o?`
+              <div class="fw-bold" style="font-size: 16px; color: var(--text-main);">${o.name}</div>
+              <div class="stat-value text-danger my-1">${o.wickets} <span style="font-size: 13px; font-weight: 500; color: var(--text-muted);">wickets</span></div>
+              <div class="small text-muted mb-2">${o.company}</div>
               <div class="border-top pt-2 mt-2">
                 <div class="small text-muted fw-bold mb-1" style="font-size: 10px; text-transform: uppercase;">Top Three Contenders</div>
-                ${l.bestBowlers.map((o,m)=>`
+                ${n.bestBowlers.map((d,p)=>`
                   <div class="d-flex justify-content-between small py-1">
-                    <span>${m+1}. ${o.name}</span>
-                    <span class="fw-bold">${o.wickets} w</span>
+                    <span>${p+1}. ${d.name}</span>
+                    <span class="fw-bold">${d.wickets} w</span>
                   </div>
                 `).join("")}
               </div>
@@ -508,10 +508,10 @@
               <div class="small text-muted mb-2">${r.company}</div>
               <div class="border-top pt-2 mt-2">
                 <div class="small text-muted fw-bold mb-1" style="font-size: 10px; text-transform: uppercase;">Top Three Contenders</div>
-                ${l.bestFielders.map((o,m)=>`
+                ${n.bestFielders.map((d,p)=>`
                   <div class="d-flex justify-content-between small py-1">
-                    <span>${m+1}. ${o.name}</span>
-                    <span class="fw-bold">${o.fieldingPoints} pts</span>
+                    <span>${p+1}. ${d.name}</span>
+                    <span class="fw-bold">${d.fieldingPoints} pts</span>
                   </div>
                 `).join("")}
               </div>
@@ -543,13 +543,13 @@
                 </tr>
               </thead>
               <tbody>
-                ${c&&c.length>0?c.map(o=>{const m=o.priority==="Critical"?"badge bg-danger":o.priority==="High"?"badge bg-warning text-dark":"badge bg-secondary";return`
+                ${c&&c.length>0?c.map(d=>{const p=d.priority==="Critical"?"badge bg-danger":d.priority==="High"?"badge bg-warning text-dark":"badge bg-secondary";return`
                     <tr>
-                      <td class="fw-bold">${o.title}</td>
-                      <td><span class="${m}">${o.priority}</span></td>
-                      <td>${o.owner}</td>
-                      <td>${o.dueDate||"No deadline"}</td>
-                      <td><span class="badge-role">${o.status}</span></td>
+                      <td class="fw-bold">${d.title}</td>
+                      <td><span class="${p}">${d.priority}</span></td>
+                      <td>${d.owner}</td>
+                      <td>${d.dueDate||"No deadline"}</td>
+                      <td><span class="badge-role">${d.status}</span></td>
                     </tr>
                   `}).join(""):`
                   <tr>
@@ -569,7 +569,7 @@
         <p>${s.message}</p>
         <button class="btn btn-burgundy btn-sm" onclick="window.location.reload()">Retry</button>
       </div>
-    `}}let T=null;function B({title:e,contentHtml:s,footerHtml:t,onOpen:a,onClose:i}){var o,m;C();const l=document.getElementById("modal-root");if(!l)return;const c=`
+    `}}let V=null;function A({title:e,contentHtml:s,footerHtml:t,onOpen:a,onClose:l}){var d,p;B();const n=document.getElementById("modal-root");if(!n)return;const c=`
     <div id="active-custom-modal" class="modal-backdrop-custom">
       <div class="modal-dialog-custom" role="dialog" aria-modal="true">
         <div class="modal-header-custom">
@@ -589,7 +589,7 @@
         `:""}
       </div>
     </div>
-  `;l.innerHTML=c;const n=document.getElementById("active-custom-modal"),d=()=>{C(),typeof i=="function"&&i()};(o=document.getElementById("modal-close-x"))==null||o.addEventListener("click",d),(m=document.getElementById("modal-btn-cancel"))==null||m.addEventListener("click",d),n.addEventListener("click",b=>{b.target===n&&d()});const r=b=>{b.key==="Escape"&&(d(),window.removeEventListener("keydown",r))};return window.addEventListener("keydown",r),T={element:n,escHandler:r,onClose:i},typeof a=="function"&&a(n),n}function C(){T&&(window.removeEventListener("keydown",T.escHandler),T.element&&T.element.parentNode&&T.element.remove(),T=null);const e=document.getElementById("modal-root");e&&(e.innerHTML="")}let je=[],S=null;async function ze(e,s){var a,i,l,c,n;S=s;const t=["Administrator","Manager"].includes(s==null?void 0:s.role);["Administrator","Manager","Coach"].includes(s==null?void 0:s.role),e.innerHTML=`
+  `;n.innerHTML=c;const i=document.getElementById("active-custom-modal"),o=()=>{B(),typeof l=="function"&&l()};(d=document.getElementById("modal-close-x"))==null||d.addEventListener("click",o),(p=document.getElementById("modal-btn-cancel"))==null||p.addEventListener("click",o),i.addEventListener("click",m=>{m.target===i&&o()});const r=m=>{m.key==="Escape"&&(o(),window.removeEventListener("keydown",r))};return window.addEventListener("keydown",r),V={element:i,escHandler:r,onClose:l},typeof a=="function"&&a(i),i}function B(){V&&(window.removeEventListener("keydown",V.escHandler),V.element&&V.element.parentNode&&V.element.remove(),V=null);const e=document.getElementById("modal-root");e&&(e.innerHTML="")}function w(e){return String(e??"").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[s])}const Ae=["Akbar Brothers (Pvt) Ltd","Quick Tea (Pvt) Ltd","Falcon Trading (Pvt) Ltd","Land and Building (Pvt) Ltd","Ceylon Coffeeworks (Pvt) Ltd","Colombo Coffee Company (Pvt) Ltd","Glowbal Retails (Pvt) Ltd","Coffee Collective (Pvt) Ltd"];let Se=[],C=null;async function _e(e,s){var a,l,n,c,i;C=s;const t=["Administrator","Manager"].includes(s==null?void 0:s.role);["Administrator","Manager","Coach"].includes(s==null?void 0:s.role),e.innerHTML=`
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
       <div>
         <h2 class="page-title mb-1">2027 Selected Squad</h2>
@@ -651,35 +651,35 @@
         <div class="spinner-border text-danger" role="status"></div>
       </div>
     </div>
-  `,await F(),(a=document.getElementById("player-search-input"))==null||a.addEventListener("input",Ge(F,300)),(i=document.getElementById("player-company-filter"))==null||i.addEventListener("change",F),(l=document.getElementById("player-role-filter"))==null||l.addEventListener("change",F),t&&((c=document.getElementById("btn-import-squad-csv"))==null||c.addEventListener("click",We),(n=document.getElementById("btn-add-player-manual"))==null||n.addEventListener("click",()=>Ce(null)))}async function F(){var l,c,n;const e=((l=document.getElementById("player-search-input"))==null?void 0:l.value)||"",s=((c=document.getElementById("player-company-filter"))==null?void 0:c.value)||"All",t=((n=document.getElementById("player-role-filter"))==null?void 0:n.value)||"All",a=document.getElementById("players-grid-container"),i=document.getElementById("player-count-label");try{const d=new URLSearchParams;e&&d.append("search",e),s!=="All"&&d.append("company",s),t!=="All"&&d.append("cricketRole",t);const r=await y.get(`/api/players?${d.toString()}`);if(je=r.players,i&&(i.textContent=`Displaying ${r.totalCount} active squad members`),!r.players||r.players.length===0){a.innerHTML=`
+  `,await W(),(a=document.getElementById("player-search-input"))==null||a.addEventListener("input",Qe(W,300)),(l=document.getElementById("player-company-filter"))==null||l.addEventListener("change",W),(n=document.getElementById("player-role-filter"))==null||n.addEventListener("change",W),t&&((c=document.getElementById("btn-import-squad-csv"))==null||c.addEventListener("click",Xe),(i=document.getElementById("btn-add-player-manual"))==null||i.addEventListener("click",()=>ce(null)))}async function W(){var i,o,r;const e=["Administrator","Manager"].includes(C==null?void 0:C.role),s=["Administrator","Manager","Coach"].includes(C==null?void 0:C.role),t=((i=document.getElementById("player-search-input"))==null?void 0:i.value)||"",a=((o=document.getElementById("player-company-filter"))==null?void 0:o.value)||"All",l=((r=document.getElementById("player-role-filter"))==null?void 0:r.value)||"All",n=document.getElementById("players-grid-container"),c=document.getElementById("player-count-label");try{const d=new URLSearchParams;t&&d.append("search",t),a!=="All"&&d.append("company",a),l!=="All"&&d.append("cricketRole",l);const p=await y.get(`/api/players?${d.toString()}`);if(Se=p.players,c&&(c.textContent=`Displaying ${p.totalCount} active squad members`),!p.players||p.players.length===0){n.innerHTML=`
         <div class="col-12 text-center py-5 text-muted">
           <i class="bi bi-people fs-2 d-block mb-2"></i>
           No squad players match your search or filter criteria.
         </div>
-      `;return}a.innerHTML=r.players.map(o=>{const m=o.fullName.split(" ").map(u=>u[0]).join("").slice(0,2).toUpperCase(),b=o.stats||{},g=o.cricketRole==="Batsman"?"badge-batsman":o.cricketRole==="Bowler"?"badge-bowler":o.cricketRole.includes("allrounder")?"badge-allrounder":"badge-role";return`
+      `;return}n.innerHTML=p.players.map(m=>{const g=m.fullName.split(" ").map(h=>h[0]).join("").slice(0,2).toUpperCase(),u=m.stats||{},v=m.cricketRole==="Batsman"?"badge-batsman":m.cricketRole==="Bowler"?"badge-bowler":m.cricketRole.includes("allrounder")?"badge-allrounder":"badge-role";return`
         <div class="col-12 col-sm-6 col-lg-3">
-          <div class="card-custom h-100 p-3 d-flex flex-column justify-content-between player-clickable-card" data-player-id="${o._id}" style="cursor: pointer;">
+          <div class="card-custom h-100 p-3 d-flex flex-column justify-content-between player-clickable-card" data-player-id="${m._id}" style="cursor: pointer;">
             <div>
               <div class="d-flex justify-content-between align-items-start mb-3">
                 <div class="d-flex align-items-center gap-2">
                   <div class="user-avatar-initials" style="width: 40px; height: 40px; font-size: 14px;">
-                    ${m}
+                    ${g}
                   </div>
                   <div>
-                    <div class="fw-bold text-main" style="font-size: 13.5px; line-height: 1.2;">${o.fullName}</div>
-                    <div class="small text-muted" style="font-size: 11px;">${o.company}</div>
+                    <div class="fw-bold text-main" style="font-size: 13.5px; line-height: 1.2;">${w(m.fullName)}</div>
+                    <div class="small text-muted" style="font-size: 11px;">${w(m.company)}</div>
                   </div>
                 </div>
-                ${o.jerseyNumber!==null&&o.jerseyNumber!==void 0?`
+                ${m.jerseyNumber!==null&&m.jerseyNumber!==void 0?`
                   <span class="badge border" style="background: rgba(22, 36, 58, 0.05); color: var(--text-main); font-weight: 800; font-size: 12px;">
-                    #${o.jerseyNumber}
+                    #${m.jerseyNumber}
                   </span>
                 `:""}
               </div>
 
               <div class="d-flex flex-wrap gap-1 mb-3">
-                <span class="badge-role ${g}">${o.cricketRole}</span>
-                <span class="badge-role" style="font-size: 9.5px;">${o.battingHand}</span>
+                <span class="badge-role ${v}">${m.cricketRole}</span>
+                <span class="badge-role" style="font-size: 9.5px;">${m.battingHand}</span>
               </div>
             </div>
 
@@ -688,31 +688,43 @@
               <div class="row text-center g-0">
                 <div class="col-4 border-end" style="border-color: var(--border-color) !important;">
                   <div class="stat-label" style="font-size: 9.5px;">Matches</div>
-                  <div class="fw-bold text-main" style="font-size: 14px;">${b.matches||0}</div>
+                  <div class="fw-bold text-main" style="font-size: 14px;">${u.matches||0}</div>
                 </div>
                 <div class="col-4 border-end" style="border-color: var(--border-color) !important;">
                   <div class="stat-label" style="font-size: 9.5px;">Runs</div>
-                  <div class="fw-bold text-danger" style="font-size: 14px;">${b.runs||0}</div>
+                  <div class="fw-bold text-danger" style="font-size: 14px;">${u.runs||0}</div>
                 </div>
                 <div class="col-4">
                   <div class="stat-label" style="font-size: 9.5px;">Wickets</div>
-                  <div class="fw-bold text-main" style="font-size: 14px;">${b.wickets||0}</div>
+                  <div class="fw-bold text-main" style="font-size: 14px;">${u.wickets||0}</div>
                 </div>
               </div>
             </div>
+            ${s?`
+              <div class="d-flex gap-2 mt-3">
+                <button type="button" class="btn btn-sm btn-outline-burgundy btn-edit-player" data-player-id="${m._id}">
+                  <i class="bi bi-pencil me-1"></i>Edit
+                </button>
+                ${e?`
+                  <button type="button" class="btn btn-sm btn-outline-danger btn-delete-player" data-player-id="${m._id}">
+                    <i class="bi bi-trash me-1"></i>Delete
+                  </button>
+                `:""}
+              </div>
+            `:""}
           </div>
         </div>
-      `}).join(""),document.querySelectorAll(".player-clickable-card").forEach(o=>{o.addEventListener("click",()=>{const m=o.getAttribute("data-player-id");Ve(m)})})}catch(d){a.innerHTML=`<div class="col-12 alert alert-danger">${d.message}</div>`}}async function Ve(e){try{const s=await y.get(`/api/players/${e}`),{player:t,assignedEquipment:a,attendanceHistory:i}=s,l=["Administrator","Manager"].includes(S==null?void 0:S.role),c=["Administrator","Manager","Coach"].includes(S==null?void 0:S.role),n=t.stats||{},d=`
+      `}).join(""),document.querySelectorAll(".player-clickable-card").forEach(m=>{m.addEventListener("click",()=>{const g=m.getAttribute("data-player-id");Ke(g)})}),document.querySelectorAll(".btn-edit-player, .btn-delete-player").forEach(m=>{m.addEventListener("click",g=>{g.stopPropagation();const u=Se.find(v=>v._id===m.dataset.playerId);u&&(m.classList.contains("btn-edit-player")?ce(u):Pe(u))})})}catch(d){n.innerHTML=`<div class="col-12 alert alert-danger">${d.message}</div>`}}async function Ke(e){try{const s=await y.get(`/api/players/${e}`),{player:t,assignedEquipment:a,attendanceHistory:l}=s,n=["Administrator","Manager"].includes(C==null?void 0:C.role),c=["Administrator","Manager","Coach"].includes(C==null?void 0:C.role),i=t.stats||{},o=`
       <div class="row g-4">
         <!-- Cricket & Employment Overview -->
         <div class="col-md-6 border-end" style="border-color: var(--border-color) !important;">
           <div class="d-flex align-items-center gap-3 mb-3">
             <div class="user-avatar-initials" style="width: 52px; height: 52px; font-size: 18px;">
-              ${t.fullName.split(" ").map(o=>o[0]).join("").slice(0,2).toUpperCase()}
+              ${t.fullName.split(" ").map(d=>d[0]).join("").slice(0,2).toUpperCase()}
             </div>
             <div>
-              <h4 class="mb-0 text-main">${t.fullName}</h4>
-              <div class="text-muted small">${t.company}</div>
+              <h4 class="mb-0 text-main">${w(t.fullName)}</h4>
+              <div class="text-muted small">${w(t.company)}</div>
               ${t.jerseyNumber?`<span class="badge bg-danger mt-1">Jersey #${t.jerseyNumber}</span>`:""}
             </div>
           </div>
@@ -727,7 +739,7 @@
           </table>
 
           <!-- Confidential Information (Admin & Manager only) -->
-          ${l?`
+          ${n?`
             <div class="p-3 rounded border mt-3" style="background: rgba(158, 35, 50, 0.04); border-color: rgba(158, 35, 50, 0.2) !important;">
               <div class="d-flex align-items-center justify-content-between mb-2">
                 <span class="stat-label text-danger"><i class="bi bi-shield-lock-fill me-1"></i>Confidential Employment Details</span>
@@ -757,25 +769,25 @@
         <div class="col-md-6">
           <h6 class="stat-label mb-2 text-gold">2026–2027 Verified Match Statistics</h6>
           <div class="row g-2 text-center mb-3">
-            <div class="col-3"><div class="p-2 border rounded"><div class="stat-label">Matches</div><div class="fw-bold text-main">${n.matches||0}</div></div></div>
-            <div class="col-3"><div class="p-2 border rounded"><div class="stat-label">Runs</div><div class="fw-bold text-danger">${n.runs||0}</div></div></div>
-            <div class="col-3"><div class="p-2 border rounded"><div class="stat-label">Wickets</div><div class="fw-bold text-main">${n.wickets||0}</div></div></div>
-            <div class="col-3"><div class="p-2 border rounded"><div class="stat-label">Field Pts</div><div class="fw-bold text-gold">${n.fieldingPoints||0}</div></div></div>
+            <div class="col-3"><div class="p-2 border rounded"><div class="stat-label">Matches</div><div class="fw-bold text-main">${i.matches||0}</div></div></div>
+            <div class="col-3"><div class="p-2 border rounded"><div class="stat-label">Runs</div><div class="fw-bold text-danger">${i.runs||0}</div></div></div>
+            <div class="col-3"><div class="p-2 border rounded"><div class="stat-label">Wickets</div><div class="fw-bold text-main">${i.wickets||0}</div></div></div>
+            <div class="col-3"><div class="p-2 border rounded"><div class="stat-label">Field Pts</div><div class="fw-bold text-gold">${i.fieldingPoints||0}</div></div></div>
           </div>
 
           <table class="table table-sm small mb-3">
-            <tr><td class="text-muted">Balls Faced:</td><td class="fw-bold">${n.ballsFaced||0}</td><td class="text-muted">Fours / Sixes:</td><td class="fw-bold">${n.fours||0} / ${n.sixes||0}</td></tr>
-            <tr><td class="text-muted">Balls Bowled:</td><td class="fw-bold">${n.ballsBowled||0}</td><td class="text-muted">Runs Conceded:</td><td class="fw-bold">${n.runsConceded||0}</td></tr>
-            <tr><td class="text-muted">Catches:</td><td class="fw-bold">${n.catches||0}</td><td class="text-muted">Stump / Run-out:</td><td class="fw-bold">${n.stumpings||0} / ${n.runOuts||0}</td></tr>
+            <tr><td class="text-muted">Balls Faced:</td><td class="fw-bold">${i.ballsFaced||0}</td><td class="text-muted">Fours / Sixes:</td><td class="fw-bold">${i.fours||0} / ${i.sixes||0}</td></tr>
+            <tr><td class="text-muted">Balls Bowled:</td><td class="fw-bold">${i.ballsBowled||0}</td><td class="text-muted">Runs Conceded:</td><td class="fw-bold">${i.runsConceded||0}</td></tr>
+            <tr><td class="text-muted">Catches:</td><td class="fw-bold">${i.catches||0}</td><td class="text-muted">Stump / Run-out:</td><td class="fw-bold">${i.stumpings||0} / ${i.runOuts||0}</td></tr>
           </table>
 
           <h6 class="stat-label mb-2 text-gold">Assigned Club Equipment</h6>
           ${a&&a.length>0?`
             <ul class="list-group list-group-flush small mb-3">
-              ${a.map(o=>`
+              ${a.map(d=>`
                 <li class="list-group-item d-flex justify-content-between px-0 py-1 bg-transparent">
-                  <span><strong>${o.assetId}</strong> — ${o.name}</span>
-                  <span class="badge-role">${o.condition}</span>
+                  <span><strong>${d.assetId}</strong> — ${d.name}</span>
+                  <span class="badge-role">${d.condition}</span>
                 </li>
               `).join("")}
             </ul>
@@ -784,12 +796,12 @@
           `}
 
           <h6 class="stat-label mb-2 text-gold">Recent Session Attendance</h6>
-          ${i&&i.length>0?`
+          ${l&&l.length>0?`
             <div class="d-flex flex-column gap-1 small">
-              ${i.slice(0,5).map(o=>`
+              ${l.slice(0,5).map(d=>`
                 <div class="d-flex justify-content-between align-items-center py-1 border-bottom" style="border-color: var(--border-color) !important;">
-                  <span>${o.date} &bull; ${o.sessionTitle}</span>
-                  <span class="badge-status badge-status-${o.status.toLowerCase().replace(/\s+/g,"")}">${o.status}</span>
+                  <span>${d.date} &bull; ${d.sessionTitle}</span>
+                  <span class="badge-status badge-status-${d.status.toLowerCase().replace(/\s+/g,"")}">${d.status}</span>
                 </div>
               `).join("")}
             </div>
@@ -800,33 +812,35 @@
       </div>
     `,r=`
       <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>
+      ${n?`
+        <button type="button" class="btn btn-outline-danger" id="btn-delete-player-profile">
+          <i class="bi bi-trash me-1"></i>Delete Player
+        </button>
+      `:""}
       ${c?`
         <button type="button" class="btn btn-burgundy" id="btn-edit-player-profile">
           <i class="bi bi-pencil me-1"></i>Edit Profile
         </button>
       `:""}
-    `;B({title:`${t.fullName} — Squad Record`,contentHtml:d,footerHtml:r,onOpen:o=>{var m;(m=document.getElementById("btn-edit-player-profile"))==null||m.addEventListener("click",()=>{C(),Ce(t)})}})}catch(s){p(`Failed to load player details: ${s.message}`,"error")}}function Ce(e=null){var i;const s=!!e,t=["Administrator","Manager"].includes(S==null?void 0:S.role),a=`
+    `;A({title:`${w(t.fullName)} — Squad Record`,contentHtml:o,footerHtml:r,onOpen:d=>{var p,m;(p=document.getElementById("btn-delete-player-profile"))==null||p.addEventListener("click",()=>Pe(t)),(m=document.getElementById("btn-edit-player-profile"))==null||m.addEventListener("click",()=>{B(),ce(t)})}})}catch(s){b(`Failed to load player details: ${s.message}`,"error")}}function ce(e=null){var n,c,i;const s=!!e,t=["Administrator","Manager"].includes(C==null?void 0:C.role),a=!!(e!=null&&e.company)&&!Ae.includes(e.company),l=`
     <form id="player-form-dialog">
       <div class="row g-3">
         <!-- 2 Columns on desktop, 1 on mobile -->
         <div class="col-md-6">
           <label class="form-label-custom">Full Name *</label>
-          <input type="text" id="p-fullName" class="form-control-custom" value="${(e==null?void 0:e.fullName)||""}" required ${!t&&s?"readonly":""}>
+          <input type="text" id="p-fullName" class="form-control-custom" value="${w(e==null?void 0:e.fullName)}" required ${!t&&s?"readonly":""}>
         </div>
 
         <div class="col-md-6">
           <label class="form-label-custom">Company *</label>
           <select id="p-company" class="form-select-custom" ${!t&&s?"disabled":""}>
-            <option value="Akbar Brothers (Pvt) Ltd" ${(e==null?void 0:e.company)==="Akbar Brothers (Pvt) Ltd"?"selected":""}>Akbar Brothers (Pvt) Ltd</option>
-            <option value="Quick Tea (Pvt) Ltd" ${(e==null?void 0:e.company)==="Quick Tea (Pvt) Ltd"?"selected":""}>Quick Tea (Pvt) Ltd</option>
-            <option value="Falcon Trading (Pvt) Ltd" ${(e==null?void 0:e.company)==="Falcon Trading (Pvt) Ltd"?"selected":""}>Falcon Trading (Pvt) Ltd</option>
-            <option value="Land and Building (Pvt) Ltd" ${(e==null?void 0:e.company)==="Land and Building (Pvt) Ltd"?"selected":""}>Land and Building (Pvt) Ltd</option>
-            <option value="Ceylon Coffeeworks (Pvt) Ltd" ${(e==null?void 0:e.company)==="Ceylon Coffeeworks (Pvt) Ltd"?"selected":""}>Ceylon Coffeeworks (Pvt) Ltd</option>
-            <option value="Colombo Coffee Company (Pvt) Ltd" ${(e==null?void 0:e.company)==="Colombo Coffee Company (Pvt) Ltd"?"selected":""}>Colombo Coffee Company (Pvt) Ltd</option>
-            <option value="Glowbal Retails (Pvt) Ltd" ${(e==null?void 0:e.company)==="Glowbal Retails (Pvt) Ltd"?"selected":""}>Glowbal Retails (Pvt) Ltd</option>
-            <option value="Coffee Collective (Pvt) Ltd" ${(e==null?void 0:e.company)==="Coffee Collective (Pvt) Ltd"?"selected":""}>Coffee Collective (Pvt) Ltd</option>
-            <option value="Other" ${(e==null?void 0:e.company)==="Other"?"selected":""}>Other</option>
+            ${Ae.map(o=>`<option value="${o}" ${(e==null?void 0:e.company)===o?"selected":""}>${o}</option>`).join("")}
+            <option value="Other" ${a?"selected":""}>Other</option>
           </select>
+          <div id="p-company-other-group" class="mt-2 ${a?"":"d-none"}">
+            <label for="p-company-other" class="form-label-custom">Company Name *</label>
+            <input type="text" id="p-company-other" class="form-control-custom" placeholder="Enter company name" value="${w(a&&e.company!=="Other"?e.company:"")}" ${!t&&s?"disabled":""}>
+          </div>
         </div>
 
         <div class="col-md-6">
@@ -861,17 +875,17 @@
 
         <div class="col-md-6">
           <label class="form-label-custom">Bowling Style</label>
-          <input type="text" id="p-bowlingStyle" class="form-control-custom" placeholder="e.g. Off spin, Fast, Orthodox" value="${(e==null?void 0:e.bowlingStyle)||""}">
+          <input type="text" id="p-bowlingStyle" class="form-control-custom" placeholder="e.g. Off spin, Fast, Orthodox" value="${w(e==null?void 0:e.bowlingStyle)}">
         </div>
 
         <div class="col-md-6">
           <label class="form-label-custom">Jersey Number</label>
-          <input type="number" id="p-jerseyNumber" class="form-control-custom" placeholder="e.g. 7" value="${(e==null?void 0:e.jerseyNumber)||""}">
+          <input type="number" id="p-jerseyNumber" class="form-control-custom" placeholder="e.g. 7" value="${(e==null?void 0:e.jerseyNumber)??""}">
         </div>
 
         <div class="col-md-6">
           <label class="form-label-custom">Technical Notes</label>
-          <input type="text" id="p-notes" class="form-control-custom" placeholder="Coaching or matchday notes" value="${(e==null?void 0:e.notes)||""}">
+          <input type="text" id="p-notes" class="form-control-custom" placeholder="Coaching or matchday notes" value="${w(e==null?void 0:e.notes)}">
         </div>
 
         ${t?`
@@ -881,47 +895,59 @@
 
           <div class="col-md-6">
             <label class="form-label-custom">Phone Number</label>
-            <input type="text" id="p-phone" class="form-control-custom" value="${(e==null?void 0:e.phone)||""}">
+            <input type="text" id="p-phone" class="form-control-custom" value="${w(e==null?void 0:e.phone)}">
           </div>
 
           <div class="col-md-6">
             <label class="form-label-custom">Work Email</label>
-            <input type="email" id="p-workEmail" class="form-control-custom" value="${(e==null?void 0:e.workEmail)||""}">
+            <input type="email" id="p-workEmail" class="form-control-custom" value="${w(e==null?void 0:e.workEmail)}">
           </div>
 
           <div class="col-md-6">
             <label class="form-label-custom">EPF / Employee Number (Preserves leading 0s)</label>
-            <input type="text" id="p-epfNumber" class="form-control-custom" value="${(e==null?void 0:e.epfNumber)||""}">
+            <input type="text" id="p-epfNumber" class="form-control-custom" value="${w(e==null?void 0:e.epfNumber)}">
           </div>
 
           <div class="col-md-6">
             <label class="form-label-custom">National Identity Card (NIC - Encrypted)</label>
-            <input type="text" id="p-nic" class="form-control-custom" placeholder="NIC number will be encrypted at rest" value="${(e==null?void 0:e.nic)||""}">
+            <input type="text" id="p-nic" class="form-control-custom" placeholder="NIC number will be encrypted at rest" value="${w(e==null?void 0:e.nic)}">
           </div>
 
           <div class="col-md-6">
             <label class="form-label-custom">Joining Date</label>
-            <input type="date" id="p-joiningDate" class="form-control-custom" value="${(e==null?void 0:e.joiningDate)||""}">
+            <input type="date" id="p-joiningDate" class="form-control-custom" value="${w(e==null?void 0:e.joiningDate)}">
           </div>
 
           <div class="col-md-6">
             <label class="form-label-custom">Worksite Location</label>
-            <input type="text" id="p-worksite" class="form-control-custom" value="${(e==null?void 0:e.worksite)||""}">
+            <input type="text" id="p-worksite" class="form-control-custom" value="${w(e==null?void 0:e.worksite)}">
           </div>
 
           <div class="col-md-6">
             <label class="form-label-custom">HOD / Reporting Manager</label>
-            <input type="text" id="p-reportingManager" class="form-control-custom" value="${(e==null?void 0:e.reportingManager)||""}">
+            <input type="text" id="p-reportingManager" class="form-control-custom" value="${w(e==null?void 0:e.reportingManager)}">
           </div>
 
           <div class="col-md-6">
-            <label class="form-label-custom">Emergency Contact Name & Phone</label>
-            <input type="text" id="p-emergencyContact" class="form-control-custom" placeholder="Name, Phone, Relationship" value="${(i=e==null?void 0:e.emergencyContact)!=null&&i.name?`${e.emergencyContact.name} - ${e.emergencyContact.phone} (${e.emergencyContact.relationship})`:""}">
+            <label class="form-label-custom">Emergency Contact Name</label>
+            <input type="text" id="p-emergencyContactName" class="form-control-custom" value="${w((n=e==null?void 0:e.emergencyContact)==null?void 0:n.name)}">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-custom">Emergency Contact Phone</label>
+            <input type="text" id="p-emergencyContactPhone" class="form-control-custom" value="${w((c=e==null?void 0:e.emergencyContact)==null?void 0:c.phone)}">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-custom">Emergency Contact Relationship</label>
+            <input type="text" id="p-emergencyContactRelationship" class="form-control-custom" value="${w((i=e==null?void 0:e.emergencyContact)==null?void 0:i.relationship)}">
           </div>
         `:""}
       </div>
     </form>
-  `;B({title:s?`Edit ${e.fullName}`:"Add Squad Member",contentHtml:a,onOpen:l=>{var c;(c=document.getElementById("modal-btn-save"))==null||c.addEventListener("click",async()=>{var r,o,m,b,g,u,v,h,f,w,x,k,I,$,N;const n=(r=document.getElementById("p-fullName"))==null?void 0:r.value;if(!n||!n.trim()){p("Full name is required.","error");return}const d={fullName:n,company:(o=document.getElementById("p-company"))==null?void 0:o.value,cricketRole:(m=document.getElementById("p-cricketRole"))==null?void 0:m.value,battingHand:(b=document.getElementById("p-battingHand"))==null?void 0:b.value,bowlingArm:(g=document.getElementById("p-bowlingArm"))==null?void 0:g.value,bowlingStyle:(u=document.getElementById("p-bowlingStyle"))==null?void 0:u.value,jerseyNumber:(v=document.getElementById("p-jerseyNumber"))==null?void 0:v.value,notes:(h=document.getElementById("p-notes"))==null?void 0:h.value};t&&(d.phone=(f=document.getElementById("p-phone"))==null?void 0:f.value,d.workEmail=(w=document.getElementById("p-workEmail"))==null?void 0:w.value,d.epfNumber=(x=document.getElementById("p-epfNumber"))==null?void 0:x.value,d.nic=(k=document.getElementById("p-nic"))==null?void 0:k.value,d.joiningDate=(I=document.getElementById("p-joiningDate"))==null?void 0:I.value,d.worksite=($=document.getElementById("p-worksite"))==null?void 0:$.value,d.reportingManager=(N=document.getElementById("p-reportingManager"))==null?void 0:N.value);try{s?(await y.put(`/api/players/${e._id}`,d),p(`Updated profile for ${n}.`,"success")):(await y.post("/api/players",d),p(`Player ${n} registered to 2027 squad.`,"success")),C(),F()}catch(D){p(`Error: ${D.message}`,"error")}})}})}function We(){B({title:"Import Squad Register (CSV)",contentHtml:`
+  `;A({title:s?`Edit ${w(e.fullName)}`:"Add Squad Member",contentHtml:l,onOpen:o=>{const r=o.querySelector("#p-company"),d=o.querySelector("#p-company-other"),p=()=>{const g=r.value==="Other";o.querySelector("#p-company-other-group").classList.toggle("d-none",!g),d.required=g&&t,d.disabled=!g||!t};r.addEventListener("change",p),p();const m=o.querySelector("#modal-btn-save");m==null||m.addEventListener("click",async()=>{var h,f,$,x,I,S,E,_,R,N,D,O,H,F,j,z,K;const g=(h=document.getElementById("p-fullName"))==null?void 0:h.value;if(!g||!g.trim()){b("Full name is required.","error");return}const u=r.value==="Other"?t?d.value.trim():e.company:r.value;if(t&&!u){b("Please enter the company name.","error"),d.focus();return}if(!o.querySelector("#player-form-dialog").reportValidity())return;const v={fullName:g,company:u,cricketRole:(f=document.getElementById("p-cricketRole"))==null?void 0:f.value,battingHand:($=document.getElementById("p-battingHand"))==null?void 0:$.value,bowlingArm:(x=document.getElementById("p-bowlingArm"))==null?void 0:x.value,bowlingStyle:(I=document.getElementById("p-bowlingStyle"))==null?void 0:I.value,jerseyNumber:(S=document.getElementById("p-jerseyNumber"))==null?void 0:S.value,notes:(E=document.getElementById("p-notes"))==null?void 0:E.value};t&&(v.phone=(_=document.getElementById("p-phone"))==null?void 0:_.value,v.workEmail=(R=document.getElementById("p-workEmail"))==null?void 0:R.value,v.epfNumber=(N=document.getElementById("p-epfNumber"))==null?void 0:N.value,v.nic=(D=document.getElementById("p-nic"))==null?void 0:D.value,v.joiningDate=(O=document.getElementById("p-joiningDate"))==null?void 0:O.value,v.worksite=(H=document.getElementById("p-worksite"))==null?void 0:H.value,v.reportingManager=(F=document.getElementById("p-reportingManager"))==null?void 0:F.value,v.emergencyContact={name:(j=document.getElementById("p-emergencyContactName"))==null?void 0:j.value,phone:(z=document.getElementById("p-emergencyContactPhone"))==null?void 0:z.value,relationship:(K=document.getElementById("p-emergencyContactRelationship"))==null?void 0:K.value}),m.disabled=!0;try{s?(await y.put(`/api/players/${e._id}`,v),b(`Updated profile for ${g}.`,"success")):(await y.post("/api/players",v),b(`Player ${g} registered to 2027 squad.`,"success")),B(),W()}catch(oe){b(`Error: ${oe.message}`,"error")}finally{m.disabled=!1}})}})}function Pe(e){A({title:"Delete Player",contentHtml:`<p>Delete <strong>${w(e.fullName)}</strong> from the active squad?</p>
+      <p class="small text-muted mb-0">Existing attendance, match, and equipment records will be retained.</p>`,footerHtml:`
+      <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Cancel</button>
+      <button type="button" class="btn btn-danger" id="btn-confirm-delete-player">Delete Player</button>
+    `,onOpen:s=>{const t=s.querySelector("#btn-confirm-delete-player");t.addEventListener("click",async()=>{t.disabled=!0;try{await y.delete(`/api/players/${e._id}`),b(`Player ${e.fullName} removed from the active squad.`,"success"),B(),await W()}catch(a){b(`Failed to delete player: ${a.message}`,"error"),t.disabled=!1}})}})}function Xe(){A({title:"Import Squad Register (CSV)",contentHtml:`
     <div>
       <p class="small text-muted mb-3">
         Upload a squad CSV file. Existing players are matched by full name and their records updated without erasing existing details. New players are automatically created. Leading zeros in EPF/employee numbers are strictly preserved.
@@ -947,12 +973,12 @@
   `,footerHtml:`
       <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>
       <button type="button" class="btn btn-burgundy" id="btn-submit-csv-import">Start Import</button>
-    `,onOpen:s=>{var t;(t=document.getElementById("btn-submit-csv-import"))==null||t.addEventListener("click",async()=>{const a=document.getElementById("csv-import-file-input");if(!a||!a.files||a.files.length===0){p("Please select a CSV file to upload.","error");return}const i=new FormData;i.append("csvFile",a.files[0]);const l=document.getElementById("btn-submit-csv-import");l.disabled=!0,l.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Processing...';const c=document.getElementById("import-results-box");try{const n=await y.upload("/api/players/import-csv",i);c.className="mt-3 p-3 rounded bg-success bg-opacity-10 border border-success small",c.innerHTML=`
-            <div class="fw-bold text-success mb-1"><i class="bi bi-check-circle-fill me-1"></i>${n.message}</div>
-            <div>New players created: <strong>${n.createdCount}</strong></div>
-            <div>Existing players updated: <strong>${n.updatedCount}</strong></div>
-            ${n.errors&&n.errors.length>0?`<div class="text-danger mt-1">Warnings: ${n.errors.join("; ")}</div>`:""}
-          `,c.classList.remove("d-none"),p("CSV squad import successful!","success"),F()}catch(n){c.className="mt-3 p-3 rounded bg-danger bg-opacity-10 border border-danger small text-danger",c.innerHTML=`<i class="bi bi-exclamation-triangle-fill me-1"></i>${n.message}`,c.classList.remove("d-none"),p(`Import error: ${n.message}`,"error")}finally{l.disabled=!1,l.innerHTML="Start Import"}})}})}function Ge(e,s){let t;return function(...a){clearTimeout(t),t=setTimeout(()=>e.apply(this,a),s)}}let J=[],q=null;async function _e(e,s){var a,i,l,c,n;q=s;const t=["Administrator","Manager","Coach"].includes(q==null?void 0:q.role);e.innerHTML=`
+    `,onOpen:s=>{var t;(t=document.getElementById("btn-submit-csv-import"))==null||t.addEventListener("click",async()=>{const a=document.getElementById("csv-import-file-input");if(!a||!a.files||a.files.length===0){b("Please select a CSV file to upload.","error");return}const l=new FormData;l.append("csvFile",a.files[0]);const n=document.getElementById("btn-submit-csv-import");n.disabled=!0,n.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Processing...';const c=document.getElementById("import-results-box");try{const i=await y.upload("/api/players/import-csv",l);c.className="mt-3 p-3 rounded bg-success bg-opacity-10 border border-success small",c.innerHTML=`
+            <div class="fw-bold text-success mb-1"><i class="bi bi-check-circle-fill me-1"></i>${i.message}</div>
+            <div>New players created: <strong>${i.createdCount}</strong></div>
+            <div>Existing players updated: <strong>${i.updatedCount}</strong></div>
+            ${i.errors&&i.errors.length>0?`<div class="text-danger mt-1">Warnings: ${i.errors.join("; ")}</div>`:""}
+          `,c.classList.remove("d-none"),b("CSV squad import successful!","success"),W()}catch(i){c.className="mt-3 p-3 rounded bg-danger bg-opacity-10 border border-danger small text-danger",c.innerHTML=`<i class="bi bi-exclamation-triangle-fill me-1"></i>${i.message}`,c.classList.remove("d-none"),b(`Import error: ${i.message}`,"error")}finally{n.disabled=!1,n.innerHTML="Start Import"}})}})}function Qe(e,s){let t;return function(...a){clearTimeout(t),t=setTimeout(()=>e.apply(this,a),s)}}let U=[],T=null;async function Je(e,s){var a,l,n,c,i;T=s;const t=["Administrator","Manager","Coach"].includes(T==null?void 0:T.role);e.innerHTML=`
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
       <div>
         <h2 class="page-title mb-1">Practice & Attendance</h2>
@@ -1026,34 +1052,39 @@
         </div>
       </div>
     </div>
-  `,await V(),(a=document.getElementById("attendance-search"))==null||a.addEventListener("input",Qe(V,300)),(i=document.getElementById("attendance-type-filter"))==null||i.addEventListener("change",V),(l=document.getElementById("btn-export-attendance-csv"))==null||l.addEventListener("click",()=>{window.location.href="/api/reports/attendance/csv"}),(c=document.getElementById("btn-print-attendance"))==null||c.addEventListener("click",()=>{window.print()}),t&&((n=document.getElementById("btn-create-session"))==null||n.addEventListener("click",Xe))}async function V(){var a,i;const e=((a=document.getElementById("attendance-search"))==null?void 0:a.value)||"",s=((i=document.getElementById("attendance-type-filter"))==null?void 0:i.value)||"All",t=document.getElementById("sessions-tbody");try{const l=new URLSearchParams;if(e&&l.append("search",e),s!=="All"&&l.append("type",s),J=(await y.get(`/api/sessions?${l.toString()}`)).sessions,!J||J.length===0){t.innerHTML=`
+  `,await Z(),(a=document.getElementById("attendance-search"))==null||a.addEventListener("input",Ye(Z,300)),(l=document.getElementById("attendance-type-filter"))==null||l.addEventListener("change",Z),(n=document.getElementById("btn-export-attendance-csv"))==null||n.addEventListener("click",()=>{window.location.href="/api/reports/attendance/csv"}),(c=document.getElementById("btn-print-attendance"))==null||c.addEventListener("click",()=>{window.print()}),t&&((i=document.getElementById("btn-create-session"))==null||i.addEventListener("click",()=>Me()))}async function Z(){var l,n;const e=["Administrator","Manager","Coach"].includes(T==null?void 0:T.role),s=((l=document.getElementById("attendance-search"))==null?void 0:l.value)||"",t=((n=document.getElementById("attendance-type-filter"))==null?void 0:n.value)||"All",a=document.getElementById("sessions-tbody");try{const c=new URLSearchParams;if(s&&c.append("search",s),t!=="All"&&c.append("type",t),U=(await y.get(`/api/sessions?${c.toString()}`)).sessions,!U||U.length===0){a.innerHTML=`
         <tr>
           <td colspan="6" class="text-center py-4 text-muted">
             No training or match sessions found.
           </td>
         </tr>
-      `;return}t.innerHTML=J.map(n=>{const d=n.type==="Match"?"badge-bowler":"badge-batsman",r=n.rateDisplay!=="—"?"color: var(--success-green); font-weight: 700;":"color: var(--text-muted);";return`
+      `;return}a.innerHTML=U.map(o=>{const r=o.type==="Match"?"badge-bowler":"badge-batsman",d=o.rateDisplay!=="—"?"color: var(--success-green); font-weight: 700;":"color: var(--text-muted);";return`
         <tr>
-          <td class="text-nowrap fw-bold">${n.date}</td>
+          <td class="text-nowrap fw-bold">${o.date}</td>
           <td>
-            <div class="fw-bold text-main" style="font-size: 13.5px;">${n.title}</div>
-            <div class="small text-muted">${n.venue||"No venue specified"}</div>
+            <div class="fw-bold text-main" style="font-size: 13.5px;">${w(o.title)}</div>
+            <div class="small text-muted">${w(o.venue||"No venue specified")}</div>
           </td>
-          <td><span class="badge-role ${d}">${n.type}</span></td>
-          <td style="${r}; font-size: 14px;">${n.rateDisplay}</td>
-          <td><span class="badge-role">${n.completionText}</span></td>
+          <td><span class="badge-role ${r}">${o.type}</span></td>
+          <td style="${d}; font-size: 14px;">${o.rateDisplay}</td>
+          <td><span class="badge-role">${o.completionText}</span></td>
           <td class="text-end">
-            <button class="btn btn-sm btn-burgundy py-1 px-3 btn-open-rollcall" data-session-id="${n.id}">
+            ${e?`
+              <button type="button" class="btn btn-sm btn-outline-burgundy py-1 px-3 btn-edit-session" data-session-id="${o.id}">
+                <i class="bi bi-pencil me-1"></i>Edit Session
+              </button>
+            `:""}
+            <button class="btn btn-sm btn-burgundy py-1 px-3 btn-open-rollcall" data-session-id="${o.id}">
               <i class="bi bi-person-check me-1"></i>Roll Call
             </button>
           </td>
         </tr>
-      `}).join(""),document.querySelectorAll(".btn-open-rollcall").forEach(n=>{n.addEventListener("click",()=>{const d=n.getAttribute("data-session-id");Ke(d)})})}catch(l){t.innerHTML=`<tr><td colspan="6" class="alert alert-danger">${l.message}</td></tr>`}}async function Ke(e){try{const s=await y.get(`/api/sessions/${e}`),{session:t,stats:a}=s,i=["Administrator","Manager","Coach"].includes(q==null?void 0:q.role),l=["Not marked","Attended","Late","Absent","Excused"],c=`
+      `}).join(""),document.querySelectorAll(".btn-open-rollcall").forEach(o=>{o.addEventListener("click",()=>{const r=o.getAttribute("data-session-id");Ue(r)})}),document.querySelectorAll(".btn-edit-session").forEach(o=>{o.addEventListener("click",()=>{const r=U.find(d=>d.id===o.dataset.sessionId);r&&Me(r)})})}catch(c){a.innerHTML=`<tr><td colspan="6" class="alert alert-danger">${c.message}</td></tr>`}}async function Ue(e){try{const s=await y.get(`/api/sessions/${e}`),{session:t,stats:a}=s,l=["Administrator","Manager","Coach"].includes(T==null?void 0:T.role),n=["Not marked","Attended","Late","Absent","Excused"],c=`
       <div>
         <div class="d-flex justify-content-between align-items-center mb-3 p-3 rounded" style="background: var(--body-bg); border: 1px solid var(--border-color);">
           <div>
-            <h5 class="mb-1 text-main fw-bold">${t.title}</h5>
-            <div class="small text-muted"><i class="bi bi-calendar3 me-1"></i>${t.date} &bull; <i class="bi bi-geo-alt me-1"></i>${t.venue||"Venue TBD"}</div>
+            <h5 class="mb-1 text-main fw-bold">${w(t.title)}</h5>
+            <div class="small text-muted"><i class="bi bi-calendar3 me-1"></i>${t.date} &bull; <i class="bi bi-geo-alt me-1"></i>${w(t.venue||"Venue TBD")}</div>
           </div>
           <div class="text-end">
             <div class="stat-label">Current Attendance Rate</div>
@@ -1064,7 +1095,7 @@
           </div>
         </div>
 
-        ${i?`
+        ${l?`
           <div class="d-flex justify-content-between align-items-center mb-3">
             <button type="button" class="btn btn-outline-burgundy btn-sm" id="btn-set-all-attended">
               <i class="bi bi-check-all me-1"></i>Set all Attended
@@ -1086,19 +1117,19 @@
               </tr>
             </thead>
             <tbody id="rollcall-table-body">
-              ${(t.rollCall||[]).map(n=>{const d=n.player||{};return`
-                  <tr data-player-id="${d._id}">
-                    <td class="fw-bold text-main">${d.fullName||"Unknown"}</td>
-                    <td class="small text-muted">${d.company||"—"}</td>
+              ${(t.rollCall||[]).map(i=>{const o=i.player||{};return`
+                  <tr data-player-id="${o._id}">
+                    <td class="fw-bold text-main">${w(o.fullName||"Unknown")}</td>
+                    <td class="small text-muted">${w(o.company||"—")}</td>
                     <td style="width: 170px;">
-                      <select class="form-select-custom rollcall-status-select" ${i?"":"disabled"}>
-                        ${l.map(r=>`
-                          <option value="${r}" ${n.status===r?"selected":""}>${r}</option>
+                      <select class="form-select-custom rollcall-status-select" ${l?"":"disabled"}>
+                        ${n.map(r=>`
+                          <option value="${r}" ${i.status===r?"selected":""}>${r}</option>
                         `).join("")}
                       </select>
                     </td>
                     <td>
-                      <input type="text" class="form-control-custom rollcall-note-input" placeholder="Optional note..." value="${n.note||""}" ${i?"":"readonly"}>
+                      <input type="text" class="form-control-custom rollcall-note-input" placeholder="Optional note..." value="${w(i.note)}" ${l?"":"readonly"}>
                     </td>
                   </tr>
                 `}).join("")}
@@ -1106,38 +1137,38 @@
           </table>
         </div>
       </div>
-    `;B({title:"Session Roll Call",contentHtml:c,footerHtml:`
+    `;A({title:"Session Roll Call",contentHtml:c,footerHtml:`
         <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>
-        ${i?'<button type="button" class="btn btn-burgundy" id="btn-save-roll-call">Save Roll Call</button>':""}
-      `,onOpen:n=>{var r,o;const d=()=>{const m=n.querySelectorAll(".rollcall-status-select");let b=0,g=0,u=0,v=0,h=0;m.forEach(I=>{I.value==="Attended"?b++:I.value==="Late"?g++:I.value==="Absent"?u++:I.value==="Excused"?v++:h++});const f=b+g+u+v,w=f>0?Math.round((b+g)/f*1e3)/10:null,x=document.getElementById("modal-attendance-rate"),k=document.getElementById("modal-marked-summary");x&&(x.textContent=w!==null?`${w}%`:"—"),k&&(k.textContent=`${f}/${m.length} players marked`)};n.querySelectorAll(".rollcall-status-select").forEach(m=>{m.addEventListener("change",d)}),(r=document.getElementById("btn-set-all-attended"))==null||r.addEventListener("click",()=>{n.querySelectorAll(".rollcall-status-select").forEach(m=>{m.value="Attended"}),d(),p("All squad players set to Attended.","info")}),(o=document.getElementById("btn-save-roll-call"))==null||o.addEventListener("click",async()=>{const m=n.querySelectorAll("#rollcall-table-body tr"),b=[];m.forEach(g=>{var f,w;const u=g.getAttribute("data-player-id"),v=((f=g.querySelector(".rollcall-status-select"))==null?void 0:f.value)||"Not marked",h=((w=g.querySelector(".rollcall-note-input"))==null?void 0:w.value)||"";b.push({player:u,status:v,note:h})});try{await y.put(`/api/sessions/${t._id}/roll-call`,{rollCall:b}),p("Roll call saved successfully!","success"),C(),V()}catch(g){p(`Failed to save roll call: ${g.message}`,"error")}})}})}catch(s){p(`Error: ${s.message}`,"error")}}function Xe(){const e=`
+        ${l?'<button type="button" class="btn btn-burgundy" id="btn-save-roll-call">Save Roll Call</button>':""}
+      `,onOpen:i=>{var r,d;const o=()=>{const p=i.querySelectorAll(".rollcall-status-select");let m=0,g=0,u=0,v=0,h=0;p.forEach(S=>{S.value==="Attended"?m++:S.value==="Late"?g++:S.value==="Absent"?u++:S.value==="Excused"?v++:h++});const f=m+g+u+v,$=f>0?Math.round((m+g)/f*1e3)/10:null,x=document.getElementById("modal-attendance-rate"),I=document.getElementById("modal-marked-summary");x&&(x.textContent=$!==null?`${$}%`:"—"),I&&(I.textContent=`${f}/${p.length} players marked`)};i.querySelectorAll(".rollcall-status-select").forEach(p=>{p.addEventListener("change",o)}),(r=document.getElementById("btn-set-all-attended"))==null||r.addEventListener("click",()=>{i.querySelectorAll(".rollcall-status-select").forEach(p=>{p.value="Attended"}),o(),b("All squad players set to Attended.","info")}),(d=document.getElementById("btn-save-roll-call"))==null||d.addEventListener("click",async()=>{const p=i.querySelectorAll("#rollcall-table-body tr"),m=[];p.forEach(g=>{var f,$;const u=g.getAttribute("data-player-id"),v=((f=g.querySelector(".rollcall-status-select"))==null?void 0:f.value)||"Not marked",h=(($=g.querySelector(".rollcall-note-input"))==null?void 0:$.value)||"";m.push({player:u,status:v,note:h})});try{await y.put(`/api/sessions/${t._id}/roll-call`,{rollCall:m}),b("Roll call saved successfully!","success"),B(),Z()}catch(g){b(`Failed to save roll call: ${g.message}`,"error")}})}})}catch(s){b(`Error: ${s.message}`,"error")}}function Me(e=null){const s=!!e,t=`
     <form id="create-session-form">
       <div class="row g-3">
         <div class="col-12">
           <label class="form-label-custom">Session Title *</label>
-          <input type="text" id="s-title" class="form-control-custom" placeholder="e.g. NCC Indoor Practice - Nets" required>
+          <input type="text" id="s-title" class="form-control-custom" placeholder="e.g. NCC Indoor Practice - Nets" value="${w(e==null?void 0:e.title)}" required>
         </div>
         <div class="col-md-6">
           <label class="form-label-custom">Session Type *</label>
           <select id="s-type" class="form-select-custom">
-            <option value="Practice">Practice</option>
-            <option value="Match">Match Attendance</option>
+            <option value="Practice" ${(e==null?void 0:e.type)==="Practice"?"selected":""}>Practice</option>
+            <option value="Match" ${(e==null?void 0:e.type)==="Match"?"selected":""}>Match Attendance</option>
           </select>
         </div>
         <div class="col-md-6">
           <label class="form-label-custom">Date *</label>
-          <input type="date" id="s-date" class="form-control-custom" value="${new Date().toISOString().split("T")[0]}" required>
+          <input type="date" id="s-date" class="form-control-custom" value="${w((e==null?void 0:e.date)||new Date().toISOString().split("T")[0])}" required>
         </div>
         <div class="col-12">
           <label class="form-label-custom">Venue</label>
-          <input type="text" id="s-venue" class="form-control-custom" placeholder="e.g. Oval Indoor Nets (MCA SPL)">
+          <input type="text" id="s-venue" class="form-control-custom" placeholder="e.g. Oval Indoor Nets (MCA SPL)" value="${w(e==null?void 0:e.venue)}">
         </div>
         <div class="col-12">
           <label class="form-label-custom">Operational Notes</label>
-          <textarea id="s-notes" class="form-control-custom" rows="2" placeholder="Specific training drills, equipment requirements..."></textarea>
+          <textarea id="s-notes" class="form-control-custom" rows="2" placeholder="Specific training drills, equipment requirements...">${w(e==null?void 0:e.notes)}</textarea>
         </div>
       </div>
     </form>
-  `;B({title:"Schedule Practice or Match Attendance",contentHtml:e,onOpen:s=>{var t;(t=document.getElementById("modal-btn-save"))==null||t.addEventListener("click",async()=>{var d,r,o,m,b;const a=(d=document.getElementById("s-title"))==null?void 0:d.value,i=(r=document.getElementById("s-type"))==null?void 0:r.value,l=(o=document.getElementById("s-date"))==null?void 0:o.value,c=(m=document.getElementById("s-venue"))==null?void 0:m.value,n=(b=document.getElementById("s-notes"))==null?void 0:b.value;if(!a||!l){p("Title and date are required.","error");return}try{await y.post("/api/sessions",{title:a,type:i,date:l,venue:c,notes:n}),p(`Session "${a}" scheduled.`,"success"),C(),V()}catch(g){p(`Error: ${g.message}`,"error")}})}})}function Qe(e,s){let t;return function(...a){clearTimeout(t),t=setTimeout(()=>e.apply(this,a),s)}}let Y=[],R=null;async function Ue(e,s){var l,c,n,d,r;R=s;const t=["Administrator","Manager","Coach"].includes(R==null?void 0:R.role);e.innerHTML=`
+  `;A({title:s?"Edit Session Details":"Schedule Practice or Match Attendance",contentHtml:t,onOpen:a=>{const l=a.querySelector("#modal-btn-save");l==null||l.addEventListener("click",async()=>{var d,p,m,g,u;const n=(d=document.getElementById("s-title"))==null?void 0:d.value.trim(),c=(p=document.getElementById("s-type"))==null?void 0:p.value,i=(m=document.getElementById("s-date"))==null?void 0:m.value,o=(g=document.getElementById("s-venue"))==null?void 0:g.value,r=(u=document.getElementById("s-notes"))==null?void 0:u.value;if(!n||!i){b("Title and date are required.","error");return}if(a.querySelector("#create-session-form").reportValidity()){l.disabled=!0;try{s?await y.put(`/api/sessions/${e.id}`,{title:n,type:c,date:i,venue:o,notes:r}):await y.post("/api/sessions",{title:n,type:c,date:i,venue:o,notes:r}),b(`Session "${n}" ${s?"updated":"scheduled"}.`,"success"),B(),Z()}catch(v){b(`Error: ${v.message}`,"error")}finally{l.disabled=!1}}})}})}function Ye(e,s){let t;return function(...a){clearTimeout(t),t=setTimeout(()=>e.apply(this,a),s)}}let ee=[],G=null;async function Ze(e,s){var n,c,i,o,r;G=s;const t=["Administrator","Manager","Coach"].includes(G==null?void 0:G.role);e.innerHTML=`
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
       <div>
         <h2 class="page-title mb-1">MCA Match Centre</h2>
@@ -1214,38 +1245,38 @@
         </div>
       </div>
     </div>
-  `,await j(),(l=document.getElementById("match-search"))==null||l.addEventListener("input",Ye(j,300)),(c=document.getElementById("match-format-filter"))==null||c.addEventListener("change",j),(n=document.getElementById("btn-export-matches-csv"))==null||n.addEventListener("click",()=>{window.location.href="/api/reports/matches/csv"}),(d=document.getElementById("btn-print-matches"))==null||d.addEventListener("click",()=>{window.print()}),t&&((r=document.getElementById("btn-create-fixture"))==null||r.addEventListener("click",Je));const i=new URLSearchParams(window.location.hash.split("?")[1]||"").get("id");i&&Be(i)}async function j(){var a,i;const e=((a=document.getElementById("match-search"))==null?void 0:a.value)||"",s=((i=document.getElementById("match-format-filter"))==null?void 0:i.value)||"All",t=document.getElementById("matches-tbody");try{const l=new URLSearchParams;if(e&&l.append("search",e),s!=="All"&&l.append("format",s),Y=(await y.get(`/api/matches?${l.toString()}`)).matches,!Y||Y.length===0){t.innerHTML=`
+  `,await J(),(n=document.getElementById("match-search"))==null||n.addEventListener("input",tt(J,300)),(c=document.getElementById("match-format-filter"))==null||c.addEventListener("change",J),(i=document.getElementById("btn-export-matches-csv"))==null||i.addEventListener("click",()=>{window.location.href="/api/reports/matches/csv"}),(o=document.getElementById("btn-print-matches"))==null||o.addEventListener("click",()=>{window.print()}),t&&((r=document.getElementById("btn-create-fixture"))==null||r.addEventListener("click",et));const l=new URLSearchParams(window.location.hash.split("?")[1]||"").get("id");l&&Te(l)}async function J(){var a,l;const e=((a=document.getElementById("match-search"))==null?void 0:a.value)||"",s=((l=document.getElementById("match-format-filter"))==null?void 0:l.value)||"All",t=document.getElementById("matches-tbody");try{const n=new URLSearchParams;if(e&&n.append("search",e),s!=="All"&&n.append("format",s),ee=(await y.get(`/api/matches?${n.toString()}`)).matches,!ee||ee.length===0){t.innerHTML=`
         <tr>
           <td colspan="7" class="text-center py-4 text-muted">
             No MCA fixtures logged. Click "Log MCA Fixture" to add scheduled matches.
           </td>
         </tr>
-      `;return}t.innerHTML=Y.map(n=>{const d=n.result==="Win"?"badge bg-success":n.result==="Loss"?"badge bg-danger":n.result==="Pending"?"badge bg-warning text-dark":"badge bg-secondary",r=n.ourScore||n.oppositionScore?`<div class="fw-bold">${n.ourScore||"—"}</div><div class="small text-muted">Opp: ${n.oppositionScore||"—"}</div>`:'<span class="text-muted small">Scores pending</span>';return`
+      `;return}t.innerHTML=ee.map(i=>{const o=i.result==="Win"?"badge bg-success":i.result==="Loss"?"badge bg-danger":i.result==="Pending"?"badge bg-warning text-dark":"badge bg-secondary",r=i.ourScore||i.oppositionScore?`<div class="fw-bold">${i.ourScore||"—"}</div><div class="small text-muted">Opp: ${i.oppositionScore||"—"}</div>`:'<span class="text-muted small">Scores pending</span>';return`
         <tr>
           <td>
-            <div class="fw-bold text-main" style="font-size: 13.5px;">vs ${n.opponent}</div>
-            <div class="small text-muted">${n.competition}</div>
+            <div class="fw-bold text-main" style="font-size: 13.5px;">vs ${i.opponent}</div>
+            <div class="small text-muted">${i.competition}</div>
           </td>
           <td>
-            <div class="fw-bold">${n.date}</div>
-            <div class="small text-muted">${n.venue||"Venue TBD"}</div>
+            <div class="fw-bold">${i.date}</div>
+            <div class="small text-muted">${i.venue||"Venue TBD"}</div>
           </td>
-          <td><span class="badge-role badge-batsman">${n.format}</span></td>
-          <td><span class="${d}">${n.result}</span></td>
+          <td><span class="badge-role badge-batsman">${i.format}</span></td>
+          <td><span class="${o}">${i.result}</span></td>
           <td>${r}</td>
           <td>
-            <span class="badge-role ${n.scorecardCount>0?"bg-info bg-opacity-10 text-primary border":""}">
-              <i class="bi bi-paperclip me-1"></i>${n.scorecardCount} file(s)
+            <span class="badge-role ${i.scorecardCount>0?"bg-info bg-opacity-10 text-primary border":""}">
+              <i class="bi bi-paperclip me-1"></i>${i.scorecardCount} file(s)
             </span>
-            ${n.scoresVerified?'<span class="badge bg-success ms-1" style="font-size: 9px;"><i class="bi bi-check2"></i> Verified</span>':""}
+            ${i.scoresVerified?'<span class="badge bg-success ms-1" style="font-size: 9px;"><i class="bi bi-check2"></i> Verified</span>':""}
           </td>
           <td class="text-end">
-            <button class="btn btn-sm btn-burgundy py-1 px-3 btn-open-match" data-match-id="${n.id}">
+            <button class="btn btn-sm btn-burgundy py-1 px-3 btn-open-match" data-match-id="${i.id}">
               <span>Open match</span> &rarr;
             </button>
           </td>
         </tr>
-      `}).join(""),document.querySelectorAll(".btn-open-match").forEach(n=>{n.addEventListener("click",()=>{const d=n.getAttribute("data-match-id");Be(d)})})}catch(l){t.innerHTML=`<tr><td colspan="7" class="alert alert-danger">${l.message}</td></tr>`}}async function Be(e){try{const s=await y.get(`/api/matches/${e}`),{match:t,attendanceSummary:a}=s,i=["Administrator","Manager","Coach"].includes(R==null?void 0:R.role),l=t.playingXI||[],c=l.filter(d=>d.status==="Playing XI").length,n=`
+      `}).join(""),document.querySelectorAll(".btn-open-match").forEach(i=>{i.addEventListener("click",()=>{const o=i.getAttribute("data-match-id");Te(o)})})}catch(n){t.innerHTML=`<tr><td colspan="7" class="alert alert-danger">${n.message}</td></tr>`}}async function Te(e){try{const s=await y.get(`/api/matches/${e}`),{match:t,attendanceSummary:a}=s,l=["Administrator","Manager","Coach"].includes(G==null?void 0:G.role),n=t.playingXI||[],c=n.filter(o=>o.status==="Playing XI").length,i=`
       <div>
         <!-- Match Header Info Card -->
         <div class="p-3 rounded mb-3" style="background: var(--body-bg); border: 1px solid var(--border-color);">
@@ -1308,16 +1339,16 @@
                   </tr>
                 </thead>
                 <tbody id="playing-xi-tbody">
-                  ${l.map(d=>{const r=d.player||{};return`
+                  ${n.map(o=>{const r=o.player||{};return`
                       <tr data-px-player-id="${r._id}">
                         <td class="fw-bold">${r.fullName||"Unknown"}</td>
                         <td><span class="badge-role">${r.cricketRole||"Not set"}</span></td>
                         <td class="small text-muted">${r.company||"—"}</td>
                         <td>
-                          <select class="form-select-custom px-status-select" ${i?"":"disabled"}>
-                            <option value="Playing XI" ${d.status==="Playing XI"?"selected":""}>Playing XI</option>
-                            <option value="Reserve" ${d.status==="Reserve"?"selected":""}>Reserve</option>
-                            <option value="Unavailable" ${d.status==="Unavailable"?"selected":""}>Unavailable</option>
+                          <select class="form-select-custom px-status-select" ${l?"":"disabled"}>
+                            <option value="Playing XI" ${o.status==="Playing XI"?"selected":""}>Playing XI</option>
+                            <option value="Reserve" ${o.status==="Reserve"?"selected":""}>Reserve</option>
+                            <option value="Unavailable" ${o.status==="Unavailable"?"selected":""}>Unavailable</option>
                           </select>
                         </td>
                       </tr>
@@ -1326,7 +1357,7 @@
               </table>
             </div>
 
-            ${i?`
+            ${l?`
               <div class="mt-3 text-end">
                 <button type="button" class="btn btn-burgundy btn-sm" id="btn-save-playing-xi">
                   Save Playing XI
@@ -1358,9 +1389,9 @@
               <div class="mb-3">
                 <div class="stat-label mb-1">Attached Scorecard Documents</div>
                 <div class="d-flex flex-wrap gap-2">
-                  ${t.scorecards.map(d=>`
-                    <a href="/api/uploads/${d.filename}" target="_blank" class="badge bg-light text-dark border p-2 text-decoration-none">
-                      <i class="bi bi-file-earmark-text me-1 text-danger"></i>${d.originalName} (${Math.round(d.size/1024)} KB)
+                  ${t.scorecards.map(o=>`
+                    <a href="/api/uploads/${o.filename}" target="_blank" class="badge bg-light text-dark border p-2 text-decoration-none">
+                      <i class="bi bi-file-earmark-text me-1 text-danger"></i>${o.originalName} (${Math.round(o.size/1024)} KB)
                     </a>
                   `).join("")}
                 </div>
@@ -1400,30 +1431,30 @@
                   </tr>
                 </thead>
                 <tbody id="score-review-tbody">
-                  ${(t.playerStats&&t.playerStats.length>0?t.playerStats:l.filter(d=>d.status==="Playing XI").map(d=>{var r;return{player:d.player,playerName:((r=d.player)==null?void 0:r.fullName)||"Player",batted:!0,runs:0,balls:0,fours:0,sixes:0,notOut:!1,ballsBowled:0,runsConceded:0,wickets:0,catches:0,stumpings:0,runOuts:0}})).map((d,r)=>{var b,g;const o=((b=d.player)==null?void 0:b._id)||d.player,m=d.playerName||((g=d.player)==null?void 0:g.fullName)||"Player";return`
-                      <tr data-stat-player-id="${o}">
+                  ${(t.playerStats&&t.playerStats.length>0?t.playerStats:n.filter(o=>o.status==="Playing XI").map(o=>{var r;return{player:o.player,playerName:((r=o.player)==null?void 0:r.fullName)||"Player",batted:!0,runs:0,balls:0,fours:0,sixes:0,notOut:!1,ballsBowled:0,runsConceded:0,wickets:0,catches:0,stumpings:0,runOuts:0}})).map((o,r)=>{var m,g;const d=((m=o.player)==null?void 0:m._id)||o.player,p=o.playerName||((g=o.player)==null?void 0:g.fullName)||"Player";return`
+                      <tr data-stat-player-id="${d}">
                         <td><input type="checkbox" class="form-check-input stat-include" checked></td>
-                        <td class="fw-bold">${m}</td>
-                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-runs" style="width: 50px;" value="${d.runs||0}"></td>
-                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-balls" style="width: 50px;" value="${d.balls||0}"></td>
+                        <td class="fw-bold">${p}</td>
+                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-runs" style="width: 50px;" value="${o.runs||0}"></td>
+                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-balls" style="width: 50px;" value="${o.balls||0}"></td>
                         <td>
                           <div class="d-flex gap-1">
-                            <input type="number" class="form-control-custom py-1 px-1 text-center stat-4s" style="width: 35px;" value="${d.fours||0}">
-                            <input type="number" class="form-control-custom py-1 px-1 text-center stat-6s" style="width: 35px;" value="${d.sixes||0}">
+                            <input type="number" class="form-control-custom py-1 px-1 text-center stat-4s" style="width: 35px;" value="${o.fours||0}">
+                            <input type="number" class="form-control-custom py-1 px-1 text-center stat-6s" style="width: 35px;" value="${o.sixes||0}">
                           </div>
                         </td>
                         <td>
                           <div class="d-flex gap-2">
-                            <label><input type="checkbox" class="form-check-input stat-batted" ${d.batted?"checked":""}> Bat</label>
-                            <label><input type="checkbox" class="form-check-input stat-notout" ${d.notOut?"checked":""}> NO</label>
+                            <label><input type="checkbox" class="form-check-input stat-batted" ${o.batted?"checked":""}> Bat</label>
+                            <label><input type="checkbox" class="form-check-input stat-notout" ${o.notOut?"checked":""}> NO</label>
                           </div>
                         </td>
-                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-ballsbowled" title="Total balls bowled (e.g. 24 balls = 4.0 overs)" style="width: 55px;" value="${d.ballsBowled||0}"></td>
-                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-runsconceded" style="width: 50px;" value="${d.runsConceded||0}"></td>
-                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-wickets" style="width: 45px;" value="${d.wickets||0}"></td>
-                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-catches" style="width: 40px;" value="${d.catches||0}"></td>
-                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-stumpings" style="width: 40px;" value="${d.stumpings||0}"></td>
-                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-runouts" style="width: 40px;" value="${d.runOuts||0}"></td>
+                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-ballsbowled" title="Total balls bowled (e.g. 24 balls = 4.0 overs)" style="width: 55px;" value="${o.ballsBowled||0}"></td>
+                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-runsconceded" style="width: 50px;" value="${o.runsConceded||0}"></td>
+                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-wickets" style="width: 45px;" value="${o.wickets||0}"></td>
+                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-catches" style="width: 40px;" value="${o.catches||0}"></td>
+                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-stumpings" style="width: 40px;" value="${o.stumpings||0}"></td>
+                        <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-runouts" style="width: 40px;" value="${o.runOuts||0}"></td>
                       </tr>
                     `}).join("")}
                 </tbody>
@@ -1451,7 +1482,7 @@
                 </select>
               </div>
               <div class="col-md-3 d-flex align-items-end">
-                ${i?`
+                ${l?`
                   <button type="button" class="btn btn-burgundy w-100" id="btn-confirm-verified-scores">
                     <i class="bi bi-shield-check me-1"></i>Confirm Verified Scores
                   </button>
@@ -1476,7 +1507,7 @@
           </div>
         </div>
       </div>
-    `;B({title:`Match Control: vs ${t.opponent}`,contentHtml:n,footerHtml:'<button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>',onOpen:d=>{var m,b,g;const r=d.querySelectorAll('[data-bs-toggle="pill"]');r.forEach(u=>{u.addEventListener("click",v=>{r.forEach(f=>f.classList.remove("active")),d.querySelectorAll(".tab-pane").forEach(f=>f.classList.remove("show","active")),u.classList.add("active");const h=d.querySelector(u.getAttribute("data-bs-target"));h&&h.classList.add("show","active")})});const o=()=>{const u=d.querySelectorAll(".px-status-select");let v=0;u.forEach(f=>{f.value==="Playing XI"&&v++});const h=document.getElementById("playing-xi-counter");h&&(h.textContent=`${v} / 11 Selected`,h.className=v>11?"badge bg-danger":v===11?"badge bg-success":"badge bg-warning text-dark")};d.querySelectorAll(".px-status-select").forEach(u=>{u.addEventListener("change",o)}),(m=document.getElementById("btn-save-playing-xi"))==null||m.addEventListener("click",async()=>{const u=d.querySelectorAll("#playing-xi-tbody tr"),v=[];let h=0;if(u.forEach(f=>{var k;const w=f.getAttribute("data-px-player-id"),x=((k=f.querySelector(".px-status-select"))==null?void 0:k.value)||"Unavailable";x==="Playing XI"&&h++,v.push({playerId:w,status:x})}),h>11){p(`At most 11 players allowed in Playing XI. Selected ${h}.`,"error");return}try{await y.put(`/api/matches/${t._id}/playing-xi`,{selections:v}),p(`Playing XI saved (${h} selected in starting XI).`,"success"),j()}catch(f){p(`Error: ${f.message}`,"error")}}),(b=document.getElementById("btn-upload-scorecard-action"))==null||b.addEventListener("click",async()=>{const u=document.getElementById("scorecard-file-input");if(!u||!u.files||u.files.length===0){p("Please select a PDF or CSV scorecard file to upload.","error");return}const v=new FormData;v.append("scorecardFile",u.files[0]);const h=document.getElementById("btn-upload-scorecard-action");h.disabled=!0,h.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Parsing...';try{const f=await y.upload(`/api/matches/${t._id}/scorecard`,v);if(p(f.message,"success"),f.fileType==="csv"&&f.matched){const w=document.getElementById("score-review-tbody");w&&(w.innerHTML=f.matched.map(x=>`
+    `;A({title:`Match Control: vs ${t.opponent}`,contentHtml:i,footerHtml:'<button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>',onOpen:o=>{var p,m,g;const r=o.querySelectorAll('[data-bs-toggle="pill"]');r.forEach(u=>{u.addEventListener("click",v=>{r.forEach(f=>f.classList.remove("active")),o.querySelectorAll(".tab-pane").forEach(f=>f.classList.remove("show","active")),u.classList.add("active");const h=o.querySelector(u.getAttribute("data-bs-target"));h&&h.classList.add("show","active")})});const d=()=>{const u=o.querySelectorAll(".px-status-select");let v=0;u.forEach(f=>{f.value==="Playing XI"&&v++});const h=document.getElementById("playing-xi-counter");h&&(h.textContent=`${v} / 11 Selected`,h.className=v>11?"badge bg-danger":v===11?"badge bg-success":"badge bg-warning text-dark")};o.querySelectorAll(".px-status-select").forEach(u=>{u.addEventListener("change",d)}),(p=document.getElementById("btn-save-playing-xi"))==null||p.addEventListener("click",async()=>{const u=o.querySelectorAll("#playing-xi-tbody tr"),v=[];let h=0;if(u.forEach(f=>{var I;const $=f.getAttribute("data-px-player-id"),x=((I=f.querySelector(".px-status-select"))==null?void 0:I.value)||"Unavailable";x==="Playing XI"&&h++,v.push({playerId:$,status:x})}),h>11){b(`At most 11 players allowed in Playing XI. Selected ${h}.`,"error");return}try{await y.put(`/api/matches/${t._id}/playing-xi`,{selections:v}),b(`Playing XI saved (${h} selected in starting XI).`,"success"),J()}catch(f){b(`Error: ${f.message}`,"error")}}),(m=document.getElementById("btn-upload-scorecard-action"))==null||m.addEventListener("click",async()=>{const u=document.getElementById("scorecard-file-input");if(!u||!u.files||u.files.length===0){b("Please select a PDF or CSV scorecard file to upload.","error");return}const v=new FormData;v.append("scorecardFile",u.files[0]);const h=document.getElementById("btn-upload-scorecard-action");h.disabled=!0,h.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Parsing...';try{const f=await y.upload(`/api/matches/${t._id}/scorecard`,v);if(b(f.message,"success"),f.fileType==="csv"&&f.matched){const $=document.getElementById("score-review-tbody");$&&($.innerHTML=f.matched.map(x=>`
                   <tr data-stat-player-id="${x.player}">
                     <td><input type="checkbox" class="form-check-input stat-include" checked></td>
                     <td class="fw-bold">${x.playerName}</td>
@@ -1501,7 +1532,7 @@
                     <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-stumpings" style="width: 40px;" value="${x.stumpings}"></td>
                     <td><input type="number" class="form-control-custom py-1 px-1 text-center stat-runouts" style="width: 40px;" value="${x.runOuts}"></td>
                   </tr>
-                `).join("")),f.unmatched&&f.unmatched.length>0&&p(`Warning: ${f.unmatched.length} player(s) in CSV could not be matched to squad register.`,"warning")}else if(f.fileType==="pdf"){const w=document.getElementById("pdf-extracted-box"),x=document.getElementById("pdf-text-content");w&&x&&(x.textContent=f.extractedText||"No plain text found (scanned image PDF).",w.classList.remove("d-none"))}}catch(f){p(`Upload failed: ${f.message}`,"error")}finally{h.disabled=!1,h.innerHTML='<i class="bi bi-cloud-arrow-up me-1"></i>Upload & Preview'}}),(g=document.getElementById("btn-confirm-verified-scores"))==null||g.addEventListener("click",async()=>{var x,k,I;const u=d.querySelectorAll("#score-review-tbody tr"),v=[];u.forEach($=>{var me,ue,pe,be,ve,ge,fe,ye,he,xe,we,$e,Ee,ke;if(!((me=$.querySelector(".stat-include"))==null?void 0:me.checked))return;const D=$.getAttribute("data-stat-player-id"),W=(ue=$.querySelector("td:nth-child(2)"))==null?void 0:ue.textContent.trim(),G=parseInt(((pe=$.querySelector(".stat-runs"))==null?void 0:pe.value)||0,10),_=parseInt(((be=$.querySelector(".stat-balls"))==null?void 0:be.value)||0,10),K=parseInt(((ve=$.querySelector(".stat-4s"))==null?void 0:ve.value)||0,10),X=parseInt(((ge=$.querySelector(".stat-6s"))==null?void 0:ge.value)||0,10),Q=(fe=$.querySelector(".stat-batted"))==null?void 0:fe.checked,U=(ye=$.querySelector(".stat-notout"))==null?void 0:ye.checked,le=parseInt(((he=$.querySelector(".stat-ballsbowled"))==null?void 0:he.value)||0,10),Te=parseInt(((xe=$.querySelector(".stat-runsconceded"))==null?void 0:xe.value)||0,10),qe=parseInt(((we=$.querySelector(".stat-wickets"))==null?void 0:we.value)||0,10),Re=parseInt((($e=$.querySelector(".stat-catches"))==null?void 0:$e.value)||0,10),Ne=parseInt(((Ee=$.querySelector(".stat-stumpings"))==null?void 0:Ee.value)||0,10),De=parseInt(((ke=$.querySelector(".stat-runouts"))==null?void 0:ke.value)||0,10);v.push({player:D,playerName:W,batted:Q,notOut:U,runs:G,balls:_,fours:K,sixes:X,ballsBowled:le,runsConceded:Te,wickets:qe,catches:Re,stumpings:Ne,runOuts:De})});const h=(x=document.getElementById("m-ourScore"))==null?void 0:x.value,f=(k=document.getElementById("m-oppScore"))==null?void 0:k.value,w=(I=document.getElementById("m-result"))==null?void 0:I.value;try{await y.post(`/api/matches/${t._id}/verify-scores`,{playerStats:v,ourScore:h,oppositionScore:f,result:w}),p("Official match scores confirmed and season leaderboards updated!","success"),C(),j()}catch($){p(`Verification failed: ${$.message}`,"error")}})}})}catch(s){p(`Failed to open match details: ${s.message}`,"error")}}function Je(){const e=`
+                `).join("")),f.unmatched&&f.unmatched.length>0&&b(`Warning: ${f.unmatched.length} player(s) in CSV could not be matched to squad register.`,"warning")}else if(f.fileType==="pdf"){const $=document.getElementById("pdf-extracted-box"),x=document.getElementById("pdf-text-content");$&&x&&(x.textContent=f.extractedText||"No plain text found (scanned image PDF).",$.classList.remove("d-none"))}}catch(f){b(`Upload failed: ${f.message}`,"error")}finally{h.disabled=!1,h.innerHTML='<i class="bi bi-cloud-arrow-up me-1"></i>Upload & Preview'}}),(g=document.getElementById("btn-confirm-verified-scores"))==null||g.addEventListener("click",async()=>{var x,I,S;const u=o.querySelectorAll("#score-review-tbody tr"),v=[];u.forEach(E=>{var be,ve,ge,fe,ye,he,xe,we,$e,Ee,ke,Ie,Ce,Be;if(!((be=E.querySelector(".stat-include"))==null?void 0:be.checked))return;const R=E.getAttribute("data-stat-player-id"),N=(ve=E.querySelector("td:nth-child(2)"))==null?void 0:ve.textContent.trim(),D=parseInt(((ge=E.querySelector(".stat-runs"))==null?void 0:ge.value)||0,10),O=parseInt(((fe=E.querySelector(".stat-balls"))==null?void 0:fe.value)||0,10),H=parseInt(((ye=E.querySelector(".stat-4s"))==null?void 0:ye.value)||0,10),F=parseInt(((he=E.querySelector(".stat-6s"))==null?void 0:he.value)||0,10),j=(xe=E.querySelector(".stat-batted"))==null?void 0:xe.checked,z=(we=E.querySelector(".stat-notout"))==null?void 0:we.checked,K=parseInt((($e=E.querySelector(".stat-ballsbowled"))==null?void 0:$e.value)||0,10),oe=parseInt(((Ee=E.querySelector(".stat-runsconceded"))==null?void 0:Ee.value)||0,10),He=parseInt(((ke=E.querySelector(".stat-wickets"))==null?void 0:ke.value)||0,10),Fe=parseInt(((Ie=E.querySelector(".stat-catches"))==null?void 0:Ie.value)||0,10),je=parseInt(((Ce=E.querySelector(".stat-stumpings"))==null?void 0:Ce.value)||0,10),ze=parseInt(((Be=E.querySelector(".stat-runouts"))==null?void 0:Be.value)||0,10);v.push({player:R,playerName:N,batted:j,notOut:z,runs:D,balls:O,fours:H,sixes:F,ballsBowled:K,runsConceded:oe,wickets:He,catches:Fe,stumpings:je,runOuts:ze})});const h=(x=document.getElementById("m-ourScore"))==null?void 0:x.value,f=(I=document.getElementById("m-oppScore"))==null?void 0:I.value,$=(S=document.getElementById("m-result"))==null?void 0:S.value;try{await y.post(`/api/matches/${t._id}/verify-scores`,{playerStats:v,ourScore:h,oppositionScore:f,result:$}),b("Official match scores confirmed and season leaderboards updated!","success"),B(),J()}catch(E){b(`Verification failed: ${E.message}`,"error")}})}})}catch(s){b(`Failed to open match details: ${s.message}`,"error")}}function et(){const e=`
     <form id="create-fixture-form">
       <div class="row g-3">
         <div class="col-md-6">
@@ -1545,7 +1576,7 @@
         </div>
       </div>
     </form>
-  `;B({title:"Log Official MCA League Fixture",contentHtml:e,onOpen:s=>{var t;(t=document.getElementById("modal-btn-save"))==null||t.addEventListener("click",async()=>{var o,m,b,g,u,v,h;const a=(o=document.getElementById("m-opponent"))==null?void 0:o.value,i=(m=document.getElementById("m-competition"))==null?void 0:m.value,l=(b=document.getElementById("m-date"))==null?void 0:b.value,c=(g=document.getElementById("m-format"))==null?void 0:g.value,n=(u=document.getElementById("m-result-init"))==null?void 0:u.value,d=(v=document.getElementById("m-venue"))==null?void 0:v.value,r=(h=document.getElementById("m-notes"))==null?void 0:h.value;if(!a||!l){p("Opponent and date are required.","error");return}try{await y.post("/api/matches",{opponent:a,competition:i,date:l,format:c,result:n,venue:d,notes:r}),p(`Fixture vs ${a} created with linked attendance session.`,"success"),C(),j()}catch(f){p(`Error: ${f.message}`,"error")}})}})}function Ye(e,s){let t;return function(...a){clearTimeout(t),t=setTimeout(()=>e.apply(this,a),s)}}async function Ze(e){var s,t,a;e.innerHTML=`
+  `;A({title:"Log Official MCA League Fixture",contentHtml:e,onOpen:s=>{var t;(t=document.getElementById("modal-btn-save"))==null||t.addEventListener("click",async()=>{var d,p,m,g,u,v,h;const a=(d=document.getElementById("m-opponent"))==null?void 0:d.value,l=(p=document.getElementById("m-competition"))==null?void 0:p.value,n=(m=document.getElementById("m-date"))==null?void 0:m.value,c=(g=document.getElementById("m-format"))==null?void 0:g.value,i=(u=document.getElementById("m-result-init"))==null?void 0:u.value,o=(v=document.getElementById("m-venue"))==null?void 0:v.value,r=(h=document.getElementById("m-notes"))==null?void 0:h.value;if(!a||!n){b("Opponent and date are required.","error");return}try{await y.post("/api/matches",{opponent:a,competition:l,date:n,format:c,result:i,venue:o,notes:r}),b(`Fixture vs ${a} created with linked attendance session.`,"success"),B(),J()}catch(f){b(`Error: ${f.message}`,"error")}})}})}function tt(e,s){let t;return function(...a){clearTimeout(t),t=setTimeout(()=>e.apply(this,a),s)}}async function st(e){var s,t,a;e.innerHTML=`
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
       <div>
         <h2 class="page-title mb-1">Player Leaderboards</h2>
@@ -1649,7 +1680,7 @@
         </div>
       </div>
     </div>
-  `,await Ie(),(s=document.getElementById("btn-apply-lead-filters"))==null||s.addEventListener("click",Ie),(t=document.getElementById("btn-export-leaderboard-csv"))==null||t.addEventListener("click",()=>{window.location.href="/api/leaderboards/export-csv"}),(a=document.getElementById("btn-print-leaderboard"))==null||a.addEventListener("click",()=>{window.print()})}async function Ie(){var l,c,n;const e=((l=document.getElementById("lead-season-filter"))==null?void 0:l.value)||"All",s=((c=document.getElementById("lead-comp-filter"))==null?void 0:c.value)||"All",t=((n=document.getElementById("lead-format-filter"))==null?void 0:n.value)||"All",a=document.getElementById("leaderboard-cards-container"),i=document.getElementById("leaderboard-tbody");try{const d=new URLSearchParams;e!=="All"&&d.append("season",e),s!=="All"&&d.append("competition",s),t!=="All"&&d.append("format",t);const r=await y.get(`/api/leaderboards?${d.toString()}`),{topBatsmen:o,topBowlers:m,topFielders:b,tableData:g}=r;if(a.innerHTML=`
+  `,await Le(),(s=document.getElementById("btn-apply-lead-filters"))==null||s.addEventListener("click",Le),(t=document.getElementById("btn-export-leaderboard-csv"))==null||t.addEventListener("click",()=>{window.location.href="/api/leaderboards/export-csv"}),(a=document.getElementById("btn-print-leaderboard"))==null||a.addEventListener("click",()=>{window.print()})}async function Le(){var n,c,i;const e=((n=document.getElementById("lead-season-filter"))==null?void 0:n.value)||"All",s=((c=document.getElementById("lead-comp-filter"))==null?void 0:c.value)||"All",t=((i=document.getElementById("lead-format-filter"))==null?void 0:i.value)||"All",a=document.getElementById("leaderboard-cards-container"),l=document.getElementById("leaderboard-tbody");try{const o=new URLSearchParams;e!=="All"&&o.append("season",e),s!=="All"&&o.append("competition",s),t!=="All"&&o.append("format",t);const r=await y.get(`/api/leaderboards?${o.toString()}`),{topBatsmen:d,topBowlers:p,topFielders:m,tableData:g}=r;if(a.innerHTML=`
       <!-- Best Batsmen Card -->
       <div class="col-md-4">
         <div class="card-custom h-100 p-3">
@@ -1657,15 +1688,15 @@
             <span class="stat-label">Best Batsman</span>
             <span class="badge-role badge-batsman">Runs & SR</span>
           </div>
-          ${o&&o.length>0?`
+          ${d&&d.length>0?`
             <div class="mb-3">
-              <div class="fw-bold text-main fs-5">${o[0].playerName}</div>
-              <div class="stat-value text-danger my-1">${o[0].runs} <span class="small text-muted fs-6">runs</span></div>
-              <div class="small text-muted">SR: ${o[0].batSR} &bull; Avg: ${o[0].batAvg!==null?o[0].batAvg:"—"}</div>
+              <div class="fw-bold text-main fs-5">${d[0].playerName}</div>
+              <div class="stat-value text-danger my-1">${d[0].runs} <span class="small text-muted fs-6">runs</span></div>
+              <div class="small text-muted">SR: ${d[0].batSR} &bull; Avg: ${d[0].batAvg!==null?d[0].batAvg:"—"}</div>
             </div>
             <div class="border-top pt-2">
               <div class="stat-label mb-2" style="font-size: 10px;">Top Five Batsmen</div>
-              ${o.map((u,v)=>`
+              ${d.map((u,v)=>`
                 <div class="d-flex justify-content-between align-items-center small py-1 ${v===0?"fw-bold":""}">
                   <span>${v+1}. ${u.playerName}</span>
                   <span>${u.runs} r <span class="text-muted" style="font-size: 10px;">(SR ${u.batSR})</span></span>
@@ -1685,15 +1716,15 @@
             <span class="stat-label">Best Bowler</span>
             <span class="badge-role badge-bowler">Wickets & Econ</span>
           </div>
-          ${m&&m.length>0?`
+          ${p&&p.length>0?`
             <div class="mb-3">
-              <div class="fw-bold text-main fs-5">${m[0].playerName}</div>
-              <div class="stat-value text-danger my-1">${m[0].wickets} <span class="small text-muted fs-6">wickets</span></div>
-              <div class="small text-muted">Econ: ${m[0].economy!==null?m[0].economy:"—"} &bull; Balls: ${m[0].ballsBowled}</div>
+              <div class="fw-bold text-main fs-5">${p[0].playerName}</div>
+              <div class="stat-value text-danger my-1">${p[0].wickets} <span class="small text-muted fs-6">wickets</span></div>
+              <div class="small text-muted">Econ: ${p[0].economy!==null?p[0].economy:"—"} &bull; Balls: ${p[0].ballsBowled}</div>
             </div>
             <div class="border-top pt-2">
               <div class="stat-label mb-2" style="font-size: 10px;">Top Five Bowlers</div>
-              ${m.map((u,v)=>`
+              ${p.map((u,v)=>`
                 <div class="d-flex justify-content-between align-items-center small py-1 ${v===0?"fw-bold":""}">
                   <span>${v+1}. ${u.playerName}</span>
                   <span>${u.wickets} w <span class="text-muted" style="font-size: 10px;">(E ${u.economy!==null?u.economy:"—"})</span></span>
@@ -1713,15 +1744,15 @@
             <span class="stat-label">Best Fielder</span>
             <span class="badge-role badge-allrounder">Points & Catches</span>
           </div>
-          ${b&&b.length>0?`
+          ${m&&m.length>0?`
             <div class="mb-3">
-              <div class="fw-bold text-main fs-5">${b[0].playerName}</div>
-              <div class="stat-value text-gold my-1">${b[0].fieldingPoints} <span class="small text-muted fs-6">points</span></div>
-              <div class="small text-muted">Catches: ${b[0].catches} &bull; Stump: ${b[0].stumpings} &bull; RO: ${b[0].runOuts}</div>
+              <div class="fw-bold text-main fs-5">${m[0].playerName}</div>
+              <div class="stat-value text-gold my-1">${m[0].fieldingPoints} <span class="small text-muted fs-6">points</span></div>
+              <div class="small text-muted">Catches: ${m[0].catches} &bull; Stump: ${m[0].stumpings} &bull; RO: ${m[0].runOuts}</div>
             </div>
             <div class="border-top pt-2">
               <div class="stat-label mb-2" style="font-size: 10px;">Top Five Fielders</div>
-              ${b.map((u,v)=>`
+              ${m.map((u,v)=>`
                 <div class="d-flex justify-content-between align-items-center small py-1 ${v===0?"fw-bold":""}">
                   <span>${v+1}. ${u.playerName}</span>
                   <span>${u.fieldingPoints} pts <span class="text-muted" style="font-size: 10px;">(${u.catches} c)</span></span>
@@ -1733,7 +1764,7 @@
           `}
         </div>
       </div>
-    `,!g||g.length===0){i.innerHTML='<tr><td colspan="12" class="text-center py-4 text-muted">No squad statistics found.</td></tr>';return}i.innerHTML=g.map(u=>`
+    `,!g||g.length===0){l.innerHTML='<tr><td colspan="12" class="text-center py-4 text-muted">No squad statistics found.</td></tr>';return}l.innerHTML=g.map(u=>`
       <tr>
         <td class="fw-bold text-main">${u.playerName}</td>
         <td class="small text-muted">${u.company}</td>
@@ -1748,7 +1779,7 @@
         <td class="text-center">${u.runOuts}</td>
         <td class="text-center fw-bold text-gold">${u.fieldingPoints}</td>
       </tr>
-    `).join("")}catch(d){a.innerHTML=`<div class="col-12 alert alert-danger">${d.message}</div>`}}let O=[],M=null;async function et(e,s){var a,i,l,c,n;M=s;const t=["Administrator","Manager","Coach"].includes(M==null?void 0:M.role);e.innerHTML=`
+    `).join("")}catch(o){a.innerHTML=`<div class="col-12 alert alert-danger">${o.message}</div>`}}let X=[],q=null;async function at(e,s){var a,l,n,c,i;q=s;const t=["Administrator","Manager","Coach"].includes(q==null?void 0:q.role);e.innerHTML=`
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
       <div>
         <h2 class="page-title mb-1">Gear & Inventory</h2>
@@ -1877,40 +1908,40 @@
         </div>
       </div>
     </div>
-  `,await Promise.all([oe(),H()]),(a=document.getElementById("inventory-search"))==null||a.addEventListener("input",st(H,300)),(i=document.getElementById("inventory-category-filter"))==null||i.addEventListener("change",H),(l=document.getElementById("inventory-condition-filter"))==null||l.addEventListener("change",H),(c=document.getElementById("btn-export-inventory-csv"))==null||c.addEventListener("click",()=>{window.location.href="/api/reports/equipment/csv"}),t&&((n=document.getElementById("btn-add-inventory-item"))==null||n.addEventListener("click",()=>Ae(null)))}async function oe(){try{const e=await y.get("/api/equipment/stats"),{stats:s}=e;document.getElementById("stat-total-items").textContent=s.totalRecords,document.getElementById("stat-count-pending").textContent=s.countPending,document.getElementById("stat-damaged-lost").textContent=s.damagedOrLost,document.getElementById("stat-low-stock").textContent=s.lowStock}catch(e){console.error("Failed to load inventory metrics:",e)}}async function H(){var i,l,c;const e=((i=document.getElementById("inventory-search"))==null?void 0:i.value)||"",s=((l=document.getElementById("inventory-category-filter"))==null?void 0:l.value)||"All",t=((c=document.getElementById("inventory-condition-filter"))==null?void 0:c.value)||"All",a=document.getElementById("inventory-tbody");try{const n=new URLSearchParams;if(e&&n.append("search",e),s!=="All"&&n.append("category",s),t!=="All"&&n.append("condition",t),O=(await y.get(`/api/equipment?${n.toString()}`)).equipment,!O||O.length===0){a.innerHTML='<tr><td colspan="7" class="text-center py-4 text-muted">No equipment items found.</td></tr>';return}const r=["Administrator","Manager","Coach"].includes(M==null?void 0:M.role);a.innerHTML=O.map(o=>{const m=o.condition==="Good"?"badge bg-success":o.condition==="Fair"?"badge bg-info text-dark":o.condition==="Inspect"?"badge bg-warning text-dark":o.condition==="Damaged"?"badge bg-danger":"badge bg-secondary",b=o.countVerified?'<span class="badge bg-success bg-opacity-10 text-success border border-success" style="font-size: 9px;"><i class="bi bi-check2"></i> Verified</span>':'<span class="badge bg-warning bg-opacity-10 text-dark border border-warning" style="font-size: 9px;"><i class="bi bi-hourglass-split"></i> Count pending</span>',g=o.isLowStock?`<span class="badge bg-danger ms-1" style="font-size: 9px;">Low Stock (Min: ${o.minimumStock})</span>`:"",u=o.assignedPlayer?`<div class="small text-muted"><i class="bi bi-person me-1"></i>Assigned: ${o.assignedPlayer.fullName}</div>`:"";return`
+  `,await Promise.all([re(),Q()]),(a=document.getElementById("inventory-search"))==null||a.addEventListener("input",lt(Q,300)),(l=document.getElementById("inventory-category-filter"))==null||l.addEventListener("change",Q),(n=document.getElementById("inventory-condition-filter"))==null||n.addEventListener("change",Q),(c=document.getElementById("btn-export-inventory-csv"))==null||c.addEventListener("click",()=>{window.location.href="/api/reports/equipment/csv"}),t&&((i=document.getElementById("btn-add-inventory-item"))==null||i.addEventListener("click",()=>qe(null)))}async function re(){try{const e=await y.get("/api/equipment/stats"),{stats:s}=e;document.getElementById("stat-total-items").textContent=s.totalRecords,document.getElementById("stat-count-pending").textContent=s.countPending,document.getElementById("stat-damaged-lost").textContent=s.damagedOrLost,document.getElementById("stat-low-stock").textContent=s.lowStock}catch(e){console.error("Failed to load inventory metrics:",e)}}async function Q(){var l,n,c;const e=((l=document.getElementById("inventory-search"))==null?void 0:l.value)||"",s=((n=document.getElementById("inventory-category-filter"))==null?void 0:n.value)||"All",t=((c=document.getElementById("inventory-condition-filter"))==null?void 0:c.value)||"All",a=document.getElementById("inventory-tbody");try{const i=new URLSearchParams;if(e&&i.append("search",e),s!=="All"&&i.append("category",s),t!=="All"&&i.append("condition",t),X=(await y.get(`/api/equipment?${i.toString()}`)).equipment,!X||X.length===0){a.innerHTML='<tr><td colspan="7" class="text-center py-4 text-muted">No equipment items found.</td></tr>';return}const r=["Administrator","Manager","Coach"].includes(q==null?void 0:q.role);a.innerHTML=X.map(d=>{const p=d.condition==="Good"?"badge bg-success":d.condition==="Fair"?"badge bg-info text-dark":d.condition==="Inspect"?"badge bg-warning text-dark":d.condition==="Damaged"?"badge bg-danger":"badge bg-secondary",m=d.countVerified?'<span class="badge bg-success bg-opacity-10 text-success border border-success" style="font-size: 9px;"><i class="bi bi-check2"></i> Verified</span>':'<span class="badge bg-warning bg-opacity-10 text-dark border border-warning" style="font-size: 9px;"><i class="bi bi-hourglass-split"></i> Count pending</span>',g=d.isLowStock?`<span class="badge bg-danger ms-1" style="font-size: 9px;">Low Stock (Min: ${d.minimumStock})</span>`:"",u=d.assignedPlayer?`<div class="small text-muted"><i class="bi bi-person me-1"></i>Assigned: ${d.assignedPlayer.fullName}</div>`:"";return`
         <tr>
-          <td class="fw-bold font-monospace text-main">${o.assetId}</td>
+          <td class="fw-bold font-monospace text-main">${d.assetId}</td>
           <td>
-            <div class="fw-bold text-main" style="font-size: 13.5px;">${o.name}</div>
-            <div class="small text-muted">${o.location}</div>
+            <div class="fw-bold text-main" style="font-size: 13.5px;">${d.name}</div>
+            <div class="small text-muted">${d.location}</div>
             ${u}
           </td>
-          <td><span class="badge-role">${o.category}</span></td>
+          <td><span class="badge-role">${d.category}</span></td>
           <td>
-            <div class="fw-bold fs-6">${o.quantity} <span class="small text-muted fw-normal">${o.unit}</span></div>
-            <div>${b} ${g}</div>
+            <div class="fw-bold fs-6">${d.quantity} <span class="small text-muted fw-normal">${d.unit}</span></div>
+            <div>${m} ${g}</div>
           </td>
-          <td><span class="${m}">${o.condition}</span></td>
+          <td><span class="${p}">${d.condition}</span></td>
           <td class="small">
-            <div>Insp: ${o.lastInspectedDate||"Awaiting check"}</div>
-            ${o.expiryDate?`<div class="text-muted">Exp: ${o.expiryDate}</div>`:""}
+            <div>Insp: ${d.lastInspectedDate||"Awaiting check"}</div>
+            ${d.expiryDate?`<div class="text-muted">Exp: ${d.expiryDate}</div>`:""}
           </td>
           <td class="text-end text-nowrap">
             ${r?`
-              <button class="btn btn-sm btn-outline-burgundy py-1 px-2 btn-verify-stock" data-item-id="${o.id}" title="Physically verify stock count">
+              <button class="btn btn-sm btn-outline-burgundy py-1 px-2 btn-verify-stock" data-item-id="${d.id}" title="Physically verify stock count">
                 <i class="bi bi-check2-square me-1"></i>Verify
               </button>
-              <button class="btn btn-sm btn-light-custom py-1 px-2 btn-edit-equipment" data-item-id="${o.id}" title="Edit asset details">
+              <button class="btn btn-sm btn-light-custom py-1 px-2 btn-edit-equipment" data-item-id="${d.id}" title="Edit asset details">
                 <i class="bi bi-pencil"></i>
               </button>
             `:`
-              <button class="btn btn-sm btn-light-custom py-1 px-2 btn-view-equipment" data-item-id="${o.id}">
+              <button class="btn btn-sm btn-light-custom py-1 px-2 btn-view-equipment" data-item-id="${d.id}">
                 View
               </button>
             `}
           </td>
         </tr>
-      `}).join(""),document.querySelectorAll(".btn-verify-stock").forEach(o=>{o.addEventListener("click",()=>{const m=o.getAttribute("data-item-id");tt(m)})}),document.querySelectorAll(".btn-edit-equipment, .btn-view-equipment").forEach(o=>{o.addEventListener("click",()=>{const m=o.getAttribute("data-item-id"),b=O.find(g=>g.id===m);Ae(b)})})}catch(n){a.innerHTML=`<tr><td colspan="7" class="alert alert-danger">${n.message}</td></tr>`}}function tt(e){const s=O.find(a=>a.id===e);if(!s)return;const t=`
+      `}).join(""),document.querySelectorAll(".btn-verify-stock").forEach(d=>{d.addEventListener("click",()=>{const p=d.getAttribute("data-item-id");nt(p)})}),document.querySelectorAll(".btn-edit-equipment, .btn-view-equipment").forEach(d=>{d.addEventListener("click",()=>{const p=d.getAttribute("data-item-id"),m=X.find(g=>g.id===p);qe(m)})})}catch(i){a.innerHTML=`<tr><td colspan="7" class="alert alert-danger">${i.message}</td></tr>`}}function nt(e){const s=X.find(a=>a.id===e);if(!s)return;const t=`
     <div>
       <p class="small text-muted mb-3">
         Physically count and verify inventory reserves for <strong>${s.name} (${s.assetId})</strong>.
@@ -1935,10 +1966,10 @@
         </div>
       </div>
     </div>
-  `;B({title:`Verify Physical Stock: ${s.assetId}`,contentHtml:t,footerHtml:`
+  `;A({title:`Verify Physical Stock: ${s.assetId}`,contentHtml:t,footerHtml:`
       <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Cancel</button>
       <button type="button" class="btn btn-burgundy" id="btn-submit-verify-stock">Confirm Verification</button>
-    `,onOpen:a=>{var i;(i=document.getElementById("btn-submit-verify-stock"))==null||i.addEventListener("click",async()=>{var n,d;const l=(n=document.getElementById("v-quantity"))==null?void 0:n.value,c=(d=document.getElementById("v-notes"))==null?void 0:d.value;if(l===""||isNaN(parseInt(l,10))){p("Please enter a valid count number.","error");return}try{await y.put(`/api/equipment/${s.id}/verify-count`,{verifiedQuantity:parseInt(l,10),notes:c}),p(`Physical count verified for ${s.name}.`,"success"),C(),await Promise.all([oe(),H()])}catch(r){p(`Error: ${r.message}`,"error")}})}})}async function Ae(e=null){const s=!!e,t=["Administrator","Manager","Coach"].includes(M==null?void 0:M.role);let a=[];try{a=(await y.get("/api/players")).players||[]}catch{}const i=`
+    `,onOpen:a=>{var l;(l=document.getElementById("btn-submit-verify-stock"))==null||l.addEventListener("click",async()=>{var i,o;const n=(i=document.getElementById("v-quantity"))==null?void 0:i.value,c=(o=document.getElementById("v-notes"))==null?void 0:o.value;if(n===""||isNaN(parseInt(n,10))){b("Please enter a valid count number.","error");return}try{await y.put(`/api/equipment/${s.id}/verify-count`,{verifiedQuantity:parseInt(n,10),notes:c}),b(`Physical count verified for ${s.name}.`,"success"),B(),await Promise.all([re(),Q()])}catch(r){b(`Error: ${r.message}`,"error")}})}})}async function qe(e=null){const s=!!e,t=["Administrator","Manager","Coach"].includes(q==null?void 0:q.role);let a=[];try{a=(await y.get("/api/players")).players||[]}catch{}const l=`
     <form id="equipment-form">
       <div class="row g-3">
         <div class="col-md-6">
@@ -1989,9 +2020,9 @@
           <label class="form-label-custom">Assigned Squad Member</label>
           <select id="eq-assignedPlayer" class="form-select-custom" ${t?"":"disabled"}>
             <option value="">None (Clubhouse General Stock)</option>
-            ${a.map(l=>{var c;return`
-              <option value="${l._id}" ${((c=e==null?void 0:e.assignedPlayer)==null?void 0:c._id)===l._id||(e==null?void 0:e.assignedPlayer)===l._id?"selected":""}>
-                ${l.fullName} (${l.company})
+            ${a.map(n=>{var c;return`
+              <option value="${n._id}" ${((c=e==null?void 0:e.assignedPlayer)==null?void 0:c._id)===n._id||(e==null?void 0:e.assignedPlayer)===n._id?"selected":""}>
+                ${n.fullName} (${n.company})
               </option>
             `}).join("")}
           </select>
@@ -2010,7 +2041,7 @@
         </div>
       </div>
     </form>
-  `;B({title:s?`Edit Asset: ${e.assetId}`:"Add New Equipment Record",contentHtml:i,footerHtml:t?void 0:'<button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>',onOpen:l=>{var c;t&&((c=document.getElementById("modal-btn-save"))==null||c.addEventListener("click",async()=>{var k,I,$,N,D,W,G,_,K,X,Q,U;const n=(k=document.getElementById("eq-assetId"))==null?void 0:k.value,d=(I=document.getElementById("eq-name"))==null?void 0:I.value,r=($=document.getElementById("eq-category"))==null?void 0:$.value,o=(N=document.getElementById("eq-condition"))==null?void 0:N.value,m=(D=document.getElementById("eq-quantity"))==null?void 0:D.value,b=(W=document.getElementById("eq-unit"))==null?void 0:W.value,g=(G=document.getElementById("eq-minStock"))==null?void 0:G.value,u=(_=document.getElementById("eq-location"))==null?void 0:_.value,v=(K=document.getElementById("eq-assignedPlayer"))==null?void 0:K.value,h=(X=document.getElementById("eq-expiryDate"))==null?void 0:X.value,f=(Q=document.getElementById("eq-cost"))==null?void 0:Q.value,w=(U=document.getElementById("eq-notes"))==null?void 0:U.value;if(!d||!n){p("Asset ID and Name are required.","error");return}const x={assetId:n,name:d,category:r,condition:o,quantity:parseInt(m,10),unit:b,minimumStock:parseInt(g,10),location:u,assignedPlayer:v||null,expiryDate:h||null,costLKR:parseFloat(f||0),notes:w};try{s?(await y.put(`/api/equipment/${e.id}`,x),p(`Asset ${n} updated.`,"success")):(await y.post("/api/equipment",x),p(`Asset ${n} created.`,"success")),C(),await Promise.all([oe(),H()])}catch(le){p(`Error: ${le.message}`,"error")}}))}})}function st(e,s){let t;return function(...a){clearTimeout(t),t=setTimeout(()=>e.apply(this,a),s)}}let Z=[],ee=null;async function at(e,s){var a,i;ee=s;const t=["Administrator","Manager","Coach"].includes(ee==null?void 0:ee.role);e.innerHTML=`
+  `;A({title:s?`Edit Asset: ${e.assetId}`:"Add New Equipment Record",contentHtml:l,footerHtml:t?void 0:'<button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>',onOpen:n=>{var c;t&&((c=document.getElementById("modal-btn-save"))==null||c.addEventListener("click",async()=>{var I,S,E,_,R,N,D,O,H,F,j,z;const i=(I=document.getElementById("eq-assetId"))==null?void 0:I.value,o=(S=document.getElementById("eq-name"))==null?void 0:S.value,r=(E=document.getElementById("eq-category"))==null?void 0:E.value,d=(_=document.getElementById("eq-condition"))==null?void 0:_.value,p=(R=document.getElementById("eq-quantity"))==null?void 0:R.value,m=(N=document.getElementById("eq-unit"))==null?void 0:N.value,g=(D=document.getElementById("eq-minStock"))==null?void 0:D.value,u=(O=document.getElementById("eq-location"))==null?void 0:O.value,v=(H=document.getElementById("eq-assignedPlayer"))==null?void 0:H.value,h=(F=document.getElementById("eq-expiryDate"))==null?void 0:F.value,f=(j=document.getElementById("eq-cost"))==null?void 0:j.value,$=(z=document.getElementById("eq-notes"))==null?void 0:z.value;if(!o||!i){b("Asset ID and Name are required.","error");return}const x={assetId:i,name:o,category:r,condition:d,quantity:parseInt(p,10),unit:m,minimumStock:parseInt(g,10),location:u,assignedPlayer:v||null,expiryDate:h||null,costLKR:parseFloat(f||0),notes:$};try{s?(await y.put(`/api/equipment/${e.id}`,x),b(`Asset ${i} updated.`,"success")):(await y.post("/api/equipment",x),b(`Asset ${i} created.`,"success")),B(),await Promise.all([re(),Q()])}catch(K){b(`Error: ${K.message}`,"error")}}))}})}function lt(e,s){let t;return function(...a){clearTimeout(t),t=setTimeout(()=>e.apply(this,a),s)}}let te=[],se=null;async function it(e,s){var a,l;se=s;const t=["Administrator","Manager","Coach"].includes(se==null?void 0:se.role);e.innerHTML=`
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
       <div>
         <h2 class="page-title mb-1">Weekly Inspections</h2>
@@ -2060,13 +2091,13 @@
         </div>
       </div>
     </div>
-  `,await Le(),(a=document.getElementById("btn-print-inspections"))==null||a.addEventListener("click",()=>{window.print()}),t&&((i=document.getElementById("btn-new-inspection"))==null||i.addEventListener("click",nt))}async function Le(){const e=document.getElementById("inspections-tbody");try{if(Z=(await y.get("/api/inspections")).inspections,!Z||Z.length===0){e.innerHTML=`
+  `,await Re(),(a=document.getElementById("btn-print-inspections"))==null||a.addEventListener("click",()=>{window.print()}),t&&((l=document.getElementById("btn-new-inspection"))==null||l.addEventListener("click",ot))}async function Re(){const e=document.getElementById("inspections-tbody");try{if(te=(await y.get("/api/inspections")).inspections,!te||te.length===0){e.innerHTML=`
         <tr>
           <td colspan="6" class="text-center py-4 text-muted">
             No inspection records logged yet. Click "Log Inspection Check" to conduct a weekly gear check.
           </td>
         </tr>
-      `;return}e.innerHTML=Z.map(t=>{const a=t.equipment||{},i=t.condition==="Good"?"badge bg-success":t.condition==="Fair"?"badge bg-info text-dark":t.condition==="Inspect"?"badge bg-warning text-dark":t.condition==="Damaged"?"badge bg-danger":"badge bg-secondary",l=t.photo?`
+      `;return}e.innerHTML=te.map(t=>{const a=t.equipment||{},l=t.condition==="Good"?"badge bg-success":t.condition==="Fair"?"badge bg-info text-dark":t.condition==="Inspect"?"badge bg-warning text-dark":t.condition==="Damaged"?"badge bg-danger":"badge bg-secondary",n=t.photo?`
         <a href="/api/uploads/${t.photo}" target="_blank" class="btn btn-sm btn-light-custom py-0 px-2" style="font-size: 11px;">
           <i class="bi bi-image me-1"></i>View Evidence
         </a>
@@ -2078,14 +2109,14 @@
             <div class="small font-monospace text-muted">${a.assetId||""} (${a.category||""})</div>
           </td>
           <td>${t.inspector}</td>
-          <td><span class="${i}">${t.condition}</span></td>
+          <td><span class="${l}">${t.condition}</span></td>
           <td class="small">
             <div>${t.notes||"Routine check completed."}</div>
             ${t.correctiveAction?`<div class="text-danger mt-1"><strong>Action:</strong> ${t.correctiveAction}</div>`:""}
           </td>
-          <td>${l}</td>
+          <td>${n}</td>
         </tr>
-      `}).join("")}catch(s){e.innerHTML=`<tr><td colspan="6" class="alert alert-danger">${s.message}</td></tr>`}}async function nt(){let e=[];try{e=(await y.get("/api/equipment")).equipment||[]}catch{}const s=`
+      `}).join("")}catch(s){e.innerHTML=`<tr><td colspan="6" class="alert alert-danger">${s.message}</td></tr>`}}async function ot(){let e=[];try{e=(await y.get("/api/equipment")).equipment||[]}catch{}const s=`
     <form id="inspection-form">
       <div class="row g-3">
         <div class="col-md-6">
@@ -2139,10 +2170,10 @@
         </div>
       </div>
     </form>
-  `;B({title:"Conduct Weekly Gear Inspection",contentHtml:s,footerHtml:`
+  `;A({title:"Conduct Weekly Gear Inspection",contentHtml:s,footerHtml:`
       <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Cancel</button>
       <button type="button" class="btn btn-burgundy" id="btn-submit-inspection">Save Inspection</button>
-    `,onOpen:t=>{var a;(a=document.getElementById("btn-submit-inspection"))==null||a.addEventListener("click",async()=>{var b,g,u,v,h,f;const i=(b=document.getElementById("ins-equipmentId"))==null?void 0:b.value,l=(g=document.getElementById("ins-date"))==null?void 0:g.value,c=(u=document.getElementById("ins-condition"))==null?void 0:u.value,n=(v=document.getElementById("ins-notes"))==null?void 0:v.value,d=(h=document.getElementById("ins-action"))==null?void 0:h.value,r=(f=document.getElementById("ins-photo"))==null?void 0:f.files[0];if(!i||!l||!c){p("Equipment, date, and condition are required.","error");return}const o=new FormData;o.append("equipmentId",i),o.append("date",l),o.append("condition",c),o.append("notes",n),o.append("correctiveAction",d),r&&o.append("evidencePhoto",r);const m=document.getElementById("btn-submit-inspection");m.disabled=!0,m.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Saving...';try{await y.upload("/api/inspections",o),p("Weekly inspection logged successfully!","success"),C(),Le()}catch(w){p(`Error: ${w.message}`,"error")}finally{m.disabled=!1,m.innerHTML="Save Inspection"}})}})}let z=[],te=null;async function lt(e,s){var a,i;te=s;const t=["Administrator","Manager","Coach"].includes(te==null?void 0:te.role);e.innerHTML=`
+    `,onOpen:t=>{var a;(a=document.getElementById("btn-submit-inspection"))==null||a.addEventListener("click",async()=>{var m,g,u,v,h,f;const l=(m=document.getElementById("ins-equipmentId"))==null?void 0:m.value,n=(g=document.getElementById("ins-date"))==null?void 0:g.value,c=(u=document.getElementById("ins-condition"))==null?void 0:u.value,i=(v=document.getElementById("ins-notes"))==null?void 0:v.value,o=(h=document.getElementById("ins-action"))==null?void 0:h.value,r=(f=document.getElementById("ins-photo"))==null?void 0:f.files[0];if(!l||!n||!c){b("Equipment, date, and condition are required.","error");return}const d=new FormData;d.append("equipmentId",l),d.append("date",n),d.append("condition",c),d.append("notes",i),d.append("correctiveAction",o),r&&d.append("evidencePhoto",r);const p=document.getElementById("btn-submit-inspection");p.disabled=!0,p.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Saving...';try{await y.upload("/api/inspections",d),b("Weekly inspection logged successfully!","success"),B(),Re()}catch($){b(`Error: ${$.message}`,"error")}finally{p.disabled=!1,p.innerHTML="Save Inspection"}})}})}let Y=[],ae=null;async function dt(e,s){var a,l;ae=s;const t=["Administrator","Manager","Coach"].includes(ae==null?void 0:ae.role);e.innerHTML=`
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
       <div>
         <h2 class="page-title mb-1">Damage Reports</h2>
@@ -2193,13 +2224,13 @@
         </div>
       </div>
     </div>
-  `,await de(),(a=document.getElementById("btn-print-damage"))==null||a.addEventListener("click",()=>{window.print()}),t&&((i=document.getElementById("btn-file-damage"))==null||i.addEventListener("click",it))}async function de(){const e=document.getElementById("damage-tbody");try{if(z=(await y.get("/api/damage-reports")).reports,!z||z.length===0){e.innerHTML=`
+  `,await me(),(a=document.getElementById("btn-print-damage"))==null||a.addEventListener("click",()=>{window.print()}),t&&((l=document.getElementById("btn-file-damage"))==null||l.addEventListener("click",ct))}async function me(){const e=document.getElementById("damage-tbody");try{if(Y=(await y.get("/api/damage-reports")).reports,!Y||Y.length===0){e.innerHTML=`
         <tr>
           <td colspan="7" class="text-center py-4 text-muted">
             No active damage incidents recorded. All club assets operational.
           </td>
         </tr>
-      `;return}e.innerHTML=z.map(t=>{const a=t.equipment||{},i=t.severity==="Unsafe"?"badge bg-danger":t.severity==="High"?"badge bg-warning text-dark":t.severity==="Medium"?"badge bg-info text-dark":"badge bg-secondary",l=t.status==="Open"?"badge bg-danger":t.status==="In progress"?"badge bg-warning text-dark":"badge bg-success",c=t.photo?`
+      `;return}e.innerHTML=Y.map(t=>{const a=t.equipment||{},l=t.severity==="Unsafe"?"badge bg-danger":t.severity==="High"?"badge bg-warning text-dark":t.severity==="Medium"?"badge bg-info text-dark":"badge bg-secondary",n=t.status==="Open"?"badge bg-danger":t.status==="In progress"?"badge bg-warning text-dark":"badge bg-success",c=t.photo?`
         <a href="/api/uploads/${t.photo}" target="_blank" class="small text-decoration-none text-danger d-inline-block mt-1">
           <i class="bi bi-image me-1"></i>Incident Photo
         </a>
@@ -2210,7 +2241,7 @@
             <div class="fw-bold text-main">${a.name||"Equipment"}</div>
             <div class="small font-monospace text-muted">${a.assetId||""}</div>
           </td>
-          <td><span class="${i}">${t.severity}</span></td>
+          <td><span class="${l}">${t.severity}</span></td>
           <td class="small" style="max-width: 300px;">
             <div class="fw-bold">${t.incidentDetails}</div>
             ${t.correctiveAction?`<div class="text-muted mt-1">Action: ${t.correctiveAction}</div>`:""}
@@ -2218,7 +2249,7 @@
           </td>
           <td>${t.reporter}</td>
           <td>
-            <span class="${l}">${t.status}</span>
+            <span class="${n}">${t.status}</span>
             ${t.followUps&&t.followUps.length>0?`<div class="small text-muted mt-1">${t.followUps.length} follow-up(s)</div>`:""}
           </td>
           <td class="text-end">
@@ -2227,7 +2258,7 @@
             </button>
           </td>
         </tr>
-      `}).join(""),document.querySelectorAll(".btn-followup-damage").forEach(t=>{t.addEventListener("click",()=>{const a=t.getAttribute("data-report-id");ot(a)})})}catch(s){e.innerHTML=`<tr><td colspan="7" class="alert alert-danger">${s.message}</td></tr>`}}async function it(){let e=[];try{e=(await y.get("/api/equipment")).equipment||[]}catch{}const s=`
+      `}).join(""),document.querySelectorAll(".btn-followup-damage").forEach(t=>{t.addEventListener("click",()=>{const a=t.getAttribute("data-report-id");rt(a)})})}catch(s){e.innerHTML=`<tr><td colspan="7" class="alert alert-danger">${s.message}</td></tr>`}}async function ct(){let e=[];try{e=(await y.get("/api/equipment")).equipment||[]}catch{}const s=`
     <form id="damage-form">
       <div class="row g-3">
         <div class="col-md-6">
@@ -2266,13 +2297,13 @@
         </div>
       </div>
     </form>
-  `;B({title:"File Equipment Damage Report",contentHtml:s,footerHtml:`
+  `;A({title:"File Equipment Damage Report",contentHtml:s,footerHtml:`
       <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Cancel</button>
       <button type="button" class="btn btn-burgundy" id="btn-submit-damage">File Report</button>
-    `,onOpen:t=>{var a;(a=document.getElementById("btn-submit-damage"))==null||a.addEventListener("click",async()=>{var b,g,u,v,h,f;const i=(b=document.getElementById("dmg-equipmentId"))==null?void 0:b.value,l=(g=document.getElementById("dmg-date"))==null?void 0:g.value,c=(u=document.getElementById("dmg-severity"))==null?void 0:u.value,n=(v=document.getElementById("dmg-details"))==null?void 0:v.value,d=(h=document.getElementById("dmg-action"))==null?void 0:h.value,r=(f=document.getElementById("dmg-photo"))==null?void 0:f.files[0];if(!i||!l||!n){p("Equipment, date, and incident details are required.","error");return}const o=new FormData;o.append("equipmentId",i),o.append("date",l),o.append("severity",c),o.append("incidentDetails",n),o.append("correctiveAction",d),r&&o.append("incidentPhoto",r);const m=document.getElementById("btn-submit-damage");m.disabled=!0,m.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Filing...';try{await y.upload("/api/damage-reports",o),p("Damage report filed and asset condition updated.","success"),C(),de()}catch(w){p(`Error: ${w.message}`,"error")}finally{m.disabled=!1,m.innerHTML="File Report"}})}})}function ot(e){var a,i;const s=z.find(l=>l._id===e);if(!s)return;const t=`
+    `,onOpen:t=>{var a;(a=document.getElementById("btn-submit-damage"))==null||a.addEventListener("click",async()=>{var m,g,u,v,h,f;const l=(m=document.getElementById("dmg-equipmentId"))==null?void 0:m.value,n=(g=document.getElementById("dmg-date"))==null?void 0:g.value,c=(u=document.getElementById("dmg-severity"))==null?void 0:u.value,i=(v=document.getElementById("dmg-details"))==null?void 0:v.value,o=(h=document.getElementById("dmg-action"))==null?void 0:h.value,r=(f=document.getElementById("dmg-photo"))==null?void 0:f.files[0];if(!l||!n||!i){b("Equipment, date, and incident details are required.","error");return}const d=new FormData;d.append("equipmentId",l),d.append("date",n),d.append("severity",c),d.append("incidentDetails",i),d.append("correctiveAction",o),r&&d.append("incidentPhoto",r);const p=document.getElementById("btn-submit-damage");p.disabled=!0,p.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Filing...';try{await y.upload("/api/damage-reports",d),b("Damage report filed and asset condition updated.","success"),B(),me()}catch($){b(`Error: ${$.message}`,"error")}finally{p.disabled=!1,p.innerHTML="File Report"}})}})}function rt(e){var a,l;const s=Y.find(n=>n._id===e);if(!s)return;const t=`
     <div>
       <div class="p-3 rounded mb-3" style="background: var(--body-bg); border: 1px solid var(--border-color);">
-        <div class="fw-bold text-main fs-6">${((a=s.equipment)==null?void 0:a.name)||"Asset"} (${((i=s.equipment)==null?void 0:i.assetId)||""})</div>
+        <div class="fw-bold text-main fs-6">${((a=s.equipment)==null?void 0:a.name)||"Asset"} (${((l=s.equipment)==null?void 0:l.assetId)||""})</div>
         <div class="small text-danger fw-bold mt-1">Severity: ${s.severity} &bull; Filed by ${s.reporter} on ${s.date}</div>
         <div class="small text-muted mt-2">${s.incidentDetails}</div>
       </div>
@@ -2281,12 +2312,12 @@
         <div class="stat-label mb-2">Follow-up History</div>
         ${s.followUps&&s.followUps.length>0?`
           <ul class="list-group list-group-flush small mb-3">
-            ${s.followUps.map(l=>`
+            ${s.followUps.map(n=>`
               <li class="list-group-item bg-transparent px-0 py-2 border-bottom">
                 <div class="d-flex justify-content-between text-muted" style="font-size: 11px;">
-                  <span>${l.date} &bull; ${l.author}</span>
+                  <span>${n.date} &bull; ${n.author}</span>
                 </div>
-                <div class="fw-bold text-main mt-1">${l.note}</div>
+                <div class="fw-bold text-main mt-1">${n.note}</div>
               </li>
             `).join("")}
           </ul>
@@ -2315,10 +2346,10 @@
         </div>
       </div>
     </div>
-  `;B({title:"Damage Incident Follow-up",contentHtml:t,footerHtml:`
+  `;A({title:"Damage Incident Follow-up",contentHtml:t,footerHtml:`
       <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>
       <button type="button" class="btn btn-burgundy" id="btn-save-follow-up">Save Follow-up</button>
-    `,onOpen:l=>{var c;(c=document.getElementById("btn-save-follow-up"))==null||c.addEventListener("click",async()=>{var r,o;const n=(r=document.getElementById("fu-status"))==null?void 0:r.value,d=(o=document.getElementById("fu-note"))==null?void 0:o.value;if(!d&&!n){p("Please enter a note or status change.","error");return}try{await y.post(`/api/damage-reports/${s._id}/follow-up`,{status:n,note:d}),p("Follow-up record saved.","success"),C(),de()}catch(m){p(`Error: ${m.message}`,"error")}})}})}let A=null,P=null;async function dt(e,s){var a,i,l,c;P=s;const t=["Administrator","Manager","Coach"].includes(P==null?void 0:P.role);e.innerHTML=`
+    `,onOpen:n=>{var c;(c=document.getElementById("btn-save-follow-up"))==null||c.addEventListener("click",async()=>{var r,d;const i=(r=document.getElementById("fu-status"))==null?void 0:r.value,o=(d=document.getElementById("fu-note"))==null?void 0:d.value;if(!o&&!i){b("Please enter a note or status change.","error");return}try{await y.post(`/api/damage-reports/${s._id}/follow-up`,{status:i,note:o}),b("Follow-up record saved.","success"),B(),me()}catch(p){b(`Error: ${p.message}`,"error")}})}})}let L=null,M=null;async function mt(e,s){var a,l,n,c;M=s;const t=["Administrator","Manager","Coach"].includes(M==null?void 0:M.role);e.innerHTML=`
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
       <div>
         <h2 class="page-title mb-1">Tasks & AI Operations Assistant</h2>
@@ -2349,7 +2380,7 @@
         <div class="spinner-border text-danger" role="status"></div>
       </div>
     </div>
-  `,await ce(),(a=document.getElementById("btn-suggest-actions"))==null||a.addEventListener("click",ct),(i=document.getElementById("btn-export-tasks-csv"))==null||i.addEventListener("click",()=>{window.location.href="/api/reports/tasks/csv"}),(l=document.getElementById("btn-print-tasks"))==null||l.addEventListener("click",()=>{window.print()}),t&&((c=document.getElementById("btn-create-task"))==null||c.addEventListener("click",()=>Se(null)))}async function ce(){const e=document.getElementById("kanban-columns-container");try{A=(await y.get("/api/tasks")).board;const t=[{key:"todo",label:"To do",count:A.counts.todo,items:A.todo},{key:"inProgress",label:"In progress",count:A.counts.inProgress,items:A.inProgress},{key:"blocked",label:"Blocked",count:A.counts.blocked,items:A.blocked},{key:"done",label:"Done",count:A.counts.done,items:A.done}];e.innerHTML=t.map(a=>`
+  `,await ue(),(a=document.getElementById("btn-suggest-actions"))==null||a.addEventListener("click",ut),(l=document.getElementById("btn-export-tasks-csv"))==null||l.addEventListener("click",()=>{window.location.href="/api/reports/tasks/csv"}),(n=document.getElementById("btn-print-tasks"))==null||n.addEventListener("click",()=>{window.print()}),t&&((c=document.getElementById("btn-create-task"))==null||c.addEventListener("click",()=>Ne(null)))}async function ue(){const e=document.getElementById("kanban-columns-container");try{L=(await y.get("/api/tasks")).board;const t=[{key:"todo",label:"To do",count:L.counts.todo,items:L.todo},{key:"inProgress",label:"In progress",count:L.counts.inProgress,items:L.inProgress},{key:"blocked",label:"Blocked",count:L.counts.blocked,items:L.blocked},{key:"done",label:"Done",count:L.counts.done,items:L.done}];e.innerHTML=t.map(a=>`
       <div class="kanban-column">
         <div class="kanban-column-header">
           <span class="stat-label text-main">${a.label}</span>
@@ -2357,20 +2388,20 @@
         </div>
 
         <div class="kanban-column-body flex-1" style="min-height: 200px;">
-          ${a.items.map(i=>{const l=i.priority==="Critical"?"badge bg-danger":i.priority==="High"?"badge bg-warning text-dark":i.priority==="Medium"?"badge bg-info text-dark":"badge bg-secondary";return`
-              <div class="kanban-task-card" data-task-id="${i._id}">
+          ${a.items.map(l=>{const n=l.priority==="Critical"?"badge bg-danger":l.priority==="High"?"badge bg-warning text-dark":l.priority==="Medium"?"badge bg-info text-dark":"badge bg-secondary";return`
+              <div class="kanban-task-card" data-task-id="${l._id}">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                  <span class="${l}" style="font-size: 9.5px;">${i.priority}</span>
-                  <span class="badge-role" style="font-size: 9px;">${i.category}</span>
+                  <span class="${n}" style="font-size: 9.5px;">${l.priority}</span>
+                  <span class="badge-role" style="font-size: 9px;">${l.category}</span>
                 </div>
-                <div class="fw-bold text-main mb-1" style="font-size: 13px;">${i.title}</div>
-                ${i.details?`<div class="small text-muted mb-2 text-truncate">${i.details}</div>`:""}
+                <div class="fw-bold text-main mb-1" style="font-size: 13px;">${l.title}</div>
+                ${l.details?`<div class="small text-muted mb-2 text-truncate">${l.details}</div>`:""}
                 <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-2 small text-muted" style="border-color: var(--border-color) !important; font-size: 11px;">
-                  <span><i class="bi bi-person me-1"></i>${i.owner}</span>
-                  <span><i class="bi bi-clock me-1"></i>${i.dueDate||"No due date"}</span>
+                  <span><i class="bi bi-person me-1"></i>${l.owner}</span>
+                  <span><i class="bi bi-clock me-1"></i>${l.dueDate||"No due date"}</span>
                 </div>
                 <div class="mt-2 text-end">
-                  <button class="btn btn-sm btn-light-custom py-0 px-2 btn-edit-task" data-task-id="${i._id}" style="font-size: 11px;">
+                  <button class="btn btn-sm btn-light-custom py-0 px-2 btn-edit-task" data-task-id="${l._id}" style="font-size: 11px;">
                     <i class="bi bi-pencil me-1"></i>Edit
                   </button>
                 </div>
@@ -2378,7 +2409,7 @@
             `}).join("")}
         </div>
       </div>
-    `).join(""),document.querySelectorAll(".btn-edit-task").forEach(a=>{a.addEventListener("click",()=>{const i=a.getAttribute("data-task-id"),c=[...A.todo,...A.inProgress,...A.blocked,...A.done].find(n=>n._id===i);Se(c)})})}catch(s){e.innerHTML=`<div class="alert alert-danger col-12">${s.message}</div>`}}async function ct(){B({title:"Suggest Management Actions (AI & Rule Engine)",contentHtml:`
+    `).join(""),document.querySelectorAll(".btn-edit-task").forEach(a=>{a.addEventListener("click",()=>{const l=a.getAttribute("data-task-id"),c=[...L.todo,...L.inProgress,...L.blocked,...L.done].find(i=>i._id===l);Ne(c)})})}catch(s){e.innerHTML=`<div class="alert alert-danger col-12">${s.message}</div>`}}async function ut(){A({title:"Suggest Management Actions (AI & Rule Engine)",contentHtml:`
     <div>
       <div class="d-flex justify-content-between align-items-center mb-3">
         <span class="stat-label text-gold"><i class="bi bi-magic me-1"></i>Operational Health Diagnostic</span>
@@ -2397,21 +2428,21 @@
         </div>
       </div>
     </div>
-  `,footerHtml:'<button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>',onOpen:async s=>{try{const t=await y.get("/api/tasks/suggestions"),a=document.getElementById("ai-source-badge");a&&(a.textContent=t.source);const i=document.getElementById("ai-suggestions-list");if(!t.suggestions||t.suggestions.length===0){i.innerHTML='<div class="text-muted text-center py-4">No urgent operational bottlenecks detected. All records are up to date!</div>';return}i.innerHTML=t.suggestions.map((l,c)=>{const n=l.priority==="Critical"?"badge bg-danger":l.priority==="High"?"badge bg-warning text-dark":"badge bg-info text-dark";return`
+  `,footerHtml:'<button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>',onOpen:async s=>{try{const t=await y.get("/api/tasks/suggestions"),a=document.getElementById("ai-source-badge");a&&(a.textContent=t.source);const l=document.getElementById("ai-suggestions-list");if(!t.suggestions||t.suggestions.length===0){l.innerHTML='<div class="text-muted text-center py-4">No urgent operational bottlenecks detected. All records are up to date!</div>';return}l.innerHTML=t.suggestions.map((n,c)=>{const i=n.priority==="Critical"?"badge bg-danger":n.priority==="High"?"badge bg-warning text-dark":"badge bg-info text-dark";return`
             <div class="card-custom p-3 mb-2" id="sug-card-${c}">
               <div class="d-flex justify-content-between align-items-start mb-1">
-                <span class="${n}" style="font-size: 10px;">${l.priority}</span>
-                <span class="badge-role" style="font-size: 9.5px;">${l.category||"Operations"}</span>
+                <span class="${i}" style="font-size: 10px;">${n.priority}</span>
+                <span class="badge-role" style="font-size: 9.5px;">${n.category||"Operations"}</span>
               </div>
-              <div class="fw-bold text-main mb-1" style="font-size: 13.5px;">${l.title}</div>
-              <p class="small text-muted mb-3" style="line-height: 1.4;">${l.explanation}</p>
+              <div class="fw-bold text-main mb-1" style="font-size: 13.5px;">${n.title}</div>
+              <p class="small text-muted mb-3" style="line-height: 1.4;">${n.explanation}</p>
               <div class="text-end">
                 <button type="button" class="btn btn-sm btn-burgundy py-1 px-3 btn-add-sug-task" data-sug-index="${c}">
                   <i class="bi bi-plus-lg me-1"></i>+ Add
                 </button>
               </div>
             </div>
-          `}).join(""),i.querySelectorAll(".btn-add-sug-task").forEach(l=>{l.addEventListener("click",async()=>{const c=parseInt(l.getAttribute("data-sug-index"),10),n=t.suggestions[c];l.disabled=!0,l.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Adding...';try{await y.post("/api/tasks",{title:n.title,details:n.explanation,category:n.category||"Operations",priority:n.priority||"Medium",status:"To do",source:t.source.includes("AI")?"AI Assistant":"Rule Engine"}),p(`Task "${n.title}" added to Kanban board.`,"success"),l.className="btn btn-sm btn-success py-1 px-3",l.innerHTML='<i class="bi bi-check2"></i> Added',ce()}catch(d){p(`Error: ${d.message}`,"error"),l.disabled=!1,l.innerHTML="+ Add"}})})}catch(t){document.getElementById("ai-suggestions-list").innerHTML=`<div class="alert alert-danger">${t.message}</div>`}}})}function Se(e=null){const s=!!e,t=["Administrator","Manager","Coach"].includes(P==null?void 0:P.role),a=`
+          `}).join(""),l.querySelectorAll(".btn-add-sug-task").forEach(n=>{n.addEventListener("click",async()=>{const c=parseInt(n.getAttribute("data-sug-index"),10),i=t.suggestions[c];n.disabled=!0,n.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Adding...';try{await y.post("/api/tasks",{title:i.title,details:i.explanation,category:i.category||"Operations",priority:i.priority||"Medium",status:"To do",source:t.source.includes("AI")?"AI Assistant":"Rule Engine"}),b(`Task "${i.title}" added to Kanban board.`,"success"),n.className="btn btn-sm btn-success py-1 px-3",n.innerHTML='<i class="bi bi-check2"></i> Added',ue()}catch(o){b(`Error: ${o.message}`,"error"),n.disabled=!1,n.innerHTML="+ Add"}})})}catch(t){document.getElementById("ai-suggestions-list").innerHTML=`<div class="alert alert-danger">${t.message}</div>`}}})}function Ne(e=null){const s=!!e,t=["Administrator","Manager","Coach"].includes(M==null?void 0:M.role),a=`
     <form id="task-dialog-form">
       <div class="row g-3">
         <div class="col-12">
@@ -2449,7 +2480,7 @@
         </div>
         <div class="col-md-6">
           <label class="form-label-custom">Owner / Assigned Official</label>
-          <input type="text" id="t-owner" class="form-control-custom" value="${(e==null?void 0:e.owner)||(P==null?void 0:P.name)||"Unassigned"}" ${t?"":"disabled"}>
+          <input type="text" id="t-owner" class="form-control-custom" value="${(e==null?void 0:e.owner)||(M==null?void 0:M.name)||"Unassigned"}" ${t?"":"disabled"}>
         </div>
         <div class="col-md-6">
           <label class="form-label-custom">Target Deadline</label>
@@ -2461,7 +2492,7 @@
         </div>
       </div>
     </form>
-  `;B({title:s?`Edit Task: ${e.title}`:"Create Operational Task",contentHtml:a,footerHtml:t?void 0:'<button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>',onOpen:i=>{var l;t&&((l=document.getElementById("modal-btn-save"))==null||l.addEventListener("click",async()=>{var u,v,h,f,w,x,k;const c=(u=document.getElementById("t-title"))==null?void 0:u.value,n=(v=document.getElementById("t-category"))==null?void 0:v.value,d=(h=document.getElementById("t-priority"))==null?void 0:h.value,r=(f=document.getElementById("t-status"))==null?void 0:f.value,o=(w=document.getElementById("t-owner"))==null?void 0:w.value,m=(x=document.getElementById("t-dueDate"))==null?void 0:x.value,b=(k=document.getElementById("t-details"))==null?void 0:k.value;if(!c||!c.trim()){p("Task title is required.","error");return}const g={title:c,category:n,priority:d,status:r,owner:o,dueDate:m,details:b};try{s?(await y.put(`/api/tasks/${e._id}`,g),p("Task updated successfully.","success")):(await y.post("/api/tasks",g),p(`Task "${c}" created.`,"success")),C(),ce()}catch(I){p(`Error: ${I.message}`,"error")}}))}})}async function rt(e){e.innerHTML=`
+  `;A({title:s?`Edit Task: ${e.title}`:"Create Operational Task",contentHtml:a,footerHtml:t?void 0:'<button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>',onOpen:l=>{var n;t&&((n=document.getElementById("modal-btn-save"))==null||n.addEventListener("click",async()=>{var u,v,h,f,$,x,I;const c=(u=document.getElementById("t-title"))==null?void 0:u.value,i=(v=document.getElementById("t-category"))==null?void 0:v.value,o=(h=document.getElementById("t-priority"))==null?void 0:h.value,r=(f=document.getElementById("t-status"))==null?void 0:f.value,d=($=document.getElementById("t-owner"))==null?void 0:$.value,p=(x=document.getElementById("t-dueDate"))==null?void 0:x.value,m=(I=document.getElementById("t-details"))==null?void 0:I.value;if(!c||!c.trim()){b("Task title is required.","error");return}const g={title:c,category:i,priority:o,status:r,owner:d,dueDate:p,details:m};try{s?(await y.put(`/api/tasks/${e._id}`,g),b("Task updated successfully.","success")):(await y.post("/api/tasks",g),b(`Task "${c}" created.`,"success")),B(),ue()}catch(S){b(`Error: ${S.message}`,"error")}}))}})}async function pt(e){e.innerHTML=`
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
       <div>
         <h2 class="page-title mb-1">Reports & Exports</h2>
@@ -2609,7 +2640,7 @@
         </div>
       </div>
     </div>
-  `,document.querySelectorAll(".btn-print-report").forEach(s=>{s.addEventListener("click",()=>{const t=s.getAttribute("data-report-type");window.location.hash=`#/${t}`,setTimeout(()=>window.print(),500)})})}let E=null;async function mt(e,s){var i,l,c;E=s;const t=(E==null?void 0:E.role)==="Administrator",a=document.documentElement.getAttribute("data-theme")||"light";e.innerHTML=`
+  `,document.querySelectorAll(".btn-print-report").forEach(s=>{s.addEventListener("click",()=>{const t=s.getAttribute("data-report-type");window.location.hash=`#/${t}`,setTimeout(()=>window.print(),500)})})}let k=null;async function bt(e,s){var l,n,c;k=s;const t=(k==null?void 0:k.role)==="Administrator",a=document.documentElement.getAttribute("data-theme")||"light";e.innerHTML=`
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
       <div>
         <h2 class="page-title mb-1">Settings & User Administration</h2>
@@ -2633,18 +2664,18 @@
           </h5>
           <div class="d-flex align-items-center gap-3 mb-4">
             <div class="user-avatar-initials" style="width: 52px; height: 52px; font-size: 18px;">
-              ${E!=null&&E.name?E.name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase():"AC"}
+              ${k!=null&&k.name?k.name.split(" ").map(i=>i[0]).join("").slice(0,2).toUpperCase():"AC"}
             </div>
             <div>
-              <div class="fw-bold fs-6 text-main">${(E==null?void 0:E.name)||"Administrator"}</div>
-              <div class="small text-muted">${(E==null?void 0:E.email)||"admin@akbarcricket.lk"}</div>
-              <span class="badge bg-danger mt-1">${(E==null?void 0:E.role)||"Administrator"}</span>
+              <div class="fw-bold fs-6 text-main">${(k==null?void 0:k.name)||"Administrator"}</div>
+              <div class="small text-muted">${(k==null?void 0:k.email)||"admin@akbarcricket.lk"}</div>
+              <span class="badge bg-danger mt-1">${(k==null?void 0:k.role)||"Administrator"}</span>
             </div>
           </div>
 
           <div class="p-3 rounded mb-3" style="background: var(--body-bg); border: 1px solid var(--border-color);">
             <div class="stat-label mb-1">Last Workspace Session</div>
-            <div class="small text-muted">${E!=null&&E.lastLogin?new Date(E.lastLogin).toLocaleString():"Active session"}</div>
+            <div class="small text-muted">${k!=null&&k.lastLogin?new Date(k.lastLogin).toLocaleString():"Active session"}</div>
           </div>
 
           <!-- Change Password Form -->
@@ -2738,7 +2769,7 @@
         `:""}
       </div>
     </div>
-  `,(i=document.getElementById("change-password-form"))==null||i.addEventListener("submit",async n=>{var o,m;n.preventDefault();const d=(o=document.getElementById("pw-current"))==null?void 0:o.value,r=(m=document.getElementById("pw-new"))==null?void 0:m.value;try{await y.put("/api/auth/change-password",{currentPassword:d,newPassword:r}),p("Password updated successfully.","success"),document.getElementById("change-password-form").reset()}catch(b){p(`Password update failed: ${b.message}`,"error")}}),(l=document.getElementById("settings-theme-switch"))==null||l.addEventListener("change",n=>{const r=n.target.checked?"dark":"light";document.documentElement.setAttribute("data-theme",r),localStorage.setItem("acc_theme",r),p(`Switched to ${r} mode.`,"info")}),t&&(Pe(),(c=document.getElementById("btn-create-user-modal"))==null||c.addEventListener("click",ut))}async function Pe(){const e=document.getElementById("users-list-container");if(e)try{const t=(await y.get("/api/users")).users||[];e.innerHTML=`
+  `,(l=document.getElementById("change-password-form"))==null||l.addEventListener("submit",async i=>{var d,p;i.preventDefault();const o=(d=document.getElementById("pw-current"))==null?void 0:d.value,r=(p=document.getElementById("pw-new"))==null?void 0:p.value;try{await y.put("/api/auth/change-password",{currentPassword:o,newPassword:r}),b("Password updated successfully.","success"),document.getElementById("change-password-form").reset()}catch(m){b(`Password update failed: ${m.message}`,"error")}}),(n=document.getElementById("settings-theme-switch"))==null||n.addEventListener("change",i=>{const r=i.target.checked?"dark":"light";document.documentElement.setAttribute("data-theme",r),localStorage.setItem("acc_theme",r),b(`Switched to ${r} mode.`,"info")}),t&&(De(),(c=document.getElementById("btn-create-user-modal"))==null||c.addEventListener("click",vt))}async function De(){const e=document.getElementById("users-list-container");if(e)try{const t=(await y.get("/api/users")).users||[];e.innerHTML=`
       <ul class="list-group list-group-flush small">
         ${t.map(a=>`
           <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0 py-2 border-bottom" style="border-color: var(--border-color) !important;">
@@ -2752,7 +2783,7 @@
           </li>
         `).join("")}
       </ul>
-    `}catch(s){e.innerHTML=`<div class="text-danger small">${s.message}</div>`}}function ut(){B({title:"Provision New User Account",contentHtml:`
+    `}catch(s){e.innerHTML=`<div class="text-danger small">${s.message}</div>`}}function vt(){A({title:"Provision New User Account",contentHtml:`
     <form id="create-user-form">
       <div class="row g-3">
         <div class="col-12">
@@ -2781,15 +2812,15 @@
   `,footerHtml:`
       <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Cancel</button>
       <button type="button" class="btn btn-burgundy" id="btn-submit-create-user">Create Account</button>
-    `,onOpen:s=>{var t;(t=document.getElementById("btn-submit-create-user"))==null||t.addEventListener("click",async()=>{var n,d,r,o;const a=(n=document.getElementById("u-name"))==null?void 0:n.value,i=(d=document.getElementById("u-email"))==null?void 0:d.value,l=(r=document.getElementById("u-role"))==null?void 0:r.value,c=(o=document.getElementById("u-password"))==null?void 0:o.value;if(!a||!i||!c||!l){p("All fields are required.","error");return}if(c.length<8){p("Password must be at least 8 characters.","error");return}try{await y.post("/api/users",{name:a,email:i,role:l,password:c}),p(`Account created for ${a} (${l}).`,"success"),C(),Pe()}catch(m){p(`Failed to create user: ${m.message}`,"error")}})}})}let L=null;const ie={"command-centre":{title:"Command Centre",breadcrumb:"Workspace / Operations",render:He,actionButton:{id:"hdr-action-btn",label:"Explore Matches",icon:"bi-trophy"}},players:{title:"Player Profiles",breadcrumb:"Workspace / Roster",render:ze,actionButton:null},attendance:{title:"Practice & Attendance",breadcrumb:"Workspace / Training",render:_e,actionButton:null},matches:{title:"MCA Match Centre",breadcrumb:"Workspace / League Fixtures",render:Ue,actionButton:null},leaderboards:{title:"Player Leaderboards",breadcrumb:"Workspace / Performance",render:Ze,actionButton:null},inventory:{title:"Gear & Inventory",breadcrumb:"Club Operations / Assets",render:et,actionButton:null},inspections:{title:"Weekly Inspections",breadcrumb:"Club Operations / Safety",render:at,actionButton:null},"damage-reports":{title:"Damage Reports",breadcrumb:"Club Operations / Incidents",render:lt,actionButton:null},tasks:{title:"Tasks & AI Assistant",breadcrumb:"Club Operations / Kanban",render:dt,actionButton:null},reports:{title:"Reports & Exports",breadcrumb:"Management / Registers",render:rt,actionButton:null},settings:{title:"Settings & Users",breadcrumb:"Management / Administration",render:mt,actionButton:null}};function pt(){const e=localStorage.getItem("acc_theme")||"light";document.documentElement.setAttribute("data-theme",e)}function bt(){const s=(document.documentElement.getAttribute("data-theme")||"light")==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",s),localStorage.setItem("acc_theme",s);const t=document.getElementById("theme-toggle-icon");t&&(t.className=s==="dark"?"bi bi-sun-fill text-gold":"bi bi-moon-stars"),p(`Switched to ${s} mode.`,"info")}function re(e="command-centre"){var m,b,g,u;const s=document.getElementById("app"),t=ie[e]||ie["command-centre"];s.innerHTML=`
+    `,onOpen:s=>{var t;(t=document.getElementById("btn-submit-create-user"))==null||t.addEventListener("click",async()=>{var i,o,r,d;const a=(i=document.getElementById("u-name"))==null?void 0:i.value,l=(o=document.getElementById("u-email"))==null?void 0:o.value,n=(r=document.getElementById("u-role"))==null?void 0:r.value,c=(d=document.getElementById("u-password"))==null?void 0:d.value;if(!a||!l||!c||!n){b("All fields are required.","error");return}if(c.length<8){b("Password must be at least 8 characters.","error");return}try{await y.post("/api/users",{name:a,email:l,role:n,password:c}),b(`Account created for ${a} (${n}).`,"success"),B(),De()}catch(p){b(`Failed to create user: ${p.message}`,"error")}})}})}let P=null;const de={"command-centre":{title:"Command Centre",breadcrumb:"Workspace / Operations",render:Ge,actionButton:{id:"hdr-action-btn",label:"Explore Matches",icon:"bi-trophy"}},players:{title:"Player Profiles",breadcrumb:"Workspace / Roster",render:_e,actionButton:null},attendance:{title:"Practice & Attendance",breadcrumb:"Workspace / Training",render:Je,actionButton:null},matches:{title:"MCA Match Centre",breadcrumb:"Workspace / League Fixtures",render:Ze,actionButton:null},leaderboards:{title:"Player Leaderboards",breadcrumb:"Workspace / Performance",render:st,actionButton:null},inventory:{title:"Gear & Inventory",breadcrumb:"Club Operations / Assets",render:at,actionButton:null},inspections:{title:"Weekly Inspections",breadcrumb:"Club Operations / Safety",render:it,actionButton:null},"damage-reports":{title:"Damage Reports",breadcrumb:"Club Operations / Incidents",render:dt,actionButton:null},tasks:{title:"Tasks & AI Assistant",breadcrumb:"Club Operations / Kanban",render:mt,actionButton:null},reports:{title:"Reports & Exports",breadcrumb:"Management / Registers",render:pt,actionButton:null},settings:{title:"Settings & Users",breadcrumb:"Management / Administration",render:bt,actionButton:null}};function gt(){const e=localStorage.getItem("acc_theme")||"light";document.documentElement.setAttribute("data-theme",e)}function ft(){const s=(document.documentElement.getAttribute("data-theme")||"light")==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",s),localStorage.setItem("acc_theme",s);const t=document.getElementById("theme-toggle-icon");t&&(t.className=s==="dark"?"bi bi-sun-fill text-gold":"bi bi-moon-stars"),b(`Switched to ${s} mode.`,"info")}function pe(e="command-centre"){var p,m,g,u;const s=document.getElementById("app"),t=de[e]||de["command-centre"];s.innerHTML=`
     <div id="app-layout">
       <!-- Sidebar -->
-      ${Oe(L,e)}
+      ${Ve(P,e)}
 
       <!-- Main Content Area -->
       <div class="app-main-wrapper">
         <!-- Header -->
-        ${Fe({title:t.title,breadcrumb:t.breadcrumb,actionButton:t.actionButton})}
+        ${We({title:t.title,breadcrumb:t.breadcrumb,actionButton:t.actionButton})}
 
         <!-- Active View Body -->
         <main class="app-content-body" id="main-view-container">
@@ -2802,4 +2833,4 @@
         </footer>
       </div>
     </div>
-  `,(m=document.getElementById("header-theme-toggle"))==null||m.addEventListener("click",bt),(b=document.getElementById("header-refresh-btn"))==null||b.addEventListener("click",()=>{Me(ne()),p("View refreshed.","info")});const a=document.getElementById("app-sidebar"),i=document.getElementById("mobile-backdrop"),l=document.getElementById("mobile-menu-toggle"),c=()=>{a==null||a.classList.add("show-mobile"),i==null||i.classList.add("show")},n=()=>{a==null||a.classList.remove("show-mobile"),i==null||i.classList.remove("show")};l==null||l.addEventListener("click",c),i==null||i.addEventListener("click",n),a==null||a.querySelectorAll(".sidebar-nav-link").forEach(v=>{v.addEventListener("click",n)}),(g=document.getElementById("sidebar-logout-btn"))==null||g.addEventListener("click",async()=>{try{await y.post("/api/auth/logout"),L=null,p("Signed out of workspace.","info"),se(document.getElementById("app"),ae)}catch{L=null,se(document.getElementById("app"),ae)}}),t.actionButton&&((u=document.getElementById(t.actionButton.id))==null||u.addEventListener("click",()=>{window.location.hash="#/matches"}));const d=document.documentElement.getAttribute("data-theme")||"light",r=document.getElementById("theme-toggle-icon");r&&(r.className=d==="dark"?"bi bi-sun-fill text-gold":"bi bi-moon-stars");const o=document.getElementById("main-view-container");t.render(o,L)}function ne(){const e=window.location.hash.replace(/^#\/?/,"").split("?")[0];return ie[e]?e:"command-centre"}function Me(e){L&&re(e)}function ae(e){L=e;const s=ne();re(s)}window.addEventListener("auth:expired",()=>{L&&(L=null,p("Your session has expired. Please sign in again.","warning"),se(document.getElementById("app"),ae))});window.addEventListener("hashchange",()=>{L&&Me(ne())});async function vt(){pt();const e=document.getElementById("app");try{L=(await y.get("/api/auth/me")).user,re(ne())}catch{L=null,se(e,ae)}}vt();
+  `,(p=document.getElementById("header-theme-toggle"))==null||p.addEventListener("click",ft),(m=document.getElementById("header-refresh-btn"))==null||m.addEventListener("click",()=>{Oe(ie()),b("View refreshed.","info")});const a=document.getElementById("app-sidebar"),l=document.getElementById("mobile-backdrop"),n=document.getElementById("mobile-menu-toggle"),c=()=>{a==null||a.classList.add("show-mobile"),l==null||l.classList.add("show")},i=()=>{a==null||a.classList.remove("show-mobile"),l==null||l.classList.remove("show")};n==null||n.addEventListener("click",c),l==null||l.addEventListener("click",i),a==null||a.querySelectorAll(".sidebar-nav-link").forEach(v=>{v.addEventListener("click",i)}),(g=document.getElementById("sidebar-logout-btn"))==null||g.addEventListener("click",async()=>{try{await y.post("/api/auth/logout"),P=null,b("Signed out of workspace.","info"),ne(document.getElementById("app"),le)}catch{P=null,ne(document.getElementById("app"),le)}}),t.actionButton&&((u=document.getElementById(t.actionButton.id))==null||u.addEventListener("click",()=>{window.location.hash="#/matches"}));const o=document.documentElement.getAttribute("data-theme")||"light",r=document.getElementById("theme-toggle-icon");r&&(r.className=o==="dark"?"bi bi-sun-fill text-gold":"bi bi-moon-stars");const d=document.getElementById("main-view-container");t.render(d,P)}function ie(){const e=window.location.hash.replace(/^#\/?/,"").split("?")[0];return de[e]?e:"command-centre"}function Oe(e){P&&pe(e)}function le(e){P=e;const s=ie();pe(s)}window.addEventListener("auth:expired",()=>{P&&(P=null,b("Your session has expired. Please sign in again.","warning"),ne(document.getElementById("app"),le))});window.addEventListener("hashchange",()=>{P&&Oe(ie())});async function yt(){gt();const e=document.getElementById("app");try{P=(await y.get("/api/auth/me")).user,pe(ie())}catch{P=null,ne(e,le)}}yt();

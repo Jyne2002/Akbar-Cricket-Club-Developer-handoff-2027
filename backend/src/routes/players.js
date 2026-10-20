@@ -123,7 +123,7 @@ router.post('/', authenticate, requireRoles('Administrator', 'Manager'), async (
 
     const newPlayerData = {
       fullName: fullName.trim(),
-      company: company || 'Other',
+      company: typeof company === 'string' && company.trim() ? company.trim() : 'Other',
       cricketRole: cricketRole || 'Not set',
       battingHand: battingHand || 'Not set',
       bowlingArm: bowlingArm || 'Not set',
@@ -178,7 +178,7 @@ router.put('/:id', authenticate, requireRoles('Administrator', 'Manager', 'Coach
     // Privileged fields
     if (isPrivileged) {
       if (req.body.fullName) player.fullName = req.body.fullName.trim();
-      if (req.body.company) player.company = req.body.company;
+      if (typeof req.body.company === 'string' && req.body.company.trim()) player.company = req.body.company.trim();
       if (req.body.phone !== undefined) player.phone = req.body.phone;
       if (req.body.workEmail !== undefined) player.workEmail = req.body.workEmail;
       if (req.body.epfNumber !== undefined) player.epfNumber = String(req.body.epfNumber);
@@ -200,6 +200,25 @@ router.put('/:id', authenticate, requireRoles('Administrator', 'Manager', 'Coach
     });
   } catch (err) {
     return res.status(500).json({ success: false, message: 'Failed to update player.' });
+  }
+});
+
+/**
+ * DELETE /api/players/:id
+ * Remove a player from the active squad while preserving historical records.
+ */
+router.delete('/:id', authenticate, requireRoles('Administrator', 'Manager'), async (req, res) => {
+  try {
+    const player = await Player.findById(req.params.id);
+    if (!player || player.isActive === false) {
+      return res.status(404).json({ success: false, message: 'Player not found.' });
+    }
+
+    player.isActive = false;
+    await player.save();
+    return res.json({ success: true, message: `Player ${player.fullName} removed from the active squad.` });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Failed to delete player.' });
   }
 });
 

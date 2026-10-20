@@ -6,6 +6,18 @@
 import { api } from '../api.js';
 import { showToast } from '../components/toast.js';
 import { openModal, closeModal } from '../components/modal.js';
+import { escapeHtml } from '../utils/html.js';
+
+const companies = [
+  'Akbar Brothers (Pvt) Ltd',
+  'Quick Tea (Pvt) Ltd',
+  'Falcon Trading (Pvt) Ltd',
+  'Land and Building (Pvt) Ltd',
+  'Ceylon Coffeeworks (Pvt) Ltd',
+  'Colombo Coffee Company (Pvt) Ltd',
+  'Glowbal Retails (Pvt) Ltd',
+  'Coffee Collective (Pvt) Ltd'
+];
 
 let currentPlayersList = [];
 let currentUserProfile = null;
@@ -95,6 +107,8 @@ export async function renderPlayers(container, currentUser) {
 }
 
 async function loadAndRenderPlayersGrid() {
+  const isPrivileged = ['Administrator', 'Manager'].includes(currentUserProfile?.role);
+  const canEdit = ['Administrator', 'Manager', 'Coach'].includes(currentUserProfile?.role);
   const search = document.getElementById('player-search-input')?.value || '';
   const company = document.getElementById('player-company-filter')?.value || 'All';
   const cricketRole = document.getElementById('player-role-filter')?.value || 'All';
@@ -143,8 +157,8 @@ async function loadAndRenderPlayersGrid() {
                     ${initials}
                   </div>
                   <div>
-                    <div class="fw-bold text-main" style="font-size: 13.5px; line-height: 1.2;">${p.fullName}</div>
-                    <div class="small text-muted" style="font-size: 11px;">${p.company}</div>
+                    <div class="fw-bold text-main" style="font-size: 13.5px; line-height: 1.2;">${escapeHtml(p.fullName)}</div>
+                    <div class="small text-muted" style="font-size: 11px;">${escapeHtml(p.company)}</div>
                   </div>
                 </div>
                 ${p.jerseyNumber !== null && p.jerseyNumber !== undefined ? `
@@ -177,6 +191,18 @@ async function loadAndRenderPlayersGrid() {
                 </div>
               </div>
             </div>
+            ${canEdit ? `
+              <div class="d-flex gap-2 mt-3">
+                <button type="button" class="btn btn-sm btn-outline-burgundy btn-edit-player" data-player-id="${p._id}">
+                  <i class="bi bi-pencil me-1"></i>Edit
+                </button>
+                ${isPrivileged ? `
+                  <button type="button" class="btn btn-sm btn-outline-danger btn-delete-player" data-player-id="${p._id}">
+                    <i class="bi bi-trash me-1"></i>Delete
+                  </button>
+                ` : ''}
+              </div>
+            ` : ''}
           </div>
         </div>
       `;
@@ -187,6 +213,15 @@ async function loadAndRenderPlayersGrid() {
       card.addEventListener('click', () => {
         const pid = card.getAttribute('data-player-id');
         openPlayerProfileModal(pid);
+      });
+    });
+    document.querySelectorAll('.btn-edit-player, .btn-delete-player').forEach(button => {
+      button.addEventListener('click', event => {
+        event.stopPropagation();
+        const player = currentPlayersList.find(p => p._id === button.dataset.playerId);
+        if (!player) return;
+        if (button.classList.contains('btn-edit-player')) openPlayerEditModal(player);
+        else openPlayerDeleteModal(player);
       });
     });
   } catch (err) {
@@ -214,8 +249,8 @@ async function openPlayerProfileModal(playerId) {
               ${player.fullName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
             </div>
             <div>
-              <h4 class="mb-0 text-main">${player.fullName}</h4>
-              <div class="text-muted small">${player.company}</div>
+              <h4 class="mb-0 text-main">${escapeHtml(player.fullName)}</h4>
+              <div class="text-muted small">${escapeHtml(player.company)}</div>
               ${player.jerseyNumber ? `<span class="badge bg-danger mt-1">Jersey #${player.jerseyNumber}</span>` : ''}
             </div>
           </div>
@@ -305,6 +340,11 @@ async function openPlayerProfileModal(playerId) {
 
     const footerHtml = `
       <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Close</button>
+      ${isPrivileged ? `
+        <button type="button" class="btn btn-outline-danger" id="btn-delete-player-profile">
+          <i class="bi bi-trash me-1"></i>Delete Player
+        </button>
+      ` : ''}
       ${canEdit ? `
         <button type="button" class="btn btn-burgundy" id="btn-edit-player-profile">
           <i class="bi bi-pencil me-1"></i>Edit Profile
@@ -313,10 +353,11 @@ async function openPlayerProfileModal(playerId) {
     `;
 
     openModal({
-      title: `${player.fullName} — Squad Record`,
+      title: `${escapeHtml(player.fullName)} — Squad Record`,
       contentHtml,
       footerHtml,
       onOpen: (modalEl) => {
+        document.getElementById('btn-delete-player-profile')?.addEventListener('click', () => openPlayerDeleteModal(player));
         document.getElementById('btn-edit-player-profile')?.addEventListener('click', () => {
           closeModal();
           openPlayerEditModal(player);
@@ -334,6 +375,7 @@ async function openPlayerProfileModal(playerId) {
 function openPlayerEditModal(player = null) {
   const isEditing = !!player;
   const isPrivileged = ['Administrator', 'Manager'].includes(currentUserProfile?.role);
+  const isCustomCompany = !!player?.company && !companies.includes(player.company);
 
   const contentHtml = `
     <form id="player-form-dialog">
@@ -341,22 +383,19 @@ function openPlayerEditModal(player = null) {
         <!-- 2 Columns on desktop, 1 on mobile -->
         <div class="col-md-6">
           <label class="form-label-custom">Full Name *</label>
-          <input type="text" id="p-fullName" class="form-control-custom" value="${player?.fullName || ''}" required ${!isPrivileged && isEditing ? 'readonly' : ''}>
+          <input type="text" id="p-fullName" class="form-control-custom" value="${escapeHtml(player?.fullName)}" required ${!isPrivileged && isEditing ? 'readonly' : ''}>
         </div>
 
         <div class="col-md-6">
           <label class="form-label-custom">Company *</label>
           <select id="p-company" class="form-select-custom" ${!isPrivileged && isEditing ? 'disabled' : ''}>
-            <option value="Akbar Brothers (Pvt) Ltd" ${player?.company === 'Akbar Brothers (Pvt) Ltd' ? 'selected' : ''}>Akbar Brothers (Pvt) Ltd</option>
-            <option value="Quick Tea (Pvt) Ltd" ${player?.company === 'Quick Tea (Pvt) Ltd' ? 'selected' : ''}>Quick Tea (Pvt) Ltd</option>
-            <option value="Falcon Trading (Pvt) Ltd" ${player?.company === 'Falcon Trading (Pvt) Ltd' ? 'selected' : ''}>Falcon Trading (Pvt) Ltd</option>
-            <option value="Land and Building (Pvt) Ltd" ${player?.company === 'Land and Building (Pvt) Ltd' ? 'selected' : ''}>Land and Building (Pvt) Ltd</option>
-            <option value="Ceylon Coffeeworks (Pvt) Ltd" ${player?.company === 'Ceylon Coffeeworks (Pvt) Ltd' ? 'selected' : ''}>Ceylon Coffeeworks (Pvt) Ltd</option>
-            <option value="Colombo Coffee Company (Pvt) Ltd" ${player?.company === 'Colombo Coffee Company (Pvt) Ltd' ? 'selected' : ''}>Colombo Coffee Company (Pvt) Ltd</option>
-            <option value="Glowbal Retails (Pvt) Ltd" ${player?.company === 'Glowbal Retails (Pvt) Ltd' ? 'selected' : ''}>Glowbal Retails (Pvt) Ltd</option>
-            <option value="Coffee Collective (Pvt) Ltd" ${player?.company === 'Coffee Collective (Pvt) Ltd' ? 'selected' : ''}>Coffee Collective (Pvt) Ltd</option>
-            <option value="Other" ${player?.company === 'Other' ? 'selected' : ''}>Other</option>
+            ${companies.map(company => `<option value="${company}" ${player?.company === company ? 'selected' : ''}>${company}</option>`).join('')}
+            <option value="Other" ${isCustomCompany ? 'selected' : ''}>Other</option>
           </select>
+          <div id="p-company-other-group" class="mt-2 ${isCustomCompany ? '' : 'd-none'}">
+            <label for="p-company-other" class="form-label-custom">Company Name *</label>
+            <input type="text" id="p-company-other" class="form-control-custom" placeholder="Enter company name" value="${escapeHtml(isCustomCompany && player.company !== 'Other' ? player.company : '')}" ${!isPrivileged && isEditing ? 'disabled' : ''}>
+          </div>
         </div>
 
         <div class="col-md-6">
@@ -391,17 +430,17 @@ function openPlayerEditModal(player = null) {
 
         <div class="col-md-6">
           <label class="form-label-custom">Bowling Style</label>
-          <input type="text" id="p-bowlingStyle" class="form-control-custom" placeholder="e.g. Off spin, Fast, Orthodox" value="${player?.bowlingStyle || ''}">
+          <input type="text" id="p-bowlingStyle" class="form-control-custom" placeholder="e.g. Off spin, Fast, Orthodox" value="${escapeHtml(player?.bowlingStyle)}">
         </div>
 
         <div class="col-md-6">
           <label class="form-label-custom">Jersey Number</label>
-          <input type="number" id="p-jerseyNumber" class="form-control-custom" placeholder="e.g. 7" value="${player?.jerseyNumber || ''}">
+          <input type="number" id="p-jerseyNumber" class="form-control-custom" placeholder="e.g. 7" value="${player?.jerseyNumber ?? ''}">
         </div>
 
         <div class="col-md-6">
           <label class="form-label-custom">Technical Notes</label>
-          <input type="text" id="p-notes" class="form-control-custom" placeholder="Coaching or matchday notes" value="${player?.notes || ''}">
+          <input type="text" id="p-notes" class="form-control-custom" placeholder="Coaching or matchday notes" value="${escapeHtml(player?.notes)}">
         </div>
 
         ${isPrivileged ? `
@@ -411,42 +450,50 @@ function openPlayerEditModal(player = null) {
 
           <div class="col-md-6">
             <label class="form-label-custom">Phone Number</label>
-            <input type="text" id="p-phone" class="form-control-custom" value="${player?.phone || ''}">
+            <input type="text" id="p-phone" class="form-control-custom" value="${escapeHtml(player?.phone)}">
           </div>
 
           <div class="col-md-6">
             <label class="form-label-custom">Work Email</label>
-            <input type="email" id="p-workEmail" class="form-control-custom" value="${player?.workEmail || ''}">
+            <input type="email" id="p-workEmail" class="form-control-custom" value="${escapeHtml(player?.workEmail)}">
           </div>
 
           <div class="col-md-6">
             <label class="form-label-custom">EPF / Employee Number (Preserves leading 0s)</label>
-            <input type="text" id="p-epfNumber" class="form-control-custom" value="${player?.epfNumber || ''}">
+            <input type="text" id="p-epfNumber" class="form-control-custom" value="${escapeHtml(player?.epfNumber)}">
           </div>
 
           <div class="col-md-6">
             <label class="form-label-custom">National Identity Card (NIC - Encrypted)</label>
-            <input type="text" id="p-nic" class="form-control-custom" placeholder="NIC number will be encrypted at rest" value="${player?.nic || ''}">
+            <input type="text" id="p-nic" class="form-control-custom" placeholder="NIC number will be encrypted at rest" value="${escapeHtml(player?.nic)}">
           </div>
 
           <div class="col-md-6">
             <label class="form-label-custom">Joining Date</label>
-            <input type="date" id="p-joiningDate" class="form-control-custom" value="${player?.joiningDate || ''}">
+            <input type="date" id="p-joiningDate" class="form-control-custom" value="${escapeHtml(player?.joiningDate)}">
           </div>
 
           <div class="col-md-6">
             <label class="form-label-custom">Worksite Location</label>
-            <input type="text" id="p-worksite" class="form-control-custom" value="${player?.worksite || ''}">
+            <input type="text" id="p-worksite" class="form-control-custom" value="${escapeHtml(player?.worksite)}">
           </div>
 
           <div class="col-md-6">
             <label class="form-label-custom">HOD / Reporting Manager</label>
-            <input type="text" id="p-reportingManager" class="form-control-custom" value="${player?.reportingManager || ''}">
+            <input type="text" id="p-reportingManager" class="form-control-custom" value="${escapeHtml(player?.reportingManager)}">
           </div>
 
           <div class="col-md-6">
-            <label class="form-label-custom">Emergency Contact Name & Phone</label>
-            <input type="text" id="p-emergencyContact" class="form-control-custom" placeholder="Name, Phone, Relationship" value="${player?.emergencyContact?.name ? `${player.emergencyContact.name} - ${player.emergencyContact.phone} (${player.emergencyContact.relationship})` : ''}">
+            <label class="form-label-custom">Emergency Contact Name</label>
+            <input type="text" id="p-emergencyContactName" class="form-control-custom" value="${escapeHtml(player?.emergencyContact?.name)}">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-custom">Emergency Contact Phone</label>
+            <input type="text" id="p-emergencyContactPhone" class="form-control-custom" value="${escapeHtml(player?.emergencyContact?.phone)}">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-custom">Emergency Contact Relationship</label>
+            <input type="text" id="p-emergencyContactRelationship" class="form-control-custom" value="${escapeHtml(player?.emergencyContact?.relationship)}">
           </div>
         ` : ''}
       </div>
@@ -454,19 +501,41 @@ function openPlayerEditModal(player = null) {
   `;
 
   openModal({
-    title: isEditing ? `Edit ${player.fullName}` : 'Add Squad Member',
+    title: isEditing ? `Edit ${escapeHtml(player.fullName)}` : 'Add Squad Member',
     contentHtml,
     onOpen: (modalEl) => {
-      document.getElementById('modal-btn-save')?.addEventListener('click', async () => {
+      const companySelect = modalEl.querySelector('#p-company');
+      const customCompanyInput = modalEl.querySelector('#p-company-other');
+      const updateCompanyInput = () => {
+        const showCustomCompany = companySelect.value === 'Other';
+        modalEl.querySelector('#p-company-other-group').classList.toggle('d-none', !showCustomCompany);
+        customCompanyInput.required = showCustomCompany && isPrivileged;
+        customCompanyInput.disabled = !showCustomCompany || !isPrivileged;
+      };
+      companySelect.addEventListener('change', updateCompanyInput);
+      updateCompanyInput();
+
+      const saveButton = modalEl.querySelector('#modal-btn-save');
+      saveButton?.addEventListener('click', async () => {
         const fullName = document.getElementById('p-fullName')?.value;
         if (!fullName || !fullName.trim()) {
           showToast('Full name is required.', 'error');
           return;
         }
 
+        const company = companySelect.value === 'Other'
+          ? (isPrivileged ? customCompanyInput.value.trim() : player.company)
+          : companySelect.value;
+        if (isPrivileged && !company) {
+          showToast('Please enter the company name.', 'error');
+          customCompanyInput.focus();
+          return;
+        }
+        if (!modalEl.querySelector('#player-form-dialog').reportValidity()) return;
+
         const bodyData = {
           fullName,
-          company: document.getElementById('p-company')?.value,
+          company,
           cricketRole: document.getElementById('p-cricketRole')?.value,
           battingHand: document.getElementById('p-battingHand')?.value,
           bowlingArm: document.getElementById('p-bowlingArm')?.value,
@@ -483,8 +552,14 @@ function openPlayerEditModal(player = null) {
           bodyData.joiningDate = document.getElementById('p-joiningDate')?.value;
           bodyData.worksite = document.getElementById('p-worksite')?.value;
           bodyData.reportingManager = document.getElementById('p-reportingManager')?.value;
+          bodyData.emergencyContact = {
+            name: document.getElementById('p-emergencyContactName')?.value,
+            phone: document.getElementById('p-emergencyContactPhone')?.value,
+            relationship: document.getElementById('p-emergencyContactRelationship')?.value
+          };
         }
 
+        saveButton.disabled = true;
         try {
           if (isEditing) {
             await api.put(`/api/players/${player._id}`, bodyData);
@@ -497,6 +572,38 @@ function openPlayerEditModal(player = null) {
           loadAndRenderPlayersGrid();
         } catch (err) {
           showToast(`Error: ${err.message}`, 'error');
+        } finally {
+          saveButton.disabled = false;
+        }
+      });
+    }
+  });
+}
+
+/**
+ * Confirm removal from the active squad without erasing attendance or match history.
+ */
+function openPlayerDeleteModal(player) {
+  openModal({
+    title: 'Delete Player',
+    contentHtml: `<p>Delete <strong>${escapeHtml(player.fullName)}</strong> from the active squad?</p>
+      <p class="small text-muted mb-0">Existing attendance, match, and equipment records will be retained.</p>`,
+    footerHtml: `
+      <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Cancel</button>
+      <button type="button" class="btn btn-danger" id="btn-confirm-delete-player">Delete Player</button>
+    `,
+    onOpen: modalEl => {
+      const deleteButton = modalEl.querySelector('#btn-confirm-delete-player');
+      deleteButton.addEventListener('click', async () => {
+        deleteButton.disabled = true;
+        try {
+          await api.delete(`/api/players/${player._id}`);
+          showToast(`Player ${player.fullName} removed from the active squad.`, 'success');
+          closeModal();
+          await loadAndRenderPlayersGrid();
+        } catch (err) {
+          showToast(`Failed to delete player: ${err.message}`, 'error');
+          deleteButton.disabled = false;
         }
       });
     }

@@ -12,17 +12,7 @@ const playerSchema = new mongoose.Schema({
   company: {
     type: String,
     required: true,
-    enum: [
-      'Akbar Brothers (Pvt) Ltd',
-      'Quick Tea (Pvt) Ltd',
-      'Falcon Trading (Pvt) Ltd',
-      'Land and Building (Pvt) Ltd',
-      'Ceylon Coffeeworks (Pvt) Ltd',
-      'Colombo Coffee Company (Pvt) Ltd',
-      'Glowbal Retails (Pvt) Ltd',
-      'Coffee Collective (Pvt) Ltd',
-      'Other'
-    ],
+    trim: true,
     default: 'Other'
   },
   cricketRole: {
