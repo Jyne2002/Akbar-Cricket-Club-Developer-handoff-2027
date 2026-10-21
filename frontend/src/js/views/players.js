@@ -48,9 +48,9 @@ export async function renderPlayers(container, currentUser) {
 
     <!-- Filter & Search Toolbar -->
     <div class="card-custom p-3 mb-4">
-      <div class="row g-2 align-items-center">
+      <div class="row g-2 align-items-center register-filters">
         <div class="col-md-5">
-          <div class="input-group">
+          <div class="input-group register-search">
             <span class="input-group-text bg-transparent border-end-0" style="border-color: var(--border-color); color: var(--text-muted);">
               <i class="bi bi-search"></i>
             </span>
