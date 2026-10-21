@@ -619,6 +619,29 @@ h1, h2, h3, h4, h5, h6, .heading-font {
   box-shadow: 0 0 0 3px rgba(220, 175, 101, 0.2);
 }
 
+.app-main-wrapper:has(.register-filters) {
+  min-width: 0;
+}
+
+.register-filters .form-control-custom,
+.register-filters .form-select-custom {
+  height: 38px;
+}
+
+.register-search {
+  flex-wrap: nowrap;
+}
+
+.register-search > .form-control-custom {
+  flex: 1 1 auto;
+  width: 1%;
+  min-width: 0;
+}
+
+.register-search > .input-group-text {
+  font-size: 12.5px;
+}
+
 .form-label-custom {
   font-size: 11px;
   font-weight: 700;

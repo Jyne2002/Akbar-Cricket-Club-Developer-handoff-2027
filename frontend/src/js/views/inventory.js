@@ -6,6 +6,7 @@
 import { api } from '../api.js';
 import { showToast } from '../components/toast.js';
 import { openModal, closeModal } from '../components/modal.js';
+import { escapeHtml } from '../utils/html.js';
 
 let inventoryList = [];
 let currentUser = null;
@@ -79,9 +80,9 @@ export async function renderInventory(container, user) {
 
     <!-- Filters -->
     <div class="card-custom p-3 mb-4">
-      <div class="row g-2 align-items-center">
+      <div class="row g-2 align-items-center register-filters">
         <div class="col-md-5">
-          <div class="input-group">
+          <div class="input-group register-search">
             <span class="input-group-text bg-transparent border-end-0" style="border-color: var(--border-color); color: var(--text-muted);">
               <i class="bi bi-search"></i>
             </span>
@@ -194,6 +195,7 @@ async function loadInventoryTable() {
     }
 
     const canEdit = ['Administrator', 'Manager', 'Coach'].includes(currentUser?.role);
+    const canDelete = ['Administrator', 'Manager'].includes(currentUser?.role);
 
     tbody.innerHTML = inventoryList.map(item => {
       const conditionBadgeClass = item.condition === 'Good' ? 'badge bg-success' :
@@ -244,6 +246,11 @@ async function loadInventoryTable() {
                 View
               </button>
             `}
+            ${canDelete ? `
+              <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2 btn-delete-equipment" data-item-id="${item.id}" title="Delete equipment record">
+                <i class="bi bi-trash me-1"></i>Delete
+              </button>
+            ` : ''}
           </td>
         </tr>
       `;
@@ -265,9 +272,42 @@ async function loadInventoryTable() {
         openEquipmentFormModal(item);
       });
     });
+    document.querySelectorAll('.btn-delete-equipment').forEach(button => {
+      button.addEventListener('click', () => {
+        const item = inventoryList.find(i => i.id === button.dataset.itemId);
+        if (item) openEquipmentDeleteModal(item);
+      });
+    });
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="7" class="alert alert-danger">${err.message}</td></tr>`;
   }
+}
+
+function openEquipmentDeleteModal(item) {
+  openModal({
+    title: 'Delete Equipment Record',
+    contentHtml: `<p>Delete <strong>${escapeHtml(item.name)} (${escapeHtml(item.assetId)})</strong> from the register?</p>
+      <p class="small text-muted mb-0">This permanently deletes the equipment record. This cannot be undone.</p>`,
+    footerHtml: `
+      <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Cancel</button>
+      <button type="button" class="btn btn-danger" id="btn-confirm-delete-equipment">Delete Equipment</button>
+    `,
+    onOpen: modalEl => {
+      const deleteButton = modalEl.querySelector('#btn-confirm-delete-equipment');
+      deleteButton.addEventListener('click', async () => {
+        deleteButton.disabled = true;
+        try {
+          await api.delete(`/api/equipment/${item.id}`);
+          showToast('Equipment record deleted successfully.', 'success');
+          closeModal();
+          await Promise.all([loadInventoryMetrics(), loadInventoryTable()]);
+        } catch (err) {
+          showToast(`Failed to delete equipment: ${err.message}`, 'error');
+          deleteButton.disabled = false;
+        }
+      });
+    }
+  });
 }
 
 /**

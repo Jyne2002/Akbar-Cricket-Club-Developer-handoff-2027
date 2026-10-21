@@ -39,9 +39,9 @@ export async function renderAttendance(container, user) {
 
     <!-- Filter Toolbar -->
     <div class="card-custom p-3 mb-4">
-      <div class="row g-2 align-items-center">
+      <div class="row g-2 align-items-center register-filters">
         <div class="col-md-6">
-          <div class="input-group">
+          <div class="input-group register-search">
             <span class="input-group-text bg-transparent border-end-0" style="border-color: var(--border-color); color: var(--text-muted);">
               <i class="bi bi-search"></i>
             </span>
@@ -113,6 +113,7 @@ export async function renderAttendance(container, user) {
 
 async function loadSessions() {
   const canEdit = ['Administrator', 'Manager', 'Coach'].includes(currentUser?.role);
+  const canDelete = ['Administrator', 'Manager'].includes(currentUser?.role);
   const search = document.getElementById('attendance-search')?.value || '';
   const type = document.getElementById('attendance-type-filter')?.value || 'All';
   const tbody = document.getElementById('sessions-tbody');
@@ -159,6 +160,11 @@ async function loadSessions() {
             <button class="btn btn-sm btn-burgundy py-1 px-3 btn-open-rollcall" data-session-id="${s.id}">
               <i class="bi bi-person-check me-1"></i>Roll Call
             </button>
+            ${canDelete ? `
+              <button type="button" class="btn btn-sm btn-outline-danger py-1 px-3 btn-delete-session" data-session-id="${s.id}">
+                <i class="bi bi-trash me-1"></i>Delete
+              </button>
+            ` : ''}
           </td>
         </tr>
       `;
@@ -177,9 +183,42 @@ async function loadSessions() {
         if (session) openSessionEditModal(session);
       });
     });
+    document.querySelectorAll('.btn-delete-session').forEach(button => {
+      button.addEventListener('click', () => {
+        const session = sessionsList.find(s => s.id === button.dataset.sessionId);
+        if (session) openSessionDeleteModal(session);
+      });
+    });
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="6" class="alert alert-danger">${err.message}</td></tr>`;
   }
+}
+
+function openSessionDeleteModal(session) {
+  openModal({
+    title: 'Delete Session',
+    contentHtml: `<p>Delete <strong>${escapeHtml(session.title)}</strong> (${escapeHtml(session.date)})?</p>
+      <p class="small text-muted mb-0">This permanently deletes the session and its saved roll call. This cannot be undone.</p>`,
+    footerHtml: `
+      <button type="button" class="btn btn-light-custom" id="modal-btn-cancel">Cancel</button>
+      <button type="button" class="btn btn-danger" id="btn-confirm-delete-session">Delete Session</button>
+    `,
+    onOpen: modalEl => {
+      const deleteButton = modalEl.querySelector('#btn-confirm-delete-session');
+      deleteButton.addEventListener('click', async () => {
+        deleteButton.disabled = true;
+        try {
+          await api.delete(`/api/sessions/${session.id}`);
+          showToast('Session deleted successfully.', 'success');
+          closeModal();
+          await loadSessions();
+        } catch (err) {
+          showToast(`Failed to delete session: ${err.message}`, 'error');
+          deleteButton.disabled = false;
+        }
+      });
+    }
+  });
 }
 
 /**
