@@ -5,6 +5,7 @@
 
 import { api } from '../api.js';
 import { showToast } from '../components/toast.js';
+import clubLogoUrl from '../../assets/akbar-cricket-logo.png';
 
 export function renderLogin(container, onLoginSuccess) {
   container.innerHTML = `
@@ -16,8 +17,8 @@ export function renderLogin(container, onLoginSuccess) {
 
         <div>
           <div class="d-flex align-items-center gap-3 mb-4">
-            <div class="brand-crest mb-0" style="width: 50px; height: 50px;">
-              <span class="brand-crest-gold fs-4">ACC</span>
+            <div class="brand-crest brand-crest-image mb-0" style="width: 100px; height: 50px;">
+              <img src="${clubLogoUrl}" alt="Akbar Cricket Club — 1 Team 1 Dream">
             </div>
             <div>
               <div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: var(--gold);">AKBAR BROTHERS</div>

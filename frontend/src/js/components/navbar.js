@@ -3,6 +3,8 @@
  * Fixed 251px sidebar with corporate groups and active highlighting
  */
 
+import clubLogoUrl from '../../assets/akbar-cricket-logo.png';
+
 export function renderSidebar(currentUser, activeSection = 'command-centre') {
   const userInitials = currentUser?.name
     ? currentUser.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
@@ -12,8 +14,8 @@ export function renderSidebar(currentUser, activeSection = 'command-centre') {
     <aside class="app-sidebar" id="app-sidebar">
       <!-- Brand & Crest -->
       <div class="sidebar-brand-box">
-        <div class="brand-crest">
-          <span class="brand-crest-gold">ACC</span>
+        <div class="brand-crest brand-crest-image">
+          <img src="${clubLogoUrl}" alt="Akbar Cricket Club — 1 Team 1 Dream">
         </div>
         <div class="brand-club-name">AKBAR CRICKET</div>
         <div class="brand-suite-name">TEAM MANAGEMENT SUITE</div>

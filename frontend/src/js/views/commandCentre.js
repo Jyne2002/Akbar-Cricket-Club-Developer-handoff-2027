@@ -5,6 +5,7 @@
 
 import { api } from '../api.js';
 import { showToast } from '../components/toast.js';
+import clubLogoUrl from '../../assets/akbar-cricket-logo.png';
 
 export async function renderCommandCentre(container) {
   container.innerHTML = `
@@ -28,8 +29,8 @@ export async function renderCommandCentre(container) {
       <div class="command-banner">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center position-relative" style="z-index: 2;">
           <div class="d-flex align-items-start gap-3 mb-3 mb-md-0">
-            <div class="brand-crest" style="width: 54px; height: 54px; flex-shrink: 0;">
-              <span class="brand-crest-gold fs-4">ACC</span>
+            <div class="brand-crest brand-crest-image" style="width: 108px; height: 54px; flex-shrink: 0;">
+              <img src="${clubLogoUrl}" alt="Akbar Cricket Club — 1 Team 1 Dream">
             </div>
             <div>
               <div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: var(--gold); margin-bottom: 4px;">
@@ -51,10 +52,7 @@ export async function renderCommandCentre(container) {
           </div>
         </div>
         <div class="banner-watermark">
-          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6">
-            <circle cx="50" cy="50" r="45" />
-            <text x="50" y="58" font-size="28" font-weight="900" text-anchor="middle" fill="currentColor">ACC</text>
-          </svg>
+          <img src="${clubLogoUrl}" alt="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: contain;">
         </div>
       </div>
 
