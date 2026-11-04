@@ -16,7 +16,7 @@ echo Keep the backend and website windows open while using the website.
 echo Close both windows to stop the servers.
 echo.
 
-start "Akbar Cricket Club - Backend" /d "%~dp0backend" "%ComSpec%" /k "npm start"
+start "Akbar Cricket Club - Backend" /d "%~dp0backend" "%ComSpec%" /k "npm run dev"
 start "Akbar Cricket Club - Website" /d "%~dp0frontend" "%ComSpec%" /k "npm run dev -- --open --port 5173 --strictPort"
 exit /b 0
 

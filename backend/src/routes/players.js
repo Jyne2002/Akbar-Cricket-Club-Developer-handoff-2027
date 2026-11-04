@@ -6,6 +6,7 @@ const Session = require('../models/Session');
 const { authenticate, requireRoles } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 const { encryptField } = require('../config/security');
+const { playerBenefits } = require('../services/playerBenefitsService');
 
 /**
  * GET /api/players
@@ -98,6 +99,9 @@ router.get('/:id', authenticate, async (req, res) => {
  */
 router.post('/', authenticate, requireRoles('Administrator', 'Manager'), async (req, res) => {
   try {
+    let benefits;
+    try { benefits = playerBenefits(req.body); }
+    catch (err) { return res.status(400).json({ success: false, message: err.message }); }
     const {
       fullName,
       company,
@@ -122,6 +126,7 @@ router.post('/', authenticate, requireRoles('Administrator', 'Manager'), async (
     }
 
     const newPlayerData = {
+      ...benefits,
       fullName: fullName.trim(),
       company: typeof company === 'string' && company.trim() ? company.trim() : 'Other',
       cricketRole: cricketRole || 'Not set',
@@ -165,6 +170,11 @@ router.put('/:id', authenticate, requireRoles('Administrator', 'Manager', 'Coach
     }
 
     const isPrivileged = ['Administrator', 'Manager'].includes(req.user.role);
+    let benefits = {};
+    if (isPrivileged) {
+      try { benefits = playerBenefits(req.body); }
+      catch (err) { return res.status(400).json({ success: false, message: err.message }); }
+    }
 
     // Allowed cricket fields for Coach, Admin, and Manager
     if (req.body.cricketRole !== undefined) player.cricketRole = req.body.cricketRole;
@@ -177,6 +187,7 @@ router.put('/:id', authenticate, requireRoles('Administrator', 'Manager', 'Coach
 
     // Privileged fields
     if (isPrivileged) {
+      Object.assign(player, benefits);
       if (req.body.fullName) player.fullName = req.body.fullName.trim();
       if (typeof req.body.company === 'string' && req.body.company.trim()) player.company = req.body.company.trim();
       if (req.body.phone !== undefined) player.phone = req.body.phone;

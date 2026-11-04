@@ -14,7 +14,9 @@ const models = {
   equipment: require('../src/models/Equipment'),
   inspections: require('../src/models/Inspection'),
   damageReports: require('../src/models/DamageReport'),
-  tasks: require('../src/models/Task')
+  tasks: require('../src/models/Task'),
+  paymentRules: require('../src/models/PaymentRule'),
+  paymentAdjustments: require('../src/models/PaymentAdjustment')
 };
 
 const referencePaths = {
@@ -22,7 +24,9 @@ const referencePaths = {
   matches: [['linkedSessionId', 'sessions'], ['playingXI.*.player', 'players'], ['playerStats.*.player', 'players']],
   equipment: [['assignedPlayer', 'players']],
   inspections: [['equipment', 'equipment']],
-  damageReports: [['equipment', 'equipment']]
+  damageReports: [['equipment', 'equipment']],
+  paymentRules: [['players.*', 'players']],
+  paymentAdjustments: [['player', 'players']]
 };
 
 const publishedDemoPasswords = ['AkbarCricket@2026!', 'Manager@2026!', 'Coach@2026!'];

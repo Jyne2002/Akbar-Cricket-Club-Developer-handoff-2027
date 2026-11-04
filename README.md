@@ -153,6 +153,14 @@ For Hostinger deployment from `backend`, run `npm run build:hostinger` at the re
     - Database engine status and encryption indicator.
     - User provisioning modal (Administrator only) with strong password enforcement.
 
+12. **Monthly Player Payments / Rates & Reward Rules** (Administrator and Manager):
+    - Manage monthly and per-session allowance rates, absence/late deductions, and verified performance rewards in LKR. No monetary rates are pre-filled.
+    - In Rates & Reward Rules, choose a player, then use Add attendance allowance, Add performance reward or Add deduction. The selected player is preselected in the rule form; searchable checkboxes support additional players. Shared rules remain visible and add to player-specific rules.
+    - Rules support selected players, effective months, fixed amounts, per-unit rates, and milestone rewards calculated monthly or per verified match.
+    - Allowance eligibility combines the player's eligibility setting with each rule's minimum attendance percentage, minimum marked sessions, and optional complete-roll-call requirement. Late counts as attended; excused entries do not trigger absence deductions.
+    - Monthly payments include editable player allowances, deductions and reward adjustments, itemized calculations, and CSV export. Calculations use current records; changes to rules or attendance recalculate affected months. Payable amounts stop at zero, with excess deductions displayed separately.
+    - Edit a player profile to record jersey-kit printed name, shirt/trouser sizes, status, quantity, issue date and notes, plus confidential allowance eligibility details.
+
 ---
 
 ## 📦 Opening Data Included

@@ -307,6 +307,16 @@ async function openPlayerProfileModal(playerId) {
             <tr><td class="text-muted">Catches:</td><td class="fw-bold">${s.catches || 0}</td><td class="text-muted">Stump / Run-out:</td><td class="fw-bold">${s.stumpings || 0} / ${s.runOuts || 0}</td></tr>
           </table>
 
+          <h6 class="stat-label mb-2 text-gold">Jersey Kit</h6>
+          <table class="table table-sm table-borderless small mb-3">
+            <tr><td class="text-muted w-50">Printed Name:</td><td>${escapeHtml(player.jerseyKit?.printedName || 'Not set')}</td></tr>
+            <tr><td class="text-muted">Shirt / Trouser Size:</td><td>${escapeHtml(player.jerseyKit?.shirtSize || 'Not set')} / ${escapeHtml(player.jerseyKit?.trouserSize || 'Not set')}</td></tr>
+            <tr><td class="text-muted">Kit Status / Quantity:</td><td>${escapeHtml(player.jerseyKit?.status || 'Not ordered')} / ${player.jerseyKit?.quantity || 0}</td></tr>
+            <tr><td class="text-muted">Issued Date:</td><td>${escapeHtml(player.jerseyKit?.issuedDate || 'Not set')}</td></tr>
+            <tr><td class="text-muted">Kit Notes:</td><td>${escapeHtml(player.jerseyKit?.notes || 'None')}</td></tr>
+          </table>
+          ${isPrivileged ? `<h6 class="stat-label mb-2 text-gold">Allowance Eligibility</h6><div class="small mb-3">${player.allowanceEligible !== false ? 'Eligible, subject to monthly attendance rules' : 'Ineligible'}${player.allowanceEligibilityNote ? `<div class="text-muted">${escapeHtml(player.allowanceEligibilityNote)}</div>` : ''}</div>` : ''}
+
           <h6 class="stat-label mb-2 text-gold">Assigned Club Equipment</h6>
           ${assignedEquipment && assignedEquipment.length > 0 ? `
             <ul class="list-group list-group-flush small mb-3">
@@ -444,6 +454,16 @@ function openPlayerEditModal(player = null) {
         </div>
 
         ${isPrivileged ? `
+          <div class="col-12 mt-3 pt-3 border-top"><div class="fw-bold text-main small">Jersey Kit</div></div>
+          <div class="col-md-6"><label for="p-kit-name" class="form-label-custom">Printed Name</label><input id="p-kit-name" class="form-control-custom" maxlength="80" value="${escapeHtml(player?.jerseyKit?.printedName)}"></div>
+          <div class="col-md-6"><label for="p-kit-shirt" class="form-label-custom">Shirt Size</label><input id="p-kit-shirt" class="form-control-custom" maxlength="80" placeholder="e.g. M, L, XL" value="${escapeHtml(player?.jerseyKit?.shirtSize)}"></div>
+          <div class="col-md-6"><label for="p-kit-trouser" class="form-label-custom">Trouser Size</label><input id="p-kit-trouser" class="form-control-custom" maxlength="80" placeholder="e.g. M or 32" value="${escapeHtml(player?.jerseyKit?.trouserSize)}"></div>
+          <div class="col-md-6"><label for="p-kit-status" class="form-label-custom">Kit Status</label><select id="p-kit-status" class="form-select-custom">${['Not ordered', 'Ordered', 'Issued', 'Returned'].map(status => `<option ${player?.jerseyKit?.status === status ? 'selected' : ''}>${status}</option>`).join('')}</select></div>
+          <div class="col-md-6"><label for="p-kit-quantity" class="form-label-custom">Kit Quantity</label><input id="p-kit-quantity" class="form-control-custom" type="number" min="0" max="100" step="1" value="${player?.jerseyKit?.quantity ?? 0}" required></div>
+          <div class="col-md-6"><label for="p-kit-issued" class="form-label-custom">Kit Issue Date</label><input id="p-kit-issued" class="form-control-custom" type="date" value="${escapeHtml(player?.jerseyKit?.issuedDate)}"></div>
+          <div class="col-12"><label for="p-kit-notes" class="form-label-custom">Kit Notes</label><input id="p-kit-notes" class="form-control-custom" maxlength="500" value="${escapeHtml(player?.jerseyKit?.notes)}"></div>
+          <div class="col-12 border-top pt-3"><label class="d-flex align-items-center gap-2"><input id="p-allowance-eligible" type="checkbox" ${player?.allowanceEligible !== false ? 'checked' : ''}>Eligible for allowances (monthly attendance rules also apply)</label></div>
+          <div class="col-12"><label for="p-allowance-note" class="form-label-custom">Allowance Eligibility Note</label><input id="p-allowance-note" class="form-control-custom" maxlength="500" value="${escapeHtml(player?.allowanceEligibilityNote)}"></div>
           <div class="col-12 mt-3 pt-3 border-top" style="border-color: var(--border-color) !important;">
             <div class="fw-bold text-danger small mb-2"><i class="bi bi-lock-fill me-1"></i>Confidential Employment & Contact Data</div>
           </div>
@@ -545,6 +565,17 @@ function openPlayerEditModal(player = null) {
         };
 
         if (isPrivileged) {
+          bodyData.allowanceEligible = document.getElementById('p-allowance-eligible').checked;
+          bodyData.allowanceEligibilityNote = document.getElementById('p-allowance-note').value;
+          bodyData.jerseyKit = {
+            printedName: document.getElementById('p-kit-name').value,
+            shirtSize: document.getElementById('p-kit-shirt').value,
+            trouserSize: document.getElementById('p-kit-trouser').value,
+            status: document.getElementById('p-kit-status').value,
+            quantity: Number(document.getElementById('p-kit-quantity').value),
+            issuedDate: document.getElementById('p-kit-issued').value,
+            notes: document.getElementById('p-kit-notes').value
+          };
           bodyData.phone = document.getElementById('p-phone')?.value;
           bodyData.workEmail = document.getElementById('p-workEmail')?.value;
           bodyData.epfNumber = document.getElementById('p-epfNumber')?.value;

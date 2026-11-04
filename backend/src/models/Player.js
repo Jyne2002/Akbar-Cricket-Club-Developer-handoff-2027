@@ -45,6 +45,17 @@ const playerSchema = new mongoose.Schema({
     type: Number,
     default: null
   },
+  jerseyKit: {
+    printedName: { type: String, default: '', maxlength: 80 },
+    shirtSize: { type: String, default: '', maxlength: 80 },
+    trouserSize: { type: String, default: '', maxlength: 80 },
+    status: { type: String, enum: ['Not ordered', 'Ordered', 'Issued', 'Returned'], default: 'Not ordered' },
+    quantity: { type: Number, default: 0, min: 0, max: 100, validate: Number.isInteger },
+    issuedDate: { type: String, default: '' },
+    notes: { type: String, default: '', maxlength: 500 }
+  },
+  allowanceEligible: { type: Boolean, default: true },
+  allowanceEligibilityNote: { type: String, default: '', maxlength: 500 },
   photo: {
     type: String,
     default: null
@@ -115,6 +126,8 @@ playerSchema.methods.toPublicJSON = function (canViewConfidential = false) {
     delete obj.worksite;
     delete obj.reportingManager;
     delete obj.emergencyContact;
+    delete obj.allowanceEligible;
+    delete obj.allowanceEligibilityNote;
   }
   return obj;
 };

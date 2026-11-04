@@ -68,6 +68,14 @@ export function renderSidebar(currentUser, activeSection = 'command-centre') {
 
         <!-- GROUP 3: MANAGEMENT -->
         <div class="nav-group-label mt-2">MANAGEMENT</div>
+        ${['Administrator', 'Manager'].includes(currentUser?.role) ? `
+          <a href="#/payments" class="sidebar-nav-link ${activeSection === 'payments' ? 'active' : ''}" data-nav="payments">
+            <i class="bi bi-cash-stack"></i><span>Monthly player payments</span>
+          </a>
+          <a href="#/payment-rules" class="sidebar-nav-link ${activeSection === 'payment-rules' ? 'active' : ''}" data-nav="payment-rules">
+            <i class="bi bi-sliders"></i><span>Rates &amp; reward rules</span>
+          </a>
+        ` : ''}
         <a href="#/reports" class="sidebar-nav-link ${activeSection === 'reports' ? 'active' : ''}" data-nav="reports">
           <i class="bi bi-file-earmark-text-fill"></i>
           <span>Reports & exports</span>

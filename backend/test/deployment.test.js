@@ -79,6 +79,14 @@ test('preserves /api/health and authenticated API routing', async () => {
   assert.equal((await profile.json()).success, false);
 });
 
+test('payment, attendance and performance endpoints are registered before the API fallback', async () => {
+  for (const route of ['/api/payments/rules', '/api/payments/monthly', '/api/sessions', '/api/leaderboards']) {
+    const response = await fetch(`${apiOrigin}${route}`);
+    assert.equal(response.status, 401, `${route} must require authentication instead of returning route not found`);
+    assert.equal((await response.json()).message, 'Authentication required. Please sign in.');
+  }
+});
+
 test('missing API routes return JSON errors for all request methods', async () => {
   for (const route of ['/api', '/api/', '/api/does-not-exist', '/api/does-not-exist/nested']) {
     for (const method of ['GET', 'POST', 'PUT', 'DELETE']) {

@@ -19,7 +19,9 @@ let store = {
   equipment: [],
   inspections: [],
   damageReports: [],
-  tasks: []
+  tasks: [],
+  paymentRules: [],
+  paymentAdjustments: []
 };
 
 let isEmbeddedActive = false;
@@ -196,6 +198,8 @@ function wrapDocument(collectionName, raw, populateFields = []) {
         delete copy.worksite;
         delete copy.reportingManager;
         delete copy.emergencyContact;
+        delete copy.allowanceEligible;
+        delete copy.allowanceEligibilityNote;
       }
       return copy;
     };

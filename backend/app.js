@@ -206,6 +206,7 @@ app.get('/api/command-centre', authenticate, async (req, res) => {
 app.use('/api/auth', require('./src/routes/auth'));
 app.use('/api/users', require('./src/routes/users'));
 app.use('/api/players', require('./src/routes/players'));
+app.use('/api/payments', require('./src/routes/payments'));
 app.use('/api/sessions', require('./src/routes/sessions'));
 app.use('/api/matches', require('./src/routes/matches'));
 app.use('/api/leaderboards', require('./src/routes/leaderboards'));

@@ -20,6 +20,7 @@ import { renderDamage } from './views/damage.js';
 import { renderTasks } from './views/tasks.js';
 import { renderReports } from './views/reports.js';
 import { renderSettings } from './views/settings.js';
+import { renderPayments, renderPaymentRules } from './views/payments.js';
 
 let currentUser = null;
 
@@ -89,6 +90,18 @@ const ROUTES = {
     title: 'Settings & Users',
     breadcrumb: 'Management / Administration',
     render: renderSettings,
+    actionButton: null
+  },
+  'payments': {
+    title: 'Monthly Player Payments',
+    breadcrumb: 'Management / Payments',
+    render: renderPayments,
+    actionButton: null
+  },
+  'payment-rules': {
+    title: 'Rates & Reward Rules',
+    breadcrumb: 'Management / Payment Rules',
+    render: renderPaymentRules,
     actionButton: null
   }
 };

@@ -638,6 +638,10 @@ h1, h2, h3, h4, h5, h6, .heading-font {
   min-width: 0;
 }
 
+.app-main-wrapper:has(.payment-view) {
+  min-width: 0;
+}
+
 .register-filters .form-control-custom,
 .register-filters .form-select-custom {
   height: 38px;
