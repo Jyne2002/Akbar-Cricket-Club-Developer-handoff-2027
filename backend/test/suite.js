@@ -27,6 +27,8 @@ const { seedDatabase } = require('../src/services/seedService');
 const { hashPassword } = require('../src/config/security');
 const User = require('../src/models/User');
 const Player = require('../src/models/Player');
+const Session = require('../src/models/Session');
+const { summarizePlayerAttendance } = require('../src/services/playerAttendanceService');
 const app = require('../app');
 
 const { encryptField, decryptField, sanitizeCsvValue } = require('../src/config/security');
@@ -118,6 +120,29 @@ async function runTests(apiOrigin) {
     allUnmarked.forEach(e => { if (e.status !== 'Not marked') unMarkedCount++; });
     const emptyRate = unMarkedCount > 0 ? (0 / unMarkedCount) * 100 : null;
     assert.strictEqual(emptyRate, null, 'Rate should be null (dash displayed) when no entries are marked');
+  });
+
+  test('Player attendance: supports MongoDB IDs, populated references, rounding, and empty records', () => {
+    const playerId = '111111111111111111111111';
+    const otherId = '222222222222222222222222';
+    const sessions = [new Session({
+      title: 'Attendance test', date: '2027-01-01', type: 'Practice',
+      rollCall: [{ player: playerId, status: 'Attended' }, { player: otherId, status: 'Absent' }]
+    }), ...['Late', 'Absent', 'Excused', 'Not marked'].map(status => ({
+      rollCall: [{ player: { _id: playerId }, status }]
+    })), {}];
+    const summaries = summarizePlayerAttendance(sessions, [playerId, otherId]);
+    assert.deepStrictEqual(summaries.get(playerId), {
+      attended: 1, late: 1, absent: 1, excused: 1, notMarked: 1,
+      total: 5, markedCount: 4, rate: 50
+    });
+    assert.strictEqual(summaries.get(otherId).rate, 0);
+    assert.strictEqual(summarizePlayerAttendance([], [playerId]).get(playerId).rate, null);
+    assert.strictEqual(summarizePlayerAttendance([{ rollCall: [{ player: playerId, status: 'Not marked' }] }], [playerId]).get(playerId).rate, null);
+    const thirds = summarizePlayerAttendance(['Attended', 'Late', 'Absent'].map(status => ({
+      rollCall: [{ player: playerId, status }]
+    })), [playerId]);
+    assert.strictEqual(thirds.get(playerId).rate, 66.7);
   });
 
   // TEST 5: Leaderboard Calculations (Strike rate, Average with 0 dismissals, Economy with 0 balls)
@@ -335,6 +360,45 @@ async function runTests(apiOrigin) {
     assert.strictEqual(futureSessionRes.status, 201);
     assert.ok(!(await futureSessionRes.json()).session.rollCall.some(entry => entry.player === createdPlayer._id));
     console.log(' [PASS] Live API: authorized player deletion removes active membership and preserves attendance history');
+    passed++;
+
+    const attendancePlayer = await Player.create({ fullName: 'Attendance Summary Player', company: 'Attendance Test Club' });
+    const unmarkedPlayer = await Player.create({ fullName: 'Unmarked Attendance Player', company: 'Attendance Test Club' });
+    const noRecordsPlayer = await Player.create({ fullName: 'No Attendance Records Player', company: 'Attendance Test Club' });
+    const statuses = [...Array(7).fill('Attended'), 'Late', 'Absent', 'Absent', 'Excused', 'Not marked'];
+    for (const [index, status] of statuses.entries()) {
+      await Session.create({
+        title: `Attendance test ${index + 1}`, type: index % 2 ? 'Match' : 'Practice',
+        date: `2027-03-${String(index + 1).padStart(2, '0')}`,
+        rollCall: [{ player: attendancePlayer._id, status }, { player: unmarkedPlayer._id, status: 'Not marked' }]
+      });
+    }
+    const expectedAttendance = {
+      attended: 7, late: 1, absent: 2, excused: 1, notMarked: 1,
+      total: 12, markedCount: 11, rate: 72.7
+    };
+    const attendanceEndpoint = `/api/players/${attendancePlayer._id}`;
+    for (const authToken of [token, coachToken]) {
+      const profile = await (await request(attendanceEndpoint, 'GET', undefined, authToken)).json();
+      assert.deepStrictEqual(profile.player.attendanceStats, expectedAttendance);
+      assert.strictEqual(profile.attendanceHistory.length, 10, 'Recent history remains capped independently of overall attendance');
+      const squad = await (await request('/api/players?company=Attendance%20Test%20Club', 'GET', undefined, authToken)).json();
+      assert.deepStrictEqual(squad.players.find(p => p._id === attendancePlayer._id).attendanceStats, expectedAttendance);
+      assert.strictEqual(squad.players.find(p => p._id === unmarkedPlayer._id).attendanceStats.rate, null);
+      assert.strictEqual(squad.players.find(p => p._id === noRecordsPlayer._id).attendanceStats.total, 0);
+    }
+    const updatedRollCall = [
+      { player: attendancePlayer._id, status: 'Attended' },
+      { player: unmarkedPlayer._id, status: 'Not marked' }
+    ];
+    const latestSessionId = (await (await request(attendanceEndpoint)).json()).attendanceHistory[0].sessionId;
+    assert.strictEqual((await request(`/api/sessions/${latestSessionId}/roll-call`, 'PUT', { rollCall: updatedRollCall }, coachToken)).status, 200);
+    const refreshedProfile = await (await request(attendanceEndpoint)).json();
+    assert.strictEqual(refreshedProfile.player.attendanceStats.rate, 75);
+    assert.strictEqual(refreshedProfile.player.attendanceStats.markedCount, 12);
+    const refreshedSquad = await (await request('/api/players?search=Attendance%20Summary%20Player')).json();
+    assert.deepStrictEqual(refreshedSquad.players[0].attendanceStats, refreshedProfile.player.attendanceStats);
+    console.log(' [PASS] Live API: player percentages use all sessions, exclude unmarked entries, preserve recent history, and refresh after roll-call edits');
     passed++;
 
   } catch (liveErr) {

@@ -7,6 +7,7 @@ const { authenticate, requireRoles } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 const { encryptField } = require('../config/security');
 const { playerBenefits } = require('../services/playerBenefitsService');
+const { summarizePlayerAttendance } = require('../services/playerAttendanceService');
 
 /**
  * GET /api/players
@@ -29,10 +30,17 @@ router.get('/', authenticate, async (req, res) => {
       query.cricketRole = cricketRole;
     }
 
-    const players = await Player.find(query).sort({ fullName: 1 });
+    const [players, sessions] = await Promise.all([
+      Player.find(query).sort({ fullName: 1 }),
+      Session.find({}).select('rollCall')
+    ]);
     const canViewConfidential = req.canViewConfidential;
 
-    const sanitizedPlayers = players.map(p => p.toPublicJSON(canViewConfidential));
+    const attendanceByPlayer = summarizePlayerAttendance(sessions, players.map(p => p._id));
+    const sanitizedPlayers = players.map(p => ({
+      ...p.toPublicJSON(canViewConfidential),
+      attendanceStats: attendanceByPlayer.get(String(p._id))
+    }));
 
     return res.json({
       success: true,
@@ -63,13 +71,13 @@ router.get('/:id', authenticate, async (req, res) => {
     const assignedEquipment = await Equipment.find({ assignedPlayer: player._id })
       .select('assetId name category condition quantity countVerified');
 
-    // Fetch recent session attendance
-    const recentSessions = await Session.find({ 'rollCall.player': player._id })
+    // Summarize all attendance while keeping the recent history limited to ten sessions.
+    const sessions = await Session.find({ 'rollCall.player': player._id })
       .sort({ date: -1 })
-      .limit(10)
       .select('title type date venue rollCall');
+    playerJson.attendanceStats = summarizePlayerAttendance(sessions, [player._id]).get(String(player._id));
 
-    const attendanceHistory = recentSessions.map(s => {
+    const attendanceHistory = sessions.slice(0, 10).map(s => {
       const entry = (s.rollCall || []).find(e => e.player.toString() === player._id.toString());
       return {
         sessionId: s._id,

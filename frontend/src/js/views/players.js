@@ -143,6 +143,7 @@ async function loadAndRenderPlayersGrid() {
     gridContainer.innerHTML = res.players.map(p => {
       const initials = p.fullName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
       const s = p.stats || {};
+      const attendance = p.attendanceStats || {};
       const roleBadgeClass = p.cricketRole === 'Batsman' ? 'badge-batsman' :
                              p.cricketRole === 'Bowler' ? 'badge-bowler' :
                              p.cricketRole.includes('allrounder') ? 'badge-allrounder' : 'badge-role';
@@ -189,6 +190,13 @@ async function loadAndRenderPlayersGrid() {
                   <div class="stat-label" style="font-size: 9.5px;">Wickets</div>
                   <div class="fw-bold text-main" style="font-size: 14px;">${s.wickets || 0}</div>
                 </div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center border-top mt-2 pt-2" style="border-color: var(--border-color) !important;">
+                <span class="stat-label" style="font-size: 9.5px;">Attendance</span>
+                <span class="fw-bold text-main" style="font-size: 14px;">${Number.isFinite(attendance.rate) ? `${attendance.rate}%` : '—'}</span>
+              </div>
+              <div class="text-muted" style="font-size: 11px;">
+                ${attendance.markedCount > 0 ? `${attendance.attended + attendance.late} / ${attendance.markedCount} marked sessions attended` : 'No marked attendance'}${attendance.notMarked > 0 ? ` · ${attendance.notMarked} unmarked` : ''}
               </div>
             </div>
             ${canEdit ? `
@@ -239,6 +247,7 @@ async function openPlayerProfileModal(playerId) {
     const isPrivileged = ['Administrator', 'Manager'].includes(currentUserProfile?.role);
     const canEdit = ['Administrator', 'Manager', 'Coach'].includes(currentUserProfile?.role);
     const s = player.stats || {};
+    const attendance = player.attendanceStats || {};
 
     const contentHtml = `
       <div class="row g-4">
@@ -330,6 +339,16 @@ async function openPlayerProfileModal(playerId) {
           ` : `
             <div class="text-muted small mb-3">No club gear currently assigned to this player.</div>
           `}
+
+          <h6 class="stat-label mb-2 text-gold">Overall Attendance</h6>
+          <div class="p-2 rounded border mb-3" style="background-color: var(--body-bg); border-color: var(--border-color) !important;">
+            <div class="d-flex justify-content-between align-items-center gap-2">
+              <span class="small text-muted">${attendance.markedCount > 0 ? `${attendance.attended + attendance.late} / ${attendance.markedCount} marked sessions attended` : 'No marked attendance'}</span>
+              <span class="fw-bold text-main">${Number.isFinite(attendance.rate) ? `${attendance.rate}%` : '—'}</span>
+            </div>
+            <div class="small text-muted mt-1">Attended: ${attendance.attended || 0} · Late: ${attendance.late || 0} · Absent: ${attendance.absent || 0} · Excused: ${attendance.excused || 0} · Not marked: ${attendance.notMarked || 0}</div>
+            <div class="small text-muted mt-2">Across all recorded practice and match sessions. Late counts as attended; unmarked entries are excluded.</div>
+          </div>
 
           <h6 class="stat-label mb-2 text-gold">Recent Session Attendance</h6>
           ${attendanceHistory && attendanceHistory.length > 0 ? `
